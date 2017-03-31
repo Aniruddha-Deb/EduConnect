@@ -33,8 +33,26 @@ public class Client implements Runnable{
 	
 	@Override
 	public void run() {
-		System.out.println( "101 client accepted" );
+		try {
+			while( s.isConnected() ) {
+				
+				String request = null;
+				if( clientReader.ready() ) {
+					request = clientReader.readLine();
+				}
+			}
+		} 
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		finally {
+			try {
+				clientReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			clientWriter.close();
+		}
 	}
-	
 }
 
