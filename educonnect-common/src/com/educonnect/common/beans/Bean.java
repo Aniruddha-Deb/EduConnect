@@ -1,15 +1,19 @@
 package com.educonnect.common.beans;
 
-public abstract class Bean {
+import java.io.Serializable;
+
+public abstract class Bean implements Serializable{
 	
+	private static final long serialVersionUID = 8864022887689600887L;
+
 	public enum BeanConstants {
-		OK, TEXT, SUCCESS, FAILURE, LOGIN;
+		OK, TEXT, SUCCESS, FAILURE, LOGIN, IMAGE;
 	}
 	
-	protected String header = null;
+	protected BeanConstants header = null;
 	protected String payload = null;
 	
-	public String getHeader() {
+	public BeanConstants getHeader() {
 		return header;
 	}
 	

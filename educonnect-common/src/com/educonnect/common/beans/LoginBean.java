@@ -6,7 +6,7 @@ public class LoginBean extends Bean{
 	public String passwd = null;
 	
 	public LoginBean( int rollNo, String passwd, String payload ) {
-		super.header = BeanConstants.LOGIN.toString();
+		super.header = BeanConstants.LOGIN;
 		super.payload = payload;
 		this.rollNo = rollNo;
 		this.passwd = passwd;

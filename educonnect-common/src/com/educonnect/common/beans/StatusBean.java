@@ -3,7 +3,7 @@ package com.educonnect.common.beans;
 public class StatusBean extends Bean {
 	
 	private StatusBean( BeanConstants header, String payload ) {
-		super.header = header.toString();
+		super.header = header;
 		super.payload = payload;
 	}
 	
