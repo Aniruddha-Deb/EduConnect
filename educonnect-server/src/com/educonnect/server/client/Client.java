@@ -23,7 +23,6 @@ public class Client extends Thread{
 		try {
 			Bean textBean;
 			while( (textBean=adapter.receive()) != null ) {
-				System.out.println( credentials.getRollNo() + "> " + (String)textBean.getPayload() );
 				ClientHandler.broadcast( textBean, this );
 			}
 		}

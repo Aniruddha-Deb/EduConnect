@@ -18,7 +18,6 @@ public class EduConnectServer {
 		System.out.println( "started" );
 		while( true ) {
 			Socket s = ss.accept();
-			System.out.println( "Somebody joined!" );
 			ClientHandler.handle( s );
 		}
 	}

@@ -8,7 +8,7 @@ import java.util.List;
 import com.educonnect.common.adapter.SocketNetworkAdapter;
 import com.educonnect.common.beans.Bean;
 import com.educonnect.common.beans.BeanParser;
-import com.educonnect.common.beans.Bean.BeanConstants;
+import com.educonnect.common.beans.Bean.Header;
 
 public class ClientHandler {
 	
@@ -21,11 +21,9 @@ public class ClientHandler {
 		
 		try {
 			b = adapter.receive();
-			System.out.println( "B not null" );
 			Client c = new Client( BeanParser.getRollNo( b ), adapter );
 			c.start();
 			clients.add( c );
-			System.out.println( "Started a client thread" );
 		} catch( Exception ex ) {
 			ex.printStackTrace();
 		}
@@ -37,7 +35,7 @@ public class ClientHandler {
 				c.getAdapter().send( bean );
 			}
 		}
-		sender.getAdapter().send( new Bean( BeanConstants.INFO, "Sent" ) );
+		sender.getAdapter().send( new Bean( Header.INFO, "Sent" ) );
 	}
 	
 }
