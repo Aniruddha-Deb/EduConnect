@@ -4,60 +4,40 @@ import java.sql.*;
 
 public class JDBCExample {
 
-	Connection sqlConnection = null;
-	
-	public JDBCExample() {
-		connectToDatabase();
-		runTests();
-	}
-	
-	private void connectToDatabase() {
-		try {
-			Class.forName( "com.mysql.jdbc.Driver").newInstance();
-		} catch( Exception ex ) {
-			System.out.println( "JDBC driver not found" );
-			System.exit( -1 );
-		}
-		
-		System.out.println( "JDBC driver registered" );
-
-		try {
-			sqlConnection = DriverManager.getConnection( 
-						"jdbc:mysql://localhost:3306/9D", "root", "bokor123" );
-		} catch( SQLException ex ) {
-			ex.printStackTrace();
-		}
-		
-		System.out.println( "Successfully connected to SQL server on port "
-				+ "3306 with userID = root and password = bokor123" );
-		System.out.println( "---------------------------------------" );
-	}
-	
-	private void runTests() {
-		String query = "SELECT * FROM 9D";
+	public static void main( String[] args ) {
+		Connection conn = null;
 		
 		try {
-			Statement st = sqlConnection.createStatement();
+			Class.forName( "com.mysql.jdbc.Driver" );
+			conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/playground",
+												"root",
+												"bokor123" );
+			String query = "SELECT * FROM 9d_test";
+			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery( query );
 			
+			System.out.println( "rollNo | firstName | lastName | passwd" );
+			
+			System.out.println( "------------------------" );
 			while( rs.next() ) {
+				
 				int rollNo = rs.getInt( "rollNo" );
 				String firstName = rs.getString( "firstName" );
-				String lastName  = rs.getString( "lastName" );
-				String passwd    = rs.getString( "passwd" );
-				System.out.println( "rollNo    = " + rollNo );
-				System.out.println( "firstName = " + firstName );
-				System.out.println( "lastName  = " + lastName );
-				System.out.println( "passwd    = " + passwd );
-				System.out.println( "-------------------------------" );
+				String lastName = rs.getString( "lastName" );
+				String passwd = rs.getString( "passwd" );
+				
+				System.out.println( rollNo + " | " + firstName + " | " + lastName + " | "
+						+ passwd);
 			}
-		} catch( SQLException ex ) {
+		} catch( Exception ex ) {
 			ex.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		new JDBCExample();
 	}
 
 }
