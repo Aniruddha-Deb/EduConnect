@@ -1,4 +1,4 @@
-package com.educonnect.client.adapter;
+package com.educonnect.common.adapter;
 
 import com.educonnect.common.beans.Bean;
 

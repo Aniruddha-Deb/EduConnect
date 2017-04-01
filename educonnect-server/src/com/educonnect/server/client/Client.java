@@ -1,57 +1,29 @@
 package com.educonnect.server.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import com.educonnect.common.adapter.SocketNetworkAdapter;
+import com.educonnect.common.beans.TextBean;
 
-public class Client implements Runnable{
+public class Client extends Thread{
 
 	private Credentials credentials = null;
-	private Socket s = null;
+	private SocketNetworkAdapter adapter = null;
 	
-	private BufferedReader clientReader = null;
-	private PrintWriter    clientWriter = null;
-
-	public Client( int rollNo, Socket s ) {
-		credentials = new Credentials( rollNo );
-		
-		try {
-			clientReader = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
-		
-		try {
-			clientWriter = new PrintWriter( s.getOutputStream() );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		run();
+	public Client( int rollNo, SocketNetworkAdapter adapter ) {
+		credentials = new Credentials( rollNo );		
+		this.adapter = adapter;
 	}
 	
 	@Override
 	public void run() {
+		
 		try {
-			while( s.isConnected() ) {
-				
-				String request = null;
-				if( clientReader.ready() ) {
-					request = clientReader.readLine();
-				}
+			TextBean tb;
+			while( (tb=(TextBean)adapter.receive()) != null ) {
+				System.out.println( credentials.getRollNo() + "> " + tb.getData() );
 			}
-		} 
+		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
-		}
-		finally {
-			try {
-				clientReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			clientWriter.close();
 		}
 	}
 }

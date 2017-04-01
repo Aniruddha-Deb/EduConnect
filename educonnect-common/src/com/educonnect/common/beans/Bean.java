@@ -7,7 +7,7 @@ public abstract class Bean implements Serializable{
 	private static final long serialVersionUID = 8864022887689600887L;
 
 	public enum BeanConstants {
-		OK, TEXT, SUCCESS, FAILURE, LOGIN, IMAGE;
+		OK, INFO, TEXT, SUCCESS, FAILURE, LOGIN, IMAGE;
 	}
 	
 	protected BeanConstants header = null;
