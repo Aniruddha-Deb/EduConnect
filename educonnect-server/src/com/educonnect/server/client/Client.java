@@ -1,7 +1,7 @@
 package com.educonnect.server.client;
 
 import com.educonnect.common.adapter.SocketNetworkAdapter;
-import com.educonnect.common.beans.TextBean;
+import com.educonnect.common.beans.Bean;
 
 public class Client extends Thread{
 
@@ -13,13 +13,18 @@ public class Client extends Thread{
 		this.adapter = adapter;
 	}
 	
+	public SocketNetworkAdapter getAdapter() {
+		return adapter;
+	}
+	
 	@Override
 	public void run() {
 		
 		try {
-			TextBean tb;
-			while( (tb=(TextBean)adapter.receive()) != null ) {
-				System.out.println( credentials.getRollNo() + "> " + tb.getData() );
+			Bean textBean;
+			while( (textBean=adapter.receive()) != null ) {
+				System.out.println( credentials.getRollNo() + "> " + (String)textBean.getPayload() );
+				ClientHandler.broadcast( textBean, this );
 			}
 		}
 		catch( Exception ex ) {
