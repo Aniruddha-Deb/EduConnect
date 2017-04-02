@@ -3,16 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/educonnect-common"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/mysql-connector-java-5.0.8-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-3.15.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-ooxml-3.15.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-ooxml-schemas-3.15.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/commons-collections4-4.1.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/junit-4.12.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/poi-ooxml-lib/curvesapi-1.04.jar"/>
-	<classpathentry kind="lib" path="/Users/Sensei/Projects/EduConnect/educonnect-server/lib/poi-lib/poi-ooxml-lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
