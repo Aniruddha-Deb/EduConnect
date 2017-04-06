@@ -28,7 +28,7 @@ public class Producer implements Runnable {
 			for( int i=0; i<10; i++ ) {
 				Thread.sleep( 100 );
 				messages.put( Integer.toString( i ) );
-				log.info( "Produced messsage " + i );
+				log.info( "Produced message " + i );
 			}
 			log.info( "Putting kill command to kill consumer" );
 			messages.put( Command.KILL.toString() );

@@ -19,8 +19,8 @@ public class ConsumerProducerTest {
 		Producer p = new Producer( messages );
 		Consumer c = new Consumer( messages );
 		
-		Thread producerThread = new Thread( p );
-		Thread consumerThread = new Thread( c );
+		Thread producerThread = new Thread( p, "Producer" );
+		Thread consumerThread = new Thread( c, "Consumer" );
 		
 		producerThread.start();
 		consumerThread.start();
