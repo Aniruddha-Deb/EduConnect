@@ -1,0 +1,23 @@
+2017-04-06 17:41:32.687 [main] INFO  ConsumerProducerTest - Starting execution test
+2017-04-06 17:41:32.791 [Thread-1] INFO  Producer - Produced messsage 0
+2017-04-06 17:41:32.893 [Thread-1] INFO  Producer - Produced messsage 1
+2017-04-06 17:41:32.893 [Thread-2] INFO  Consumer - Consumed message 0
+2017-04-06 17:41:32.995 [Thread-1] INFO  Producer - Produced messsage 2
+2017-04-06 17:41:32.995 [Thread-2] INFO  Consumer - Consumed message 1
+2017-04-06 17:41:33.096 [Thread-1] INFO  Producer - Produced messsage 3
+2017-04-06 17:41:33.096 [Thread-2] INFO  Consumer - Consumed message 2
+2017-04-06 17:41:33.197 [Thread-1] INFO  Producer - Produced messsage 4
+2017-04-06 17:41:33.197 [Thread-2] INFO  Consumer - Consumed message 3
+2017-04-06 17:41:33.298 [Thread-2] INFO  Consumer - Consumed message 4
+2017-04-06 17:41:33.298 [Thread-1] INFO  Producer - Produced messsage 5
+2017-04-06 17:41:33.399 [Thread-1] INFO  Producer - Produced messsage 6
+2017-04-06 17:41:33.399 [Thread-2] INFO  Consumer - Consumed message 5
+2017-04-06 17:41:33.505 [Thread-2] INFO  Consumer - Consumed message 6
+2017-04-06 17:41:33.505 [Thread-1] INFO  Producer - Produced messsage 7
+2017-04-06 17:41:33.606 [Thread-1] INFO  Producer - Produced messsage 8
+2017-04-06 17:41:33.606 [Thread-2] INFO  Consumer - Consumed message 7
+2017-04-06 17:41:33.707 [Thread-1] INFO  Producer - Produced messsage 9
+2017-04-06 17:41:33.707 [Thread-1] INFO  Producer - Putting kill command to kill consumer
+2017-04-06 17:41:33.708 [Thread-2] INFO  Consumer - Consumed message 8
+2017-04-06 17:41:33.808 [Thread-2] INFO  Consumer - Consumed message 9
+2017-04-06 17:41:33.808 [Thread-2] INFO  Consumer - Received kill command, stopping execution

@@ -2,6 +2,9 @@ package com.sensei.poc.multithreading;
 
 import java.util.concurrent.BlockingQueue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * This is a proof-of-concept example of the producer-consumer pattern using 
  * threads. This example uses a BlockingQueue to transfer messages between the 
@@ -13,6 +16,7 @@ import java.util.concurrent.BlockingQueue;
 public class Producer implements Runnable {
 
 	private BlockingQueue<String> messages = null;
+	private static final Logger log = LogManager.getLogger( Producer.class );
 	
 	public Producer( BlockingQueue<String> messages ) {
 		this.messages = messages;
@@ -24,13 +28,13 @@ public class Producer implements Runnable {
 			for( int i=0; i<10; i++ ) {
 				Thread.sleep( 100 );
 				messages.put( Integer.toString( i ) );
-				System.out.println( "Produced messsage " + i );
+				log.info( "Produced messsage " + i );
 			}
-			System.out.println( "Putting kill command to kill consumer" );
+			log.info( "Putting kill command to kill consumer" );
 			messages.put( Command.KILL.toString() );
 			
 		} catch( InterruptedException ex ) {
-			ex.printStackTrace();
+			log.error( "InterruptedException thrown", ex );
 		}
 	}
 }
