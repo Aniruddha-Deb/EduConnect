@@ -6,10 +6,10 @@ public class Drivers {
 	private int number     = -1;
 	private int diameter   = -1;
 	
-	public Drivers( int resistance, int number, int diameter ) {
-		this.resistance   = resistance;
-		this.number       = number;
-		this.diameter     = diameter;
+	public Drivers() {
+		this.resistance   = 24;
+		this.number       = 2;
+		this.diameter     = 35;
 	}
 	
 	public int getResistance() {
@@ -24,12 +24,27 @@ public class Drivers {
 		return diameter;
 	}
 	
+	public Drivers withResistance( int r ) {
+		this.resistance = r;
+		return this;
+	}
+	
+	public Drivers withNumber( int number ) {
+		this.number = number;
+		return this;
+	}
+	
+	public Drivers withDiameter( int diameter ) {
+		this.diameter = diameter;
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append( "Driver resistance  = " + resistance + "\n" );
+		builder.append( "Driver resistance  = " + resistance + " Ω\n" );
 		builder.append( "no. of drivers     = " + number     + "\n" );
-		builder.append( "diameter of driver = " + diameter   + "\n" ); 
+		builder.append( "diameter of driver = " + diameter   + " mm\n" ); 
 		
 		return builder.toString();
 	}

@@ -40,6 +40,16 @@ public abstract class Headphone<T extends Headphone> {
 		return powerSource;
 	}
 	
+	public T withManufacturer( HeadphoneManufacturer manufacturer ) {
+		this.manufacturer = manufacturer;
+		return (T)this;
+	}
+	
+	public T withModel( String model ) {
+		this.model = model;
+		return (T)this;
+	}
+	
 	public T withConnector( Connector c ) {
 		this.connector = c ;
 		return (T)this ;
@@ -48,6 +58,16 @@ public abstract class Headphone<T extends Headphone> {
 	public T withFrame( Frame f ) {
 		this.frame = f ;
 		return (T)this ;
+	}
+	
+	public T withDrivers( Drivers d ) {
+		this.drivers = d;
+		return (T)this;
+	}
+	
+	public T withPowerSource( PowerSource p ) {
+		this.powerSource = p;
+		return (T)this;
 	}
 	
 	@Override

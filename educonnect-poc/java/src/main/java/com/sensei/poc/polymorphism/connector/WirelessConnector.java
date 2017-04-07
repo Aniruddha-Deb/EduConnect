@@ -8,12 +8,26 @@ public class WirelessConnector extends Connector {
 	
 	private ConnectionProtocol protocol = null;
 	
-	public WirelessConnector( ConnectionProtocol protocol ) {
-		this.protocol = protocol;
+	public WirelessConnector() {
+		this.protocol = ConnectionProtocol.BLUETOOTH_BLE;
 	}
 	
 	public ConnectionProtocol getProtocol() {
 		return protocol;
+	}
+	
+	public WirelessConnector withConnector( ConnectionProtocol cp ) {
+		this.protocol = cp;
+		return this;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append( "Headphone is a wireless type\n" );
+		builder.append( "	connection protocol = " + protocol.toString().toLowerCase() + "\n" );
+		
+		return builder.toString();
 	}
 
 }

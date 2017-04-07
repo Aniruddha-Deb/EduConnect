@@ -8,11 +8,16 @@ public class Headband {
 	
 	private HeadbandMaterial material = null;
 	
-	public Headband( HeadbandMaterial material ) {
-		this.material = material;
+	public Headband() {
+		this.material = HeadbandMaterial.PLASTIC;
 	}
 	
 	public HeadbandMaterial getMaterial() {
 		return material;
+	}
+	
+	public Headband withMaterial( HeadbandMaterial m ) {
+		this.material = m;
+		return this;
 	}
 }

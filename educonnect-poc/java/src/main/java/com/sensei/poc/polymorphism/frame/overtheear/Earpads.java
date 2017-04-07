@@ -8,11 +8,16 @@ public class Earpads {
 	
 	private EarpadMaterial material = null;
 	
-	public Earpads( EarpadMaterial material ) {
-		this.material = material;
+	public Earpads() {
+		this.material = EarpadMaterial.FOAM;
 	}
 	
 	public EarpadMaterial getMaterial() {
 		return material;
+	}
+	
+	public Earpads withMaterial( EarpadMaterial e ) {
+		this.material = e;
+		return this;
 	}
 }
