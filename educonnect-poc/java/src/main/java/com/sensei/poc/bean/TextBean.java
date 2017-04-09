@@ -6,7 +6,6 @@ import com.sensei.poc.bean.payload.TextJSON;
 public class TextBean extends Bean{
 	
 	public TextBean( TextJSON payload ) {
-		super.header = BeanHeader.TEXT;
-		super.payload = payload;
+		super( BeanHeader.TEXT, payload );
 	}
 }

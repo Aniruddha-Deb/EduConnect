@@ -4,10 +4,23 @@ import com.sensei.poc.bean.header.BeanHeader;
 import com.sensei.poc.bean.payload.JSONPayload;
 import com.sensei.poc.json.JSONSerializer;
 
-public abstract class Bean {
+public class Bean {
 	
-	protected BeanHeader header = null;
-	protected JSONPayload payload = null;
+	private BeanHeader header = null;
+	private JSONPayload payload = null;
+
+	public Bean( BeanHeader header, JSONPayload payload ) {
+		this.header = header;
+		this.payload = payload;
+	}
+	
+	public BeanHeader getHeader() {
+		return header;
+	}
+	
+	public JSONPayload getPayload() {
+		return payload;
+	}
 	
 	@Override
 	public String toString() {

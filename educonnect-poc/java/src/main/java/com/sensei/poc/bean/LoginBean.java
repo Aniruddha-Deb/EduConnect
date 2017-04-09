@@ -6,7 +6,6 @@ import com.sensei.poc.bean.payload.LoginJSON;
 public class LoginBean extends Bean {
 	
 	public LoginBean( LoginJSON payload ) {
-		super.header = BeanHeader.LOGIN;
-		super.payload = payload;
+		super( BeanHeader.LOGIN, payload );
 	}
 }
