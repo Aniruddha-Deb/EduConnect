@@ -1,0 +1,21 @@
+<bean> ::= <header> <JSON payload>
+
+	<header> ::= "HEADER=" <header types>
+
+		<header types> ::= "LOGIN" | "AUTH" | "NACK" | "TEXT" | "FILE" 
+
+	<JSON payload> ::= <login JSON> | <auth JSON> | <NACK JSON> | <text JSON> | <file JSON>
+
+		<login JSON> ::= "CLASS   : " int
+						 "SECTION : " char
+						 "ROLLNO  : " int
+
+		<auth JSON> ::= "EMAIL : " String
+						"PASSWD : " String
+
+		<NACK JSON> ::= "!"
+
+		<text JSON> ::= "NAME : " String
+						"TEXT : " String
+
+		<file JSON> ::= "FILE : " String
