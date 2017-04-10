@@ -5,7 +5,7 @@ import com.sensei.poc.bean.payload.TextJSON;
 
 public class TextBean extends Bean{
 	
-	public TextBean( TextJSON payload ) {
-		super( BeanHeader.TEXT, payload );
+	public TextBean( String sender, String text ) {
+		super( BeanHeader.TEXT, new TextJSON( sender, text ) );
 	}
 }

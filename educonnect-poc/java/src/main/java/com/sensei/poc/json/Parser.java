@@ -3,6 +3,7 @@ package com.sensei.poc.json;
 import com.google.gson.Gson;
 import com.sensei.poc.bean.Bean;
 import com.sensei.poc.bean.header.BeanHeader;
+import com.sensei.poc.bean.payload.FileJSON;
 import com.sensei.poc.bean.payload.JSONPayload;
 import com.sensei.poc.bean.payload.LoginJSON;
 import com.sensei.poc.bean.payload.TextJSON;
@@ -31,6 +32,7 @@ public class Parser {
 			
 			case "TEXT"  : return BeanHeader.TEXT;
 			case "LOGIN" : return BeanHeader.LOGIN;
+			case "FILE"  : return BeanHeader.FILE;
 
 			default: throw new IllegalArgumentException( "Undefined bean header used" );
 		}
@@ -46,6 +48,7 @@ public class Parser {
 		
 			case LOGIN : return gson.fromJson( jsonString, LoginJSON.class );
 			case TEXT  : return gson.fromJson( jsonString, TextJSON.class );
+			case FILE  : return gson.fromJson( jsonString, FileJSON.class );
 			
 			default: return gson.fromJson( jsonString, Bean.class );
 		}

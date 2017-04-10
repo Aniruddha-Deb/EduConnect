@@ -5,7 +5,7 @@ import com.sensei.poc.bean.payload.LoginJSON;
 
 public class LoginBean extends Bean {
 	
-	public LoginBean( LoginJSON payload ) {
-		super( BeanHeader.LOGIN, payload );
+	public LoginBean( int grade, char section, int rollNo ) {
+		super( BeanHeader.LOGIN, new LoginJSON( grade, section, rollNo ) );
 	}
 }
