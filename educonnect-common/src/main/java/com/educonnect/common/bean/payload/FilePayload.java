@@ -52,10 +52,10 @@ public class FilePayload extends Payload {
 		return bytes;
 	}
 
-	public File getFile() {
+	public File unloadFile( String path ) {
 		File file = null;
 		try {
-			file = File.createTempFile( "payload", ".file" );
+			file = new File( path );
 			OutputStream os = Files.newOutputStream( Paths.get( file.getAbsolutePath() ) );
 			byte[] decoded = Base64.getDecoder().decode( base64EncodedFile );
 			os.write( decoded );
