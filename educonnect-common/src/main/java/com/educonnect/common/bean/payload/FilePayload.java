@@ -8,10 +8,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
 
+/**
+ * A FilePayload is a concrete implementation of a {@link Payload}. It contains 
+ * a file which is to be sent over the network in the form of a base64 string.   
+ * However, this encoding logic is encapsulated from programmers and they are 
+ * only supposed to call {@link FilePayload#unloadFile(String)} to retrieve the 
+ * encoded file. 
+ * 
+ * @author Sensei
+ * 
+ */
 public class FilePayload extends Payload {
 	
 	private String base64EncodedFile = null;
 	
+	/**
+	 * The standard constructor for creating a FilePayload
+	 * @param filepath The absolute path of the file to be placed in the payload.
+	 */
 	public FilePayload( String filepath ) {
 		byte[] loadedFile = null;
 		
