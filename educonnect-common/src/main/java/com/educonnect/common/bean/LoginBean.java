@@ -22,5 +22,5 @@ public class LoginBean extends Bean {
 	 */
 	public LoginBean( int grade, char section, int rollNo ) {
 		super( Header.LOGIN, new LoginPayload( grade, section, rollNo ) );
-	}
+	}	
 }

@@ -78,4 +78,25 @@ public class FilePayload extends Payload {
 		}
 		return file;
 	}
+	
+	public String getBase64EncodedFile() {
+		return base64EncodedFile;
+	}
+
+	@Override
+	public boolean equals( Object obj ) {
+		
+		if( obj instanceof FilePayload && obj.hashCode() == this.hashCode() ) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		int base64FileHash = base64EncodedFile == null ? 5 : base64EncodedFile.hashCode(); 
+				
+		return base64FileHash;
+	}
 }

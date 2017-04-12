@@ -21,18 +21,18 @@ public class BeanTests {
 
 	private static final Logger log = LogManager.getLogger( BeanTests.class );
 	
-	private static final int  CLASS   = 9;
-	private static final char SECTION = 'D';
-	private static final int  ROLLNO  = 11;
+	public static final int  CLASS   = 9;
+	public static final char SECTION = 'D';
+	public static final int  ROLLNO  = 11;
 	
-	private static final String EMAIL_ID = "aniruddha.deb.2002@gmail.com";
-	private static final String PASSWORD = "notrealpasswd";
+	public static final String EMAIL_ID = "aniruddha.deb.2002@gmail.com";
+	public static final String PASSWORD = "notrealpasswd";
 	
-	private static final String SENDER = "Aniruddha Deb";
-	private static final String TEXT   = "Test!";
+	public static final String SENDER = "Aniruddha Deb";
+	public static final String TEXT   = "Test!";
 	
-	private static final String IN_FILE_PATH  = "src/test/resources/filetest.png";
-	private static final String OUT_FILE_PATH = "src/test/resources/out.png";
+	public static final String IN_FILE_PATH  = "src/test/resources/filetest.png";
+	public static final String OUT_FILE_PATH = "src/test/resources/out.png";
 	
 	@Test
 	public void loginBeanTest() {

@@ -28,4 +28,22 @@ public class AuthPayload extends Payload {
 	public String getPasswd() {
 		return passwd;
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		if( obj instanceof AuthPayload && obj.hashCode() == this.hashCode() ) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		int emailHash  = emailId == null ? 2 : emailId.hashCode();
+		int passwdHash = passwd  == null ? 3 : passwd.hashCode();
+		
+		return emailHash + passwdHash;
+	}
+
 }

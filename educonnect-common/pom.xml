@@ -6,6 +6,11 @@
   <name>educonnect-common</name>
   <description>common logic for the EduConnect client-server application</description>
   
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

@@ -29,4 +29,22 @@ public class TextPayload extends Payload {
 	public String getText() {
 		return text;
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+
+		if( obj instanceof TextPayload && obj.hashCode() == this.hashCode() ) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+
+		int senderHash = sender == null ? 17 : sender.hashCode();
+		int textHash   = text   == null ? 19 : text.hashCode();
+		
+		return senderHash + textHash;
+	}
 }

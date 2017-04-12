@@ -36,4 +36,23 @@ public class LoginPayload extends Payload {
 	public int getRollNo() {
 		return rollNo;
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+
+		if( obj instanceof LoginPayload && obj.hashCode() == this.hashCode() ) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		int gradeHash   = grade   == -1  ? 7  : new Integer( grade ).hashCode();
+		int sectionHash = section == 'Z' ? 11 : new Character( section ).hashCode();
+		int rollNoHash  = rollNo  == -1  ? 13 : new Integer( rollNo ).hashCode();
+		
+		return gradeHash + sectionHash + rollNoHash;
+	}
 }
