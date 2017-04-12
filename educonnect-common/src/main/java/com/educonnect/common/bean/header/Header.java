@@ -41,6 +41,12 @@ public enum Header {
 	 * @see FileBean
 	 * @see FilePayload
 	 */
-	FILE;
-
+	FILE,
+	
+	/**
+	 * Used to indicate a payload containing a shutdown request
+	 * @see ShutdownBean
+	 * @see ShutdownPayload
+	 */
+	SHUTDOWN,	
 }

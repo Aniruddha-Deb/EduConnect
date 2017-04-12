@@ -5,4 +5,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>educonnect-client-desktop</name>
   <description>Desktop client for the educonnect chat application</description>
+  
+  <dependencies>
+    <dependency>
+        <groupId>educonnect-common</groupId>
+        <artifactId>educonnect-common</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>
