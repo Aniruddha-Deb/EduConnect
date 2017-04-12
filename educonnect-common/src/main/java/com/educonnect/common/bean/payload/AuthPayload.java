@@ -31,7 +31,9 @@ public class AuthPayload extends Payload {
 	
 	@Override
 	public boolean equals( Object obj ) {
-		if( obj instanceof AuthPayload && obj.hashCode() == this.hashCode() ) {
+		if( obj == this ) return true;
+		if( obj == null ) return false;
+		if( obj.getClass() == this.getClass() && obj.hashCode() == this.hashCode() ) {
 			return true;
 		}
 		return false;
