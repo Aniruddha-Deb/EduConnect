@@ -41,10 +41,12 @@ public class DummyServer {
 				
 				if( lPayload.getGrade() != 9 ) {
 					writer.write( Serializer.serialize( new FailBean( "Class currently not supported" ) ) );
+					writer.flush();
 					continue;
 				}
 				if( lPayload.getSection() != 'D' ) {
 					writer.write( Serializer.serialize( new FailBean( "Division currently not supported" ) ) );
+					writer.flush();
 					continue;
 				}
 				
@@ -52,6 +54,7 @@ public class DummyServer {
 				String user = DummyClientDB.getName( lPayload.getRollNo() );
 				if( user == null ) {
 					writer.write( Serializer.serialize( new FailBean( "You are not registered in the system" ) ) );					
+					writer.flush();
 					continue;
 				}
 				
@@ -60,6 +63,7 @@ public class DummyServer {
 			}
 			else {
 				writer.write( Serializer.serialize( new FailBean( "Bad login request" ) ) );									
+				writer.flush();
 			}
 		}
 	}

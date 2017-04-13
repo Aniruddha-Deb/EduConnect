@@ -29,8 +29,6 @@ public class SecureSocketReceiver implements Receiver {
 	
 	@Override
 	public void run() {
-
-		
 		
 		Payload p;
 		try {		
@@ -40,9 +38,7 @@ public class SecureSocketReceiver implements Receiver {
 			while( !( p instanceof ShutdownPayload ) ) {
 				adapter.receive( p );
 				s = reader.readLine();
-				if( !s.equals( "" ) ) {
-					p = Parser.parse( s );
-				}
+				p = Parser.parse( s );
 			}
 			System.out.println( "Closing" );
 			sslSocket.close();

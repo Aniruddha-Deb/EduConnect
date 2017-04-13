@@ -37,7 +37,7 @@ public class DummyClientModel {
 	}
 	
 	public void send( String s ) {
-		System.out.print( "Sending to" + name + ", " + s );		
+		System.out.println( "Sending to" + name + ", " + s );		
 		try {
 			writer.write( s + "\n" );
 			writer.flush();
@@ -48,9 +48,9 @@ public class DummyClientModel {
 
 	public void send( Bean b ) {
 		String s = Serializer.serialize( b );
-		System.out.print( "Sending " + s );
+		System.out.println( "Sending " + s );
 		try {
-			writer.write( s + "\n" );
+			writer.write( s );
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -60,5 +60,9 @@ public class DummyClientModel {
 
 	public void receive( String s ) {
 		DummyServerClientHandler.broadcast( s, this );
+	}
+	
+	public void shutDown() {
+		DummyServerClientHandler.remove( this );
 	}
 }

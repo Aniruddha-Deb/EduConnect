@@ -23,16 +23,17 @@ public class DummyClientReceiver implements Runnable{
 		Payload p = null;
 		try {
 			String s = reader.readLine();
-			if( s != null ) {
-				p = Parser.parse( s );
-			}
+			System.out.println( s );
+			p = Parser.parse( s );
 			
 			while( !( p instanceof ShutdownPayload ) ) {
 				cModel.receive( s );
 				s = reader.readLine();
 				p = Parser.parse( s );
 			}
+			
 			reader.close();
+			cModel.shutDown();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

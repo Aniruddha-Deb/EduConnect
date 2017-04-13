@@ -17,10 +17,19 @@ public class DummyServerClientHandler {
 		System.out.println( "Sending " + s + " On request of " + sender.getName() );
 		for( DummyClientModel c : clients ) {
 			if( !c.equals( sender ) ) {
+				System.out.println( "Test " + s );
 				c.send( s );
 			}
 		}
 		sender.send( new InfoBean( "Sent to all" ) );
 	}
 
+	public static void remove( DummyClientModel requester ) {
+		for( DummyClientModel c : clients ) {
+			if( c.equals( requester ) ) {
+				clients.remove( requester );
+				break;
+			}
+		}
+	}
 }

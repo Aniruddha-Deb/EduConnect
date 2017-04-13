@@ -11,9 +11,7 @@ import com.educonnect.client.network.receiver.SecureSocketReceiver;
 import com.educonnect.client.network.sender.SecureSocketSender;
 import com.educonnect.common.bean.Bean;
 import com.educonnect.common.bean.ShutdownBean;
-import com.educonnect.common.bean.header.Header;
 import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.serializer.Serializer;
 
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
