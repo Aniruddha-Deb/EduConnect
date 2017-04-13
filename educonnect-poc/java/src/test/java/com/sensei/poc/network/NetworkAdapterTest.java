@@ -8,6 +8,9 @@ public class NetworkAdapterTest {
 
 		SecureSocketNetworkAdapter adapter = new SecureSocketNetworkAdapter( "127.0.0.1", 1132 );
 		adapter.send( new LoginBean( 9, 'D', 11 ) );
+		adapter.send( new LoginBean( 9, 'D', 11 ) );
+		adapter.send( new LoginBean( 9, 'D', 11 ) );
+		adapter.send( new LoginBean( 9, 'D', 11 ) );
 		adapter.shutdown();
 	}
 
