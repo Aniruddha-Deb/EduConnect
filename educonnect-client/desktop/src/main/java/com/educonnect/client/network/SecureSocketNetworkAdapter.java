@@ -69,12 +69,22 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	public void receive( Payload p ) {
 		try {
 			receivedPayload.put( p );
-			System.out.println( Serializer.serialize( new Bean( Header.FILE, p ) ) );
+			// just for now
+			DummyClient.updateUI( p );
 		} catch ( InterruptedException e ) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public Payload get() {
+		try {
+			return receivedPayload.take();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@Override
 	public void shutdown() {
 		try {
@@ -84,7 +94,4 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		}
 	}
 	
-	public BlockingQueue<Payload> getReceivedPayload() {
-		return receivedPayload;
-	}
 }

@@ -1,7 +1,9 @@
 package com.educonnect.common.parser;
 
 import com.educonnect.common.bean.payload.AuthPayload;
+import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
+import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.LoginPayload;
 import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.bean.payload.ShutdownPayload;
@@ -95,6 +97,12 @@ public class Parser {
 			break;
 			
 			case "AUTH"  : payloadInstance = AuthPayload.class;
+			break;
+			
+			case "FAIL"  : payloadInstance = FailPayload.class;
+			break;
+			
+			case "INFO"  : payloadInstance = InfoPayload.class;
 			break;
 			
 			case "SHUTDOWN"  : payloadInstance = ShutdownPayload.class;

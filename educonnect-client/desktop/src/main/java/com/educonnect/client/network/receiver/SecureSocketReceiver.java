@@ -14,10 +14,12 @@ import com.educonnect.common.parser.Parser;
 public class SecureSocketReceiver implements Receiver {
 
 	private BufferedReader reader = null;
+	private SSLSocket sslSocket = null;
 	private SecureSocketNetworkAdapter adapter = null;
 	
 	public SecureSocketReceiver( SSLSocket sslSocket, SecureSocketNetworkAdapter adapter ) {
 		this.adapter = adapter;
+		this.sslSocket = sslSocket;
 		try {
 			this.reader = new BufferedReader( new InputStreamReader( sslSocket.getInputStream() ) );
 		} catch ( IOException e ) {
@@ -28,17 +30,23 @@ public class SecureSocketReceiver implements Receiver {
 	@Override
 	public void run() {
 
+		
+		
 		Payload p;
-		try {
+		try {		
 			String s = reader.readLine();
 			p = Parser.parse( s );
 			
 			while( !( p instanceof ShutdownPayload ) ) {
 				adapter.receive( p );
 				s = reader.readLine();
-				p = Parser.parse( s );
+				if( !s.equals( "" ) ) {
+					p = Parser.parse( s );
+				}
 			}
-			
+			System.out.println( "Closing" );
+			sslSocket.close();
+			reader.close();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

@@ -48,5 +48,20 @@ public enum Header {
 	 * @see ShutdownBean
 	 * @see ShutdownPayload
 	 */
-	SHUTDOWN,	
+	SHUTDOWN,
+	
+	/**
+	 * Used to indicate a payload containing a failure
+	 * @see FailBean
+	 * @see FailPayload
+	 */
+	FAIL,	
+
+	/**
+	 * Used to indicate a payload containing information
+	 * @see InfoBean
+	 * @see InfoPayload
+	 */
+	INFO;	
+
 }

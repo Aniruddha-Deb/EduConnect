@@ -1,30 +1,66 @@
 package com.educonnect.client.network;
 
-import static com.educonnect.common.bean.BeanTests.CLASS;
-import static com.educonnect.common.bean.BeanTests.EMAIL_ID;
-import static com.educonnect.common.bean.BeanTests.IN_FILE_PATH;
-import static com.educonnect.common.bean.BeanTests.PASSWORD;
-import static com.educonnect.common.bean.BeanTests.ROLLNO;
-import static com.educonnect.common.bean.BeanTests.SECTION;
-import static com.educonnect.common.bean.BeanTests.SENDER;
-import static com.educonnect.common.bean.BeanTests.TEXT;
+import java.util.Scanner;
 
-import com.educonnect.common.bean.AuthBean;
-import com.educonnect.common.bean.FileBean;
 import com.educonnect.common.bean.LoginBean;
 import com.educonnect.common.bean.TextBean;
+import com.educonnect.common.bean.payload.InfoPayload;
+import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.bean.payload.TextPayload;
 
 public class DummyClient {
 
-	public static void main(String[] args) throws InterruptedException{
+	private static Scanner sc = new Scanner( System.in );
+	
+	public static void main( String[] args ) throws InterruptedException{
 		SecureSocketNetworkAdapter adapter = new SecureSocketNetworkAdapter( "127.0.0.1", 1132 );
-		adapter.send( new LoginBean( CLASS, SECTION, ROLLNO ) );
-		adapter.send( new AuthBean( EMAIL_ID, PASSWORD ) );
-		adapter.send( new TextBean( SENDER, TEXT ) );
-		adapter.send( new FileBean( IN_FILE_PATH ) );
+		String s ;
+
+		int grade = getGrade();
+		char section = getSection();
+		int rollNo = getRollNo();
 		
-		System.out.println( "Done" );
+		adapter.send( new LoginBean( grade, section, rollNo ) );
+		InfoPayload p = (InfoPayload)adapter.get();
+		String name = p.getInfo();
+		
+		System.out.println( "EduConnect v.0.1 pre-alpha" );
+		System.out.println( "Logged in as " + name );
+		System.out.println( "Press q to quit" );
+		System.out.println( "---------------------------------" );
+		System.out.print( "> " );
+		
+		s = sc.nextLine();
+		while( !(s.equals( "q" )) ) {
+			adapter.send( new TextBean( name, s ) );
+			s = sc.nextLine();
+		}
+		
 		adapter.shutdown();
 		System.out.println( "Shutdown" );
+		sc.close();
+	}
+
+	private static int getRollNo() {
+		System.out.print( "Roll no: " );
+		return sc.nextInt();
+	}
+
+	private static char getSection() {
+		System.out.print( "Section: " );
+		return sc.next().toCharArray()[0];
+	}
+
+	private static int getGrade() {
+		System.out.print( "Class: " );
+		return sc.nextInt();
+	}
+	
+	public static void updateUI( Payload p ) {
+		try {
+			System.out.println( ((TextPayload) p).getSender() + "> " + ((TextPayload)p).getText() );
+		} catch( ClassCastException e ) {
+			// swallow
+		}
 	}
 }
