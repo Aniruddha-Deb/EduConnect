@@ -7,6 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import com.educonnect.client.engine.Engine;
 import com.educonnect.client.network.receiver.SecureSocketReceiver;
 import com.educonnect.client.network.sender.SecureSocketSender;
 import com.educonnect.common.bean.Bean;
@@ -26,7 +27,9 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	private SecureSocketSender sender     = null;
 	private SecureSocketReceiver receiver = null;
 	
-	public SecureSocketNetworkAdapter( String ipAddress, int port ) {
+	private Engine engine = null;
+	
+	public SecureSocketNetworkAdapter( String ipAddress, int port, Engine engine ) {
 		sslSocket = setUpSSLSocket( ipAddress, port );
 		
 		sentBeans = new LinkedBlockingQueue<>();
@@ -67,8 +70,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	public void receive( Payload p ) {
 		try {
 			receivedPayload.put( p );
-			// just for now
-			DummyClient.updateUI( p );
+			engine.updateUI( p );
 		} catch ( InterruptedException e ) {
 			e.printStackTrace();
 		}
