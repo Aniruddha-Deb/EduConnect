@@ -1,4 +1,4 @@
-package com.educonnect.client.ui.panels;
+package com.educonnect.admin.ui.panels;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -13,7 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.educonnect.client.ui.UIConstants;
+import com.educonnect.admin.ui.UIConstants;
 
 public class LoginPanel extends JPanel {
 

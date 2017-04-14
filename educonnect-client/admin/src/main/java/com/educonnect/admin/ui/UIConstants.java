@@ -1,4 +1,4 @@
-package com.educonnect.client.ui;
+package com.educonnect.admin.ui;
 
 import java.awt.Font;
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.educonnect.client.network;
+package com.educonnect.common.network;
 
 import com.educonnect.common.bean.Bean;
 import com.educonnect.common.bean.payload.Payload;

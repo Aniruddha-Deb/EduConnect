@@ -1,10 +1,10 @@
-package com.educonnect.client.ui;
+package com.educonnect.admin.ui;
 
 import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import com.educonnect.client.ui.panels.LoginPanel;
+import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.common.bean.payload.Payload;
 
 public class MainFrame extends JFrame {
@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame() {
 		super( "EduConnect" );
-		super.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		super.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
 		super.setSize( 500, 400 );
 		super.setLocationRelativeTo( null );
 		super.setBackground( new Color( 255, 255, 255 ) );

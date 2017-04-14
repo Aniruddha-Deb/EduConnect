@@ -1,4 +1,4 @@
-package com.educonnect.client.network.receiver;
+package com.educonnect.common.network.receiver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,9 +6,9 @@ import java.io.InputStreamReader;
 
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.client.network.SecureSocketNetworkAdapter;
 import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.bean.payload.ShutdownPayload;
+import com.educonnect.common.network.SecureSocketNetworkAdapter;
 import com.educonnect.common.parser.Parser;
 
 public class SecureSocketReceiver implements Receiver {
