@@ -7,7 +7,6 @@ import com.educonnect.common.bean.payload.ShutdownPayload;
 import com.educonnect.common.parser.Parser;
 
 public class DummyClientReceiver implements Runnable{
-
 	
 	private DummyClientModel cModel = null;
 	private BufferedReader reader = null;

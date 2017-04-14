@@ -21,7 +21,6 @@ public class UIConstants {
 			pathName = "src/main/resources/fonts/ubuntu.ttf";
 		}
 
-		pathName = "src/main/resources/fonts/mac.ttf";
 		if( pathName == null ) {
 			FONT = new Font( "Helvetica", Font.PLAIN, 10 );
 		}
