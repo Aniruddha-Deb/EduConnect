@@ -3,6 +3,8 @@ package com.educonnect.admin.ui.panels;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -13,9 +15,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
 
-public class LoginPanel extends JPanel {
+public class LoginPanel extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 8803272978255150804L;
 	
@@ -26,14 +29,25 @@ public class LoginPanel extends JPanel {
 	private JLabel         passwordPromptLabel = null;
 	private JLabel         emailIdPromptLabel  = null;
 	
+	private GridBagConstraints c = null;
+	
 	public LoginPanel() {
 		super();
 		super.setBackground( Color.WHITE );
 		super.setLayout( new GridBagLayout() );
 		super.setBorder( new EmptyBorder( 75, 75, 75, 75 ) );
 		
-		GridBagConstraints c = new GridBagConstraints();
-		
+		createLoginLabel();
+		createEmailIdPromptLabel();
+		createEmailIdField();
+		createVerticalStrut();
+		createPasswordPromptLabel();
+		createPasswordField();
+		createLoginButton();
+	}
+
+	private void createLoginLabel() {
+		c = new GridBagConstraints();
 		loginLabel = new JLabel( "Login: " );
 		loginLabel.setFont( UIConstants.FONT.deriveFont( 40f ) );
 		c.gridx = 0;
@@ -41,8 +55,10 @@ public class LoginPanel extends JPanel {
 		c.gridwidth = 2;
 		c.weighty = 0.5;
 		c.anchor = GridBagConstraints.NORTHWEST;
-		super.add( loginLabel, c );
+		super.add( loginLabel, c );		
+	}
 		
+	private void createEmailIdPromptLabel() {
 		c = new GridBagConstraints();
 		emailIdPromptLabel = new JLabel( "Email id: " );
 		emailIdPromptLabel.setFont( UIConstants.FONT.deriveFont( 20f ) );
@@ -50,24 +66,36 @@ public class LoginPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 0;
 		c.anchor = GridBagConstraints.WEST;
-		super.add( emailIdPromptLabel, c );
-
+		super.add( emailIdPromptLabel, c );		
+	}
+	
+	private void createEmailIdField() {
 		c = new GridBagConstraints();
-		emailIdField = new JTextField(50);
-		emailIdField.setFont( UIConstants.FONT.deriveFont( 15f ) );
-		emailIdField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
+		if( MainFrame.isSerialized( "emailIdField" ) ) {
+			emailIdField = (JTextField)MainFrame.deserialize( "emailIdField" );
+		}
+		else {
+			emailIdField = new JTextField();
+			emailIdField.setFont( UIConstants.FONT.deriveFont( 15f ) );
+			emailIdField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
+		}
 		c.gridx = 1;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.fill = GridBagConstraints.BOTH;
 		super.add( emailIdField, c );
-
+	}
+	
+	private void createVerticalStrut() {
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 2;
 		super.add( Box.createVerticalStrut( 10 ), c );
-		
+
+	}
+	
+	private void createPasswordPromptLabel() {
 		c = new GridBagConstraints();
 		passwordPromptLabel = new JLabel( "Password: " );
 		passwordPromptLabel.setFont( UIConstants.FONT.deriveFont( 20f ) );
@@ -76,7 +104,9 @@ public class LoginPanel extends JPanel {
 		c.weightx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		super.add( passwordPromptLabel, c );
-
+	}
+	
+	private void createPasswordField() {
 		c = new GridBagConstraints();
 		passwordField = new JPasswordField();
 		passwordField.setEchoChar( '•' );
@@ -87,9 +117,12 @@ public class LoginPanel extends JPanel {
 		c.weightx = 1;
 		c.fill = GridBagConstraints.BOTH;
 		super.add( passwordField, c );
-		
+	}
+	
+	private void createLoginButton() {
 		c = new GridBagConstraints();
 		loginButton = new JButton( "Log in" );
+		loginButton.addActionListener( this );
 		loginButton.setFont( UIConstants.FONT.deriveFont( 20f ) );
 		c.gridx = 0;
 		c.gridy = 4;
@@ -100,5 +133,9 @@ public class LoginPanel extends JPanel {
 		c.anchor = GridBagConstraints.SOUTH;
 		super.add( loginButton, c );
 	}
-	
+
+	@Override
+	public void actionPerformed( ActionEvent e ) {
+		MainFrame.serialize( emailIdField, "emailIdField" );
+	}
 }

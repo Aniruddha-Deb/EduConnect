@@ -76,7 +76,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	public void receive( Payload p ) {
 		try {
 			receivedPayload.put( p );
-			engine.updateUI( p );
+			engine.handle( p );
 		} catch ( InterruptedException e ) {
 			e.printStackTrace();
 		}

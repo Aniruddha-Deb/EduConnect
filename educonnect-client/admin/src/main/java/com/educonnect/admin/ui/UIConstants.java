@@ -15,7 +15,7 @@ public class UIConstants {
 			pathName = "src/main/resources/fonts/win.ttf";
 		}
 		else if( sysName.indexOf( "mac" ) >= 0 ) {
-			pathName = "src/main/resources/fonts/mac.otf";
+			pathName = "src/main/resources/fonts/mac.ttf";
 		}
 		else if( sysName.indexOf( "nix" ) >= 0 ) {
 			pathName = "src/main/resources/fonts/ubuntu.ttf";

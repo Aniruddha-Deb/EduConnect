@@ -4,7 +4,7 @@ import com.educonnect.common.bean.payload.Payload;
 
 public abstract class Engine {
 	
-	public abstract void updateUI( Payload p );
+	public abstract void handle( Payload p );
 	
 	public abstract void start();
 	
