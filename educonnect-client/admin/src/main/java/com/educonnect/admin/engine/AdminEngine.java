@@ -40,7 +40,7 @@ public class AdminEngine extends Engine{
 		}
 		else if( p instanceof InfoPayload ) {
 			Constants.userName = ((InfoPayload) p).getInfo();
-			mainFrame.showNextPanel();
+			mainFrame.alert( "Hiiiiii" );
 		}
 	}
 	
@@ -57,9 +57,25 @@ public class AdminEngine extends Engine{
 	
 	@Override
 	public void start() {
+		mainFrame.display();
 	}
 
 	@Override
 	public void shutdown() {
+		adapter.shutdown();
+		while( adapter.getReceiverThread().isAlive() ) {
+			try {
+				Thread.sleep( 10 );
+			} catch ( InterruptedException e ) {
+				e.printStackTrace();
+			}
+		}
+		mainFrame.setVisible( false );
+		mainFrame.dispose();
+		System.exit( 0 );
+	}
+	
+	public static void main(String[] args) {
+		new AdminEngine().start();
 	}
 }

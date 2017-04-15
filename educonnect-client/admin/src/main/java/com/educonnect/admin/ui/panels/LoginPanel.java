@@ -16,10 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.educonnect.admin.engine.AdminEngine;
-import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.admin.ui.util.UIUtils;
-import com.educonnect.common.bean.LoginBean;
 import com.educonnect.common.client.ClientType;
 
 public class LoginPanel extends JPanel implements ActionListener{
@@ -144,6 +142,5 @@ public class LoginPanel extends JPanel implements ActionListener{
 		AdminEngine.getInstance().sendLoginRequest( emailIdField.getText(), 
 													   new String( passwordField.getPassword() ), 
 													   ClientType.ADMIN );
-		MainFrame.getInstance().showNextPanel();
 	}
 }

@@ -19,7 +19,7 @@ import com.educonnect.common.serializer.Serializer;
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
 	private static final String TRUSTSTORE_PASSWD = "public";
-	private static final String TRUSTSTORE_LOC    = "src/main/resources/client.truststore";	
+	private static final String TRUSTSTORE_LOC    = "/Users/Sensei/Projects/Educonnect/educonnect-client/desktop/src/main/resources/client.truststore";	
 	
 	private BlockingQueue<Payload> receivedPayload = null;
 	
@@ -28,11 +28,13 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	private BufferedWriter writer = null;
 	
 	private SecureSocketReceiver receiver = null;
+	private Thread receiverThread = null;
 	
 	private Engine engine = null;
 	
 	public SecureSocketNetworkAdapter( String ipAddress, int port, Engine engine ) {
 		sslSocket = setUpSSLSocket( ipAddress, port );
+		this.engine = engine;
 		
 		receivedPayload = new LinkedBlockingQueue<>();
 		
@@ -43,7 +45,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		}
 		receiver = new SecureSocketReceiver( sslSocket, this );
 		
-		new Thread( receiver, "Receiver" ).start();
+		receiverThread = new Thread( receiver, "Receiver" );
+		receiverThread.start();
 	}
 	
 	private SSLSocket setUpSSLSocket( String ipAddress, int port ) {
@@ -59,6 +62,10 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		}
 		
 		return socket;
+	}
+	
+	public Thread getReceiverThread() {
+		return receiverThread;
 	}
 
 	@Override

@@ -2,14 +2,17 @@ package com.educonnect.admin.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.admin.ui.panels.MainPanel;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements WindowListener{
 
 	private static final long serialVersionUID = 2981649205219251588L;
 	
@@ -24,6 +27,7 @@ public class MainFrame extends JFrame {
 		super( "EduConnect admin" );
 		super.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		super.setSize( 500, 400 );
+		super.addWindowListener( this );
 		super.setLocationRelativeTo( null );
 		super.setBackground( new Color( 255, 255, 255 ) );
 	
@@ -60,5 +64,45 @@ public class MainFrame extends JFrame {
 	
 	public void showFirstPanel() {
 		c.first( mainPanel );
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		AdminEngine.getInstance().shutdown();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

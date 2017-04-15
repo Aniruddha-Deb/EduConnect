@@ -9,6 +9,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.ShutdownBean;
 import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.bean.payload.ShutdownPayload;
@@ -19,8 +20,8 @@ public class SSLServer {
 
 	
 	public static final int    SERVER_PORT_NO    = 1132;
-	public static final String KEYSTORE_PASSWD = "EduConnect";
-	public static final String KEYSTORE_LOC    = "src/main/resources/keystore.server";
+	public static final String KEYSTORE_PASSWD = "nlcy9408";
+	public static final String KEYSTORE_LOC    = "/Users/Sensei/Projects/EduConnect/educonnect-server/src/main/resources/server.keystore";
 
 	public static void main( String[] args ) throws Exception {
 
@@ -34,9 +35,11 @@ public class SSLServer {
 		BufferedReader br = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
 		BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream() ) );
 		String s = null;
+		
 		while( (s=br.readLine()) != null ) {
 			Payload p = Parser.parse( s );
-			System.out.println( s );
+			writer.write( Serializer.serialize( new InfoBean( "looo" ) ) );
+			writer.flush();
 			if( p instanceof ShutdownPayload ) {
 				System.out.println( "Shutting down" ); 
 				writer.write( Serializer.serialize( new ShutdownBean() ) );
