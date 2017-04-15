@@ -33,22 +33,24 @@ public class AdminEngine extends Engine{
 		return instance;
 	}
 	
-	public void sendLoginRequest( String emailId, String password, ClientType clientType ) {
-		adapter.send( new LoginBean( emailId, password, clientType ) );
+	public void sendLoginRequest( String emailId, String password ) {
+		adapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
 		Payload p = adapter.get();
 		if( p instanceof FailPayload ) {
 			mainFrame.alert( ((FailPayload) p).getCause() );
 		}
 		else if( p instanceof InfoPayload ) {
 			Constants.userName = ((InfoPayload) p).getInfo();
-			mainFrame.alert( "Hiiiiii" );
 		}
+		System.out.println( "Passed" );  
+		mainFrame.showEditPanel();
 	}
 	
 	@Override
 	public void handle( Payload p ) {
 		if( p instanceof FilePayload ) {
 			((FilePayload) p).unloadFile( Constants.XLSX_FILE_PATH );
+			System.out.println( "Unloaded file" );
 		}
 	}
 	

@@ -20,8 +20,8 @@ public class SSLServer {
 
 	
 	public static final int    SERVER_PORT_NO    = 1132;
-	public static final String KEYSTORE_PASSWD = "nlcy9408";
-	public static final String KEYSTORE_LOC    = "/Users/Sensei/Projects/EduConnect/educonnect-server/src/main/resources/server.keystore";
+	public static final String KEYSTORE_PASSWD = "EduConnect";
+	public static final String KEYSTORE_LOC    = "src/main/resources/keystore.server";
 
 	public static void main( String[] args ) throws Exception {
 

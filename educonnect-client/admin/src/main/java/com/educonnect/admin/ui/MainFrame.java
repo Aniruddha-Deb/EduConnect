@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.educonnect.admin.engine.AdminEngine;
+import com.educonnect.admin.ui.panels.EditPanel;
 import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.admin.ui.panels.MainPanel;
 
@@ -17,6 +18,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	private static final long serialVersionUID = 2981649205219251588L;
 	
 	private LoginPanel loginPanel = null;
+	private EditPanel editPanel = null;
 	private MainPanel  mainPanel  = null;
 	
 	private static MainFrame instance = null;
@@ -34,11 +36,13 @@ public class MainFrame extends JFrame implements WindowListener{
 		instance = this;
 		
 		mainPanel = new MainPanel();
+		editPanel = new EditPanel();
 		loginPanel = new LoginPanel();
 		
 		c = (CardLayout)mainPanel.getLayout();
 		
-		mainPanel.add( loginPanel );		
+		mainPanel.add( loginPanel, "loginPanel" );
+		mainPanel.add( editPanel, "editPanel" );
 		super.add( mainPanel );
 	}
 	
@@ -54,18 +58,10 @@ public class MainFrame extends JFrame implements WindowListener{
 		super.setVisible( true );
 	}
 	
-	public void showNextPanel() {
-		c.next( mainPanel );
+	public void showEditPanel() {
+		editPanel.load();
+		c.show( mainPanel, "editPanel" );
 	}
-	
-	public void showPreviousPanel() {
-		c.previous( mainPanel );
-	}
-	
-	public void showFirstPanel() {
-		c.first( mainPanel );
-	}
-
 	@Override
 	public void windowOpened(WindowEvent e) {}
 

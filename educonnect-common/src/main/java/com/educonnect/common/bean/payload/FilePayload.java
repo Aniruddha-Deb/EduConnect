@@ -70,6 +70,9 @@ public class FilePayload extends Payload {
 		File file = null;
 		try {
 			file = new File( path );
+			if( !file.exists() ) {
+				file.createNewFile();
+			}
 			OutputStream os = Files.newOutputStream( Paths.get( file.getAbsolutePath() ) );
 			byte[] decoded = Base64.getDecoder().decode( base64EncodedFile );
 			os.write( decoded );

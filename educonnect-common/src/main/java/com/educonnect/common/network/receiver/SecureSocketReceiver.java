@@ -45,7 +45,10 @@ public class SecureSocketReceiver implements Receiver {
 			while( !( p instanceof ShutdownPayload ) ) {
 				adapter.receive( p );
 				s = reader.readLine();
-				p = Parser.parse( s );
+				
+				if( !(s == null) ) {
+					p = Parser.parse( s );
+				}
 			}
 			System.out.println( "Closing" );
 			sslSocket.close();

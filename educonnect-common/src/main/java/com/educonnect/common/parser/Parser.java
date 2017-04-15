@@ -40,6 +40,8 @@ public class Parser {
 	 * the string 
 	 */
 	public static Payload parse( String receivedString ) {
+		if( receivedString == null ) return null;
+		
 		int splitIndex = receivedString.indexOf( ";" ) ;
 		parts = new String[2];
 		parts[0] = receivedString.substring( 0, splitIndex );

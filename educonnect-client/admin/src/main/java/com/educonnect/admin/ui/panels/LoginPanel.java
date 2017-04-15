@@ -18,7 +18,6 @@ import javax.swing.border.EmptyBorder;
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.admin.ui.util.UIUtils;
-import com.educonnect.common.client.ClientType;
 
 public class LoginPanel extends JPanel implements ActionListener{
 
@@ -78,9 +77,9 @@ public class LoginPanel extends JPanel implements ActionListener{
 		}
 		else {
 			emailIdField = new JTextField();
-			emailIdField.setFont( UIConstants.FONT.deriveFont( 15f ) );
 			emailIdField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
 		}
+		emailIdField.setFont( UIConstants.FONT.deriveFont( 15f ) );
 		c.gridx = 1;
 		c.gridy = 1;
 		c.weightx = 1;
@@ -140,7 +139,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	public void actionPerformed( ActionEvent e ) {
 		UIUtils.serialize( emailIdField, "emailIdField" );
 		AdminEngine.getInstance().sendLoginRequest( emailIdField.getText(), 
-													   new String( passwordField.getPassword() ), 
-													   ClientType.ADMIN );
+													   new String( passwordField.getPassword() ) 
+												  );
 	}
 }
