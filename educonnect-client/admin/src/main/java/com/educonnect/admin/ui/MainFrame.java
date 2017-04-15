@@ -2,11 +2,15 @@ package com.educonnect.admin.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Enumeration;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.EditPanel;
@@ -44,7 +48,22 @@ public class MainFrame extends JFrame implements WindowListener{
 		mainPanel.add( loginPanel, "loginPanel" );
 		mainPanel.add( editPanel, "editPanel" );
 		super.add( mainPanel );
+		
+		setUIFont( new FontUIResource( UIConstants.FONT.deriveFont( 12f ) ) );
 	}
+	
+    public static void setUIFont( FontUIResource f ) {
+        Enumeration<?> keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value instanceof FontUIResource) {
+                FontUIResource orig = (FontUIResource) value;
+                Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
+                UIManager.put(key, new FontUIResource(font));
+            }
+        }
+    }
 	
 	public void alert( String cause ) {
 		JOptionPane.showMessageDialog( this, cause, "EduConnect admin", JOptionPane.ERROR_MESSAGE );
