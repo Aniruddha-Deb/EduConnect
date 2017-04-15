@@ -17,9 +17,10 @@ public class LoginBean extends Bean {
 	/**
 	 * The standard constructor for creating a LoginBean
 	 * 
-	 * @param grade   The grade or class to which the student belongs
-	 * @param section The section of the student based on which he is segregated
-	 * @param rollNo  The roll number of the student in that section.
+	 * @param emailId    The eMail ID of the user logging in
+	 * @param password   The password of the user logging in
+	 * @param clientType The type of user logging in - Can either be an ADMIN or 
+	 * a STUDENT
 	 */
 	public LoginBean( String emailId, String password, ClientType clientType ) {
 		super( Header.LOGIN, new LoginPayload( emailId, password, clientType ) );

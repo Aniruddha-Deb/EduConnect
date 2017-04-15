@@ -4,7 +4,9 @@ import com.educonnect.common.client.ClientType;
 
 /**
  * A LoginPayload is a concrete implementation of a {@link Payload}. It contains 
- * all the required fields required for logging a user in.  
+ * all the required fields required for logging a user in and specifying what 
+ * kind of user is logging in.
+ *   
  * @author Sensei
  *
  */
@@ -13,12 +15,14 @@ public class LoginPayload extends Payload {
 	private String     emailId    = null;
 	private String     password   = null;
 	private ClientType clientType = null;
+
 	/**
-	 * The standard constructor for creating a LoginPayload 
+	 * The standard constructor for creating a LoginPayload
 	 * 
-	 * @param grade   The grade or class the student belongs to
-	 * @param section The section the student belongs to
-	 * @param rollNo  The roll number of the student in that class
+	 * @param emailId    The eMail id of the user
+	 * @param password   The password of the user 
+	 * @param clientType The type of user logging in - can either be an ADMIN or 
+	 * a STUDENT
 	 */
 	public LoginPayload( String emailId, String password, ClientType clientType ) {
 		this.emailId    = emailId;

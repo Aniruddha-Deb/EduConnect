@@ -7,17 +7,15 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.educonnect.common.bean.payload.AuthPayload;
-import com.educonnect.common.bean.payload.FilePayload;
-import com.educonnect.common.bean.payload.LoginPayload;
-import com.educonnect.common.bean.payload.TextPayload;
+import com.educonnect.common.bean.payload.*;
+import com.educonnect.common.client.ClientType;
 
 public class PayloadEqualsTests {
 
 	@Test
 	public void loginPayloadTest() {
 		
-		LoginPayload loginPayload = new LoginPayload( CLASS, SECTION, ROLLNO );
+		LoginPayload loginPayload = new LoginPayload( EMAIL_ID, PASSWORD, ClientType.STUDENT );
 		assertThat( loginPayload, equalTo( loginPayload ) );
 		
 		LoginPayload nullPayload = null;
@@ -28,7 +26,7 @@ public class PayloadEqualsTests {
 		assertThat( textPayload, not( equalTo( loginPayload ) ) );
 		assertThat( textPayload, equalTo( textPayload ) );
 
-		LoginPayload duplicateLoginPayload = new LoginPayload( CLASS, SECTION, ROLLNO );
+		LoginPayload duplicateLoginPayload = new LoginPayload( EMAIL_ID, PASSWORD, ClientType.STUDENT );
 		assertThat( duplicateLoginPayload, equalTo( loginPayload ) );
 		assertThat( loginPayload, equalTo( duplicateLoginPayload ) );
 	}
@@ -36,7 +34,7 @@ public class PayloadEqualsTests {
 	@Test
 	public void authPayloadTest() {
 		
-		AuthPayload authPayload = new AuthPayload( EMAIL_ID, PASSWORD );
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
 		assertThat( authPayload, equalTo( authPayload ) );
 		
 		AuthPayload nullPayload = null;
@@ -47,7 +45,7 @@ public class PayloadEqualsTests {
 		assertThat( textPayload, not( equalTo( authPayload ) ) );
 		assertThat( textPayload, equalTo( textPayload ) );
 
-		AuthPayload duplicateAuthPayload = new AuthPayload( EMAIL_ID, PASSWORD );
+		AuthPayload duplicateAuthPayload = new AuthPayload( AUTH_TOKEN );
 		assertThat( duplicateAuthPayload, equalTo( authPayload ) );
 		assertThat( authPayload, equalTo( duplicateAuthPayload ) );
 	}
@@ -62,7 +60,7 @@ public class PayloadEqualsTests {
 		assertThat( textPayload, not( equalTo( nullPayload ) ) );
 		assertThat( nullPayload, equalTo( nullPayload ) );
 		
-		AuthPayload authPayload = new AuthPayload( EMAIL_ID, PASSWORD );
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
 		assertThat( authPayload, not( equalTo( textPayload ) ) );
 		assertThat( authPayload, equalTo( authPayload ) );
 
@@ -88,5 +86,81 @@ public class PayloadEqualsTests {
 		FilePayload duplicateAuthPayload = new FilePayload( IN_FILE_PATH );
 		assertThat( duplicateAuthPayload, equalTo( filePayload ) );
 		assertThat( filePayload, equalTo( duplicateAuthPayload ) );
+	}
+	
+	@Test
+	public void failPayloadTest() {
+		
+		FailPayload failPayload = new FailPayload( FAIL_CAUSE );
+		assertThat( failPayload, equalTo( failPayload ) );
+		
+		FailPayload nullPayload = null;
+		assertThat( failPayload, not( equalTo( nullPayload ) ) );
+		assertThat( nullPayload, equalTo( nullPayload ) );
+		
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
+		assertThat( authPayload, not( equalTo( failPayload ) ) );
+		assertThat( authPayload, equalTo( authPayload ) );
+
+		FailPayload duplicateFailPayload = new FailPayload( FAIL_CAUSE );
+		assertThat( duplicateFailPayload, equalTo( failPayload ) );
+		assertThat( failPayload, equalTo( duplicateFailPayload ) );
+	}
+
+	@Test
+	public void infoPayloadTest() {
+		
+		InfoPayload infoPayload = new InfoPayload( INFO );
+		assertThat( infoPayload, equalTo( infoPayload ) );
+		
+		InfoPayload nullPayload = null;
+		assertThat( infoPayload, not( equalTo( nullPayload ) ) );
+		assertThat( nullPayload, equalTo( nullPayload ) );
+		
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
+		assertThat( authPayload, not( equalTo( infoPayload ) ) );
+		assertThat( authPayload, equalTo( authPayload ) );
+
+		InfoPayload duplicateInfoPayload = new InfoPayload( INFO );
+		assertThat( duplicateInfoPayload, equalTo( infoPayload ) );
+		assertThat( infoPayload, equalTo( duplicateInfoPayload ) );
+	}
+
+	@Test
+	public void registerPayloadTest() {
+		
+		RegisterPayload registerPayload = new RegisterPayload( CLASS, SECTION, ROLLNO, EMAIL_ID, PASSWORD );
+		assertThat( registerPayload, equalTo( registerPayload ) );
+		
+		RegisterPayload nullPayload = null;
+		assertThat( registerPayload, not( equalTo( nullPayload ) ) );
+		assertThat( nullPayload, equalTo( nullPayload ) );
+		
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
+		assertThat( authPayload, not( equalTo( registerPayload ) ) );
+		assertThat( authPayload, equalTo( authPayload ) );
+
+		RegisterPayload duplicateRegisterPayload = new RegisterPayload( CLASS, SECTION, ROLLNO, EMAIL_ID, PASSWORD );
+		assertThat( duplicateRegisterPayload, equalTo( registerPayload ) );
+		assertThat( registerPayload, equalTo( duplicateRegisterPayload ) );
+	}
+
+	@Test
+	public void shutdownPayloadTest() {
+		
+		ShutdownPayload shutdownPayload = new ShutdownPayload();
+		assertThat( shutdownPayload, equalTo( shutdownPayload ) );
+		
+		TextPayload nullPayload = null;
+		assertThat( shutdownPayload, not( equalTo( nullPayload ) ) );
+		assertThat( nullPayload, equalTo( nullPayload ) );
+		
+		AuthPayload authPayload = new AuthPayload( AUTH_TOKEN );
+		assertThat( authPayload, not( equalTo( shutdownPayload ) ) );
+		assertThat( authPayload, equalTo( authPayload ) );
+
+		ShutdownPayload duplicateShutdownPayload = new ShutdownPayload();
+		assertThat( duplicateShutdownPayload, equalTo( shutdownPayload ) );
+		assertThat( shutdownPayload, equalTo( duplicateShutdownPayload ) );
 	}
 }

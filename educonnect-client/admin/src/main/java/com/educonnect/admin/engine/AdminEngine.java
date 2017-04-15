@@ -23,6 +23,7 @@ public class AdminEngine extends Engine{
 	private static final int    PORT       = 1132;
 	
 	public AdminEngine() {
+		super( "public", "src/main/resources/client.truststore" );	
 		instance = this;
 		mainFrame = new MainFrame();
 		adapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );

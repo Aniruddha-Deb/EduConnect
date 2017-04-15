@@ -67,9 +67,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 
 	@Override
-	public void windowOpened(WindowEvent e) {
-		
-	}
+	public void windowOpened(WindowEvent e) {}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -77,32 +75,17 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowClosed(WindowEvent e) {}
 
 	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowIconified(WindowEvent e) {}
 
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowDeiconified(WindowEvent e) {}
 
 	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowActivated(WindowEvent e) {}
 
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowDeactivated(WindowEvent e) {}
 }

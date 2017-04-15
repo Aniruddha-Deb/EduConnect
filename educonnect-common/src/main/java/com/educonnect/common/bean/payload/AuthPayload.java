@@ -2,7 +2,7 @@ package com.educonnect.common.bean.payload;
 
 /**
  * An AuthPayload is a concrete implementation of a {@link Payload}. It contains 
- * all the required fields required for authenticating a user.  
+ * an authCode, which is used for two-step authentication by the user.  
  * @author Sensei
  *
  */
@@ -12,8 +12,8 @@ public class AuthPayload extends Payload {
 	
 	/**
 	 * The standard constructor for creating an AuthPayload
-	 * @param emailId The emailId of the user to be authenticated
-	 * @param passwd The password of the user to be authenticated
+	 * @param authCode The authentication code, given to the user by eMail and 
+	 * entered by him on the prompt
 	 */
 	public AuthPayload( long authCode ) {
 		this.authCode = authCode;

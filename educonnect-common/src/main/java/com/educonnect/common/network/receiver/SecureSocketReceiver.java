@@ -11,6 +11,13 @@ import com.educonnect.common.bean.payload.ShutdownPayload;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 import com.educonnect.common.parser.Parser;
 
+/**
+ * The SecureSocketReceiver is a receiver which collects data sent over a secure 
+ * socket. The secure socket is required to implement the TLS protocol to securely 
+ * transfer data. 
+ * 
+ * @author Sensei 
+ */
 public class SecureSocketReceiver implements Receiver {
 
 	private BufferedReader reader = null;

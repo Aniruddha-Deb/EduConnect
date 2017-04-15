@@ -23,7 +23,7 @@ public enum Header {
 	LOGIN, 
 	
 	/**
-	 * Used to indicate a payload containing Authentication information
+	 * Used to indicate a payload containing an Authentication code
 	 * @see AuthBean
 	 * @see AuthPayload
 	 */
@@ -52,20 +52,20 @@ public enum Header {
 
 	/**
 	 * Used to indicate a payload containing a registration request
-	 * @see Bean
-	 * @see ShutdownPayload
+	 * @see RegisterBean
+	 * @see RegisterPayload
 	 */
 	REGISTER,
 
 	/**
-	 * Used to indicate a payload containing a failure
+	 * Used to indicate a payload containing failure information
 	 * @see FailBean
 	 * @see FailPayload
 	 */
 	FAIL,	
 
 	/**
-	 * Used to indicate a payload containing information
+	 * Used to indicate a payload containing general success information
 	 * @see InfoBean
 	 * @see InfoPayload
 	 */

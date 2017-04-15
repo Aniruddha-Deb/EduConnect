@@ -1,7 +1,9 @@
 package com.educonnect.common.bean;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +15,14 @@ import org.junit.Test;
 
 import com.educonnect.common.bean.header.Header;
 import com.educonnect.common.bean.payload.AuthPayload;
+import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
+import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.LoginPayload;
+import com.educonnect.common.bean.payload.RegisterPayload;
+import com.educonnect.common.bean.payload.ShutdownPayload;
 import com.educonnect.common.bean.payload.TextPayload;
+import com.educonnect.common.client.ClientType;
 
 public class BeanTests {
 
@@ -28,15 +35,20 @@ public class BeanTests {
 	public static final String EMAIL_ID = "aniruddha.deb.2002@gmail.com";
 	public static final String PASSWORD = "notrealpasswd";
 	
+	public static final long AUTH_TOKEN = 11285234L;
+	
 	public static final String SENDER = "Aniruddha Deb";
 	public static final String TEXT   = "Test!";
 	
 	public static final String IN_FILE_PATH  = "src/test/resources/filetest.png";
 	public static final String OUT_FILE_PATH = "src/test/resources/out.png";
 	
+	public static final String FAIL_CAUSE = "Just cause :P";
+	public static final String INFO       = "Whoever's reading this is stupid!";
+	
 	@Test
 	public void loginBeanTest() {
-		LoginBean loginBean = new LoginBean( CLASS, SECTION, ROLLNO );
+		LoginBean loginBean = new LoginBean( EMAIL_ID, PASSWORD, ClientType.ADMIN );
 		log.debug( "Created login bean" );
 		Header loginHeader = loginBean.getHeader();
 		assertEquals( loginHeader, Header.LOGIN );
@@ -44,15 +56,15 @@ public class BeanTests {
 		assertThat( loginBean.getPayload(), instanceOf( LoginPayload.class ) );
 		LoginPayload loginPayload = (LoginPayload)loginBean.getPayload();
 		
-		assertEquals( loginPayload.getGrade(), CLASS );
-		assertEquals( loginPayload.getSection(), SECTION );
-		assertEquals( loginPayload.getRollNo(), ROLLNO );
+		assertEquals( loginPayload.getEmailId(), EMAIL_ID );
+		assertEquals( loginPayload.getPassword(), PASSWORD );
+		assertEquals( loginPayload.getClientType(), ClientType.ADMIN );
 		log.debug( "Login bean test passed" );
 	}
 	
 	@Test
 	public void authBeanTest() {
-		AuthBean authBean = new AuthBean( EMAIL_ID, PASSWORD );
+		AuthBean authBean = new AuthBean( AUTH_TOKEN );
 		log.debug( "Created authentication bean" );
 		Header authHeader = authBean.getHeader();
 		assertEquals( authHeader, Header.AUTH );
@@ -60,8 +72,7 @@ public class BeanTests {
 		assertThat( authBean.getPayload(), instanceOf( AuthPayload.class ) );
 		AuthPayload authPayload = (AuthPayload)authBean.getPayload();
 		
-		assertEquals( authPayload.getEmailId(), EMAIL_ID );
-		assertEquals( authPayload.getPasswd(), PASSWORD );
+		assertEquals( authPayload.getAuthCode(), AUTH_TOKEN );
 		log.debug( "Authentication bean test passed" );
 	}
 	
@@ -102,5 +113,63 @@ public class BeanTests {
 		}
 		
 		log.debug( "File bean test passed" );
+	}
+	
+	@Test
+	public void failBeanTest() {
+		FailBean failBean = new FailBean( FAIL_CAUSE );
+		log.debug( "Created fail bean" );
+		Header failHeader = failBean.getHeader();
+		assertEquals( failHeader, Header.FAIL );
+		
+		assertThat( failBean.getPayload(), instanceOf( FailPayload.class ) );
+		FailPayload failPayload = (FailPayload)failBean.getPayload();
+		
+		assertEquals( failPayload.getCause(), FAIL_CAUSE );
+		log.debug( "Fail bean test passed" );
+	}
+	
+	@Test
+	public void infoBeanTest() {
+		InfoBean infoBean = new InfoBean( INFO );
+		log.debug( "Created info bean" );
+		Header infoHeader = infoBean.getHeader();
+		assertEquals( infoHeader, Header.INFO );
+		
+		assertThat( infoBean.getPayload(), instanceOf( InfoPayload.class ) );
+		InfoPayload infoPayload = (InfoPayload)infoBean.getPayload();
+		
+		assertEquals( infoPayload.getInfo(), INFO );
+		log.debug( "Info bean test passed" );
+	}
+	
+	@Test
+	public void registerBeanTest() {
+		RegisterBean registerBean = new RegisterBean( CLASS, SECTION, ROLLNO, EMAIL_ID, PASSWORD );
+		log.debug( "Created register bean" );
+		Header registerHeader = registerBean.getHeader();
+		assertEquals( registerHeader, Header.REGISTER );
+		
+		assertThat( registerBean.getPayload(), instanceOf( RegisterPayload.class ) );
+		RegisterPayload registerPayload = (RegisterPayload)registerBean.getPayload();
+		
+		assertEquals( registerPayload.getClazz()  , CLASS    );
+		assertEquals( registerPayload.getSection(), SECTION  );
+		assertEquals( registerPayload.getRollNo() , ROLLNO   );
+		assertEquals( registerPayload.getEmailId(), EMAIL_ID );
+		assertEquals( registerPayload.getPasswd() , PASSWORD );
+		log.debug( "Authentication bean test passed" );
+	}
+	
+	@Test
+	public void shutdownBeanTest() {
+		ShutdownBean shutdownBean = new ShutdownBean();
+		log.debug( "Created shutdown bean" );
+		Header shutdownHeader = shutdownBean.getHeader();
+		assertEquals( shutdownHeader, Header.SHUTDOWN );
+		
+		assertThat( shutdownBean.getPayload(), instanceOf( ShutdownPayload.class ) );
+		
+		log.debug( "Info bean test passed" );
 	}
 }

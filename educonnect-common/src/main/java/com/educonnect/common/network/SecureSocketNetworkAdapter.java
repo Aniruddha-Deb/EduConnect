@@ -16,11 +16,16 @@ import com.educonnect.common.engine.Engine;
 import com.educonnect.common.network.receiver.SecureSocketReceiver;
 import com.educonnect.common.serializer.Serializer;
 
+/**
+ * A SecureSocketNetworkAdapter is an implementation of NetworkAdapter which 
+ * uses TLS or SSL secured sockets for communication. It contains both a sender 
+ * and a receiver and encapsulates all the connection IO from the program.
+ * 
+ * @author Sensei
+ *
+ */
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
-	private static final String TRUSTSTORE_PASSWD = "public";
-	private static final String TRUSTSTORE_LOC    = "/Users/Sensei/Projects/Educonnect/educonnect-client/desktop/src/main/resources/client.truststore";	
-	
 	private BlockingQueue<Payload> receivedPayload = null;
 	
 	private SSLSocket sslSocket = null;
@@ -33,8 +38,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	private Engine engine = null;
 	
 	public SecureSocketNetworkAdapter( String ipAddress, int port, Engine engine ) {
-		sslSocket = setUpSSLSocket( ipAddress, port );
 		this.engine = engine;
+		this.sslSocket = setUpSSLSocket( ipAddress, port );
 		
 		receivedPayload = new LinkedBlockingQueue<>();
 		
@@ -50,8 +55,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	}
 	
 	private SSLSocket setUpSSLSocket( String ipAddress, int port ) {
-		System.setProperty( "javax.net.ssl.trustStore", TRUSTSTORE_LOC );
-		System.setProperty( "javax.net.ssl.trustStorePassword", TRUSTSTORE_PASSWD );
+		System.setProperty( "javax.net.ssl.trustStore", engine.getLocation() );
+		System.setProperty( "javax.net.ssl.trustStorePassword", engine.getPasswd() );
 
 		SSLSocketFactory factory = ( SSLSocketFactory )SSLSocketFactory.getDefault();
 		SSLSocket socket = null;

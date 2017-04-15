@@ -6,6 +6,7 @@ import com.educonnect.common.bean.payload.FilePayload;
 import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.LoginPayload;
 import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.bean.payload.RegisterPayload;
 import com.educonnect.common.bean.payload.ShutdownPayload;
 import com.educonnect.common.bean.payload.TextPayload;
 import com.google.gson.Gson;
@@ -106,6 +107,9 @@ public class Parser {
 			break;
 			
 			case "SHUTDOWN"  : payloadInstance = ShutdownPayload.class;
+			break;
+			
+			case "REGISTER" : payloadInstance = RegisterPayload.class;
 			break;
 			
 			default: throw new IllegalArgumentException( "Bad header passed to parsePayload" );
