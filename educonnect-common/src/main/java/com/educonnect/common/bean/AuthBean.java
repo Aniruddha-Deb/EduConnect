@@ -19,7 +19,7 @@ public class AuthBean extends Bean {
 	 * @param emailId The email ID of the person getting authenticated
 	 * @param passwd  The password of the person getting authenticated
 	 */
-	public AuthBean( String emailId, String passwd ) {
-		super( Header.AUTH, new AuthPayload( emailId, passwd ) );
+	public AuthBean( long authCode ) {
+		super( Header.AUTH, new AuthPayload( authCode ) );
 	}
 }

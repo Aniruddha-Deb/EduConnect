@@ -8,25 +8,19 @@ package com.educonnect.common.bean.payload;
  */
 public class AuthPayload extends Payload {
 	
-	private String emailId = null;
-	private String passwd  = null;
+	private long authCode = -1;
 	
 	/**
 	 * The standard constructor for creating an AuthPayload
 	 * @param emailId The emailId of the user to be authenticated
 	 * @param passwd The password of the user to be authenticated
 	 */
-	public AuthPayload( String emailId, String passwd ) {
-		this.emailId = emailId;
-		this.passwd  = passwd;
+	public AuthPayload( long authCode ) {
+		this.authCode = authCode;
 	}
-	
-	public String getEmailId() {
-		return emailId;
-	}
-	
-	public String getPasswd() {
-		return passwd;
+
+	public long getAuthCode() {
+		return authCode;
 	}
 	
 	@Override
@@ -42,10 +36,9 @@ public class AuthPayload extends Payload {
 	@Override
 	public int hashCode() {
 		
-		int emailHash  = emailId == null ? 2 : emailId.hashCode();
-		int passwdHash = passwd  == null ? 3 : passwd.hashCode();
+		int authCodeHash = authCode == -1 ? 43 : new Long( authCode ).hashCode();
 		
-		return emailHash + passwdHash;
+		return authCodeHash;
 	}
 
 }

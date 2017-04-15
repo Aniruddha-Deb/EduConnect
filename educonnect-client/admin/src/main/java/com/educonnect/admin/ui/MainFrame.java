@@ -1,25 +1,24 @@
 package com.educonnect.admin.ui;
 
+import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.educonnect.admin.ui.panels.LoginPanel;
+import com.educonnect.admin.ui.panels.MainPanel;
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 2981649205219251588L;
-	private static final String USER_HOME = System.getProperty( "user.home" );
-	private static final String DIR_PATH  = USER_HOME + "/.educonnect/admin";
 	
 	private LoginPanel loginPanel = null;
+	private MainPanel  mainPanel  = null;
+	
+	private static MainFrame instance = null;
+	
+	private CardLayout c = null;
 	
 	public MainFrame() {
 		super( "EduConnect admin" );
@@ -28,52 +27,38 @@ public class MainFrame extends JFrame {
 		super.setLocationRelativeTo( null );
 		super.setBackground( new Color( 255, 255, 255 ) );
 	
-		File dir = new File( DIR_PATH );
-		if( !dir.exists() ) {
-			dir.mkdirs();
-		}
+		instance = this;
 		
+		mainPanel = new MainPanel();
 		loginPanel = new LoginPanel();
-		super.add( loginPanel );
-	}
-	
-	public static void serialize( Component comp, String name ) {
-		File file = new File( DIR_PATH + "/" + name );
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( file ) );
-			oos.writeObject( comp );
-			oos.flush();
-			oos.close();
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static boolean isSerialized( String name ) {
-		File file = new File( DIR_PATH );
 		
-		for( String s : file.list() ) {
-			if( s.equals( name ) )  {
-				return true;
-			}
-		}
-		return false;
+		c = (CardLayout)mainPanel.getLayout();
+		
+		mainPanel.add( loginPanel );		
+		super.add( mainPanel );
 	}
-
-	public static Component deserialize( String name ) {
-		File file = new File( DIR_PATH + "/" + name );
-		Component comp = null;
-		try {
-			ObjectInputStream ois = new ObjectInputStream( new FileInputStream( file ) );
-			comp = (Component)ois.readObject();
-			ois.close();
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		return comp;
+	
+	public void alert( String cause ) {
+		JOptionPane.showMessageDialog( this, cause, "EduConnect admin", JOptionPane.ERROR_MESSAGE );
+	}
+	
+	public static MainFrame getInstance() {
+		return instance;
 	}
 	
 	public void display() {
 		super.setVisible( true );
+	}
+	
+	public void showNextPanel() {
+		c.next( mainPanel );
+	}
+	
+	public void showPreviousPanel() {
+		c.previous( mainPanel );
+	}
+	
+	public void showFirstPanel() {
+		c.first( mainPanel );
 	}
 }

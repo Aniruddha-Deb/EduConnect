@@ -49,7 +49,14 @@ public enum Header {
 	 * @see ShutdownPayload
 	 */
 	SHUTDOWN,
-	
+
+	/**
+	 * Used to indicate a payload containing a registration request
+	 * @see Bean
+	 * @see ShutdownPayload
+	 */
+	REGISTER,
+
 	/**
 	 * Used to indicate a payload containing a failure
 	 * @see FailBean

@@ -15,8 +15,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
+import com.educonnect.admin.ui.util.UIUtils;
+import com.educonnect.common.bean.LoginBean;
+import com.educonnect.common.client.ClientType;
 
 public class LoginPanel extends JPanel implements ActionListener{
 
@@ -71,8 +75,8 @@ public class LoginPanel extends JPanel implements ActionListener{
 	
 	private void createEmailIdField() {
 		c = new GridBagConstraints();
-		if( MainFrame.isSerialized( "emailIdField" ) ) {
-			emailIdField = (JTextField)MainFrame.deserialize( "emailIdField" );
+		if( UIUtils.isSerialized( "emailIdField" ) ) {
+			emailIdField = (JTextField)UIUtils.deserialize( "emailIdField" );
 		}
 		else {
 			emailIdField = new JTextField();
@@ -136,6 +140,10 @@ public class LoginPanel extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed( ActionEvent e ) {
-		MainFrame.serialize( emailIdField, "emailIdField" );
+		UIUtils.serialize( emailIdField, "emailIdField" );
+		AdminEngine.getInstance().sendLoginRequest( emailIdField.getText(), 
+													   new String( passwordField.getPassword() ), 
+													   ClientType.ADMIN );
+		MainFrame.getInstance().showNextPanel();
 	}
 }

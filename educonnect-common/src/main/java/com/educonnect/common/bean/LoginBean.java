@@ -2,6 +2,7 @@ package com.educonnect.common.bean;
 
 import com.educonnect.common.bean.header.Header;
 import com.educonnect.common.bean.payload.LoginPayload;
+import com.educonnect.common.client.ClientType;
 
 /**
  * A LoginBean is a more concrete implementation of a {@link Bean} which is 
@@ -20,7 +21,7 @@ public class LoginBean extends Bean {
 	 * @param section The section of the student based on which he is segregated
 	 * @param rollNo  The roll number of the student in that section.
 	 */
-	public LoginBean( int grade, char section, int rollNo ) {
-		super( Header.LOGIN, new LoginPayload( grade, section, rollNo ) );
+	public LoginBean( String emailId, String password, ClientType clientType ) {
+		super( Header.LOGIN, new LoginPayload( emailId, password, clientType ) );
 	}	
 }

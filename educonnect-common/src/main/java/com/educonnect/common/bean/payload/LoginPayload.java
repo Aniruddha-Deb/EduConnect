@@ -1,5 +1,7 @@
 package com.educonnect.common.bean.payload;
 
+import com.educonnect.common.client.ClientType;
+
 /**
  * A LoginPayload is a concrete implementation of a {@link Payload}. It contains 
  * all the required fields required for logging a user in.  
@@ -8,10 +10,9 @@ package com.educonnect.common.bean.payload;
  */
 public class LoginPayload extends Payload {
 	
-	private int  grade   = -1;
-	private char section = 'Z';
-	private int  rollNo  = -1;
-	
+	private String     emailId    = null;
+	private String     password   = null;
+	private ClientType clientType = null;
 	/**
 	 * The standard constructor for creating a LoginPayload 
 	 * 
@@ -19,22 +20,22 @@ public class LoginPayload extends Payload {
 	 * @param section The section the student belongs to
 	 * @param rollNo  The roll number of the student in that class
 	 */
-	public LoginPayload( int grade, char section, int rollNo ) {
-		this.grade   = grade;
-		this.section = section;
-		this.rollNo  = rollNo;
+	public LoginPayload( String emailId, String password, ClientType clientType ) {
+		this.emailId    = emailId;
+		this.password   = password;
+		this.clientType = clientType;
 	}
 
-	public int getGrade() {
-		return grade;
+	public String getEmailId() {
+		return emailId;
 	}
 	
-	public char getSection() {
-		return section;
+	public String getPassword() {
+		return password;
 	}
 	
-	public int getRollNo() {
-		return rollNo;
+	public ClientType getClientType() {
+		return clientType;
 	}
 	
 	@Override
@@ -50,10 +51,10 @@ public class LoginPayload extends Payload {
 	@Override
 	public int hashCode() {
 		
-		int gradeHash   = grade   == -1  ? 7  : new Integer( grade ).hashCode();
-		int sectionHash = section == 'Z' ? 11 : new Character( section ).hashCode();
-		int rollNoHash  = rollNo  == -1  ? 13 : new Integer( rollNo ).hashCode();
+		int emailHash       = emailId     == null  ? 7  : emailId.hashCode();
+		int passwordHash    = password    == null  ? 11 : password.hashCode();
+		int clientTypeHash  = clientType  == null  ? 13 : clientType.hashCode();
 		
-		return gradeHash + sectionHash + rollNoHash;
+		return emailHash + passwordHash + clientTypeHash;
 	}
 }
