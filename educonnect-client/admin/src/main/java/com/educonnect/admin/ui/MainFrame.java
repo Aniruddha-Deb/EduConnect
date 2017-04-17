@@ -16,6 +16,8 @@ import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.EditPanel;
 import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.admin.ui.panels.MainPanel;
+import com.educonnect.common.bean.payload.DatabasePayload;
+import com.educonnect.common.bean.payload.InfoPayload;
 
 public class MainFrame extends JFrame implements WindowListener{
 
@@ -73,19 +75,28 @@ public class MainFrame extends JFrame implements WindowListener{
 		return instance;
 	}
 	
+	public EditPanel getEditPanel() {
+		return editPanel;
+	}
+	
+	public MainPanel getMainPanel() {
+		return mainPanel;
+	}
+	
+	public CardLayout getCardLayout() {
+		return c;
+	}
+	
 	public void display() {
 		super.setVisible( true );
 	}
 	
-	public void showEditPanel() {
-		editPanel.load();
-		c.show( mainPanel, "editPanel" );
-	}
 	@Override
 	public void windowOpened(WindowEvent e) {}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
+		System.out.println( "Close button pressed" ); 
 		AdminEngine.getInstance().shutdown();
 	}
 

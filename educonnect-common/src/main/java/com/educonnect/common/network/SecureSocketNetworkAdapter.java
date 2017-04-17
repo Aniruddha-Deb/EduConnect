@@ -79,6 +79,10 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	public Thread getReceiverThread() {
 		return receiverThread;
 	}
+	
+	public boolean isConnected() {
+		return (sslSocket != null);
+	}
 
 	@Override
 	public void send( Bean b ) {

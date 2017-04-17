@@ -1,6 +1,7 @@
 package com.educonnect.common.parser;
 
 import com.educonnect.common.bean.payload.AuthPayload;
+import com.educonnect.common.bean.payload.DatabasePayload;
 import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
 import com.educonnect.common.bean.payload.InfoPayload;
@@ -112,6 +113,9 @@ public class Parser {
 			break;
 			
 			case "REGISTER" : payloadInstance = RegisterPayload.class;
+			break;
+			
+			case "DATABASE" : payloadInstance = DatabasePayload.class;
 			break;
 			
 			default: throw new IllegalArgumentException( "Bad header passed to parsePayload" );

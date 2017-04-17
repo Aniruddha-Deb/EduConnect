@@ -22,8 +22,8 @@ public class JDBCAdapter {
 	
 	private JDBCAdapter() {
 		try {
-			Class.forName( "com.mysql.jdbc.Driver" ).newInstance();
-			String url = "jdbc:mysql://localhost:3306/ec_tbs_camp";
+			Class.forName( "com.mysql.cj.jdbc.Driver" ).newInstance();
+			String url = "jdbc:mysql://localhost:3306/ec_tbs_camp?useSSL=false";
 			String username = "root";
 			String password = "bokor123";
 			connection = DriverManager.getConnection( url, username, password );
@@ -82,9 +82,56 @@ public class JDBCAdapter {
 		return adminName;		
 	}
 	
+	public String[] getStudentDatabaseHeaders() {
+		return new String[]{ "rollNo", "firstName", "lastName" }; 
+	}
+	
+	public String[][] getStudentDatabaseData( int clazz, char section ) {
+		String query = "SELECT rollNo, firstName, lastName FROM students WHERE "
+				+ "class=" + clazz + " AND section='" + section + "'";
+		
+		String[][] data = new String[100][3];				 	
+		try {
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery( query );
+			
+			for( int i=0; rs.next(); i++ ) {
+				data[i][0] = rs.getInt( "rollNo" ) + "" ;
+				System.out.println( data[i][0] );
+				data[i][1] = rs.getString( "firstName" );
+				System.out.println( data[i][1] );
+				data[i][2] = rs.getString( "lastName" );
+				System.out.println( data[i][2] );
+			}
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
 	private int getStudentClient( String emailId, char[] password ) {
 		// TODO do this when students actually start using the server
 		return 0;
+	}
+
+	public String getEditableClasses() {
+		String query = "SELECT DISTINCT class, section FROM students";
+		StringBuilder b = new StringBuilder( "DB headers:" );
+				 	
+		try {
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery( query );
+
+			while( rs.next() ) {
+				int  clazz   = rs.getInt( "class" );
+				char section = rs.getString( "section" ).charAt(0);
+				b.append( clazz + "-" + section + " " );
+			}
+			
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		}
+		return b.toString();
 	}
 	
 }

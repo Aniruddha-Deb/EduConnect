@@ -69,6 +69,14 @@ public enum Header {
 	 * @see InfoBean
 	 * @see InfoPayload
 	 */
-	INFO;	
+	INFO,
+
+	/**
+	 * Used to indicate a payload containing the student database
+	 * @see DatabaseBean
+	 * @see DatabasePayload
+	 */
+
+	DATABASE;	
 
 }

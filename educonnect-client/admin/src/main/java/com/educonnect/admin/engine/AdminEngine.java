@@ -2,8 +2,10 @@ package com.educonnect.admin.engine;
 
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
+import com.educonnect.admin.ui.panels.MainPanel;
 import com.educonnect.common.bean.Bean;
 import com.educonnect.common.bean.LoginBean;
+import com.educonnect.common.bean.payload.DatabasePayload;
 import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
 import com.educonnect.common.bean.payload.InfoPayload;
@@ -44,17 +46,26 @@ public class AdminEngine extends Engine{
 		}
 		else if( p instanceof InfoPayload ) {
 			Constants.userName = ((InfoPayload) p).getInfo();
-			System.out.println( "Passed" );  
-			mainFrame.showEditPanel();
+			mainFrame.getCardLayout().show( mainFrame.getMainPanel(), "editPanel" );
 		}
 	}
 	
 	@Override
 	public void handle( Payload p ) {
-		if( p instanceof FilePayload ) {
-			((FilePayload) p).unloadFile( Constants.XLSX_FILE_PATH );
-			System.out.println( "Unloaded file" );
+		if( p instanceof InfoPayload ) {
+			InfoPayload ip = (InfoPayload)p;
+			if( ip.getInfo().startsWith( "DB headers:" ) ) {
+				mainFrame.getEditPanel().load( new InfoPayload( 
+						ip.getInfo().substring( 11 ) ) );
+			}
 		}
+		else if( p instanceof DatabasePayload ) {
+			mainFrame.getEditPanel().display( (DatabasePayload)p );
+		}
+	}
+	
+	public Payload get() {
+		return adapter.get();
 	}
 	
 	public void send( Bean b ) {
@@ -68,20 +79,18 @@ public class AdminEngine extends Engine{
 
 	@Override
 	public void shutdown() {
-		adapter.shutdown();
-		while( adapter.getReceiverThread().isAlive() ) {
-			try {
-				Thread.sleep( 10 );
-			} catch ( InterruptedException e ) {
-				e.printStackTrace();
+		if( adapter.isConnected() ) {
+			adapter.shutdown();
+			while( adapter.getReceiverThread().isAlive() ) {
+				try {
+					Thread.sleep( 10 );
+				} catch ( InterruptedException e ) {
+					e.printStackTrace();
+				}
 			}
 		}
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
 		System.exit( 0 );
-	}
-	
-	public static void main(String[] args) {
-		new AdminEngine().start();
-	}
+	}	
 }

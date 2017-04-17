@@ -12,6 +12,7 @@ import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;
+import com.educonnect.server.payload.PayloadHandler;
 
 public class Client {
 	
@@ -39,13 +40,21 @@ public class Client {
 		
 		if( clientType.equals( ClientType.ADMIN ) ) {			
 			this.clientName = JDBCAdapter.getInstance().getAdminName( UID );
+			send( new InfoBean( clientName ) );
+			send( new InfoBean( JDBCAdapter.getInstance().getEditableClasses() ) );
 		}
-		
-		send( new InfoBean( clientName ) );
 	}
 	
 	public String getClientName() {
 		return clientName;
+	}
+	
+	public ClientType getClientType() {
+		return clientType;
+	}
+	
+	public int getUID() {
+		return UID;
 	}
 	
 	public void send( Bean b ) {
@@ -69,7 +78,7 @@ public class Client {
 	}
 
 	public void receive( Payload p ) {
-		// do nothing for now
+		PayloadHandler.handlePayload( p, this );
 	}
 	
 	public void shutdown() {

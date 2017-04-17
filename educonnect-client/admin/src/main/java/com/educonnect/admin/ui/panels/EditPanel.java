@@ -3,10 +3,6 @@ package com.educonnect.admin.ui.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Iterator;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
@@ -19,15 +15,15 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellRenderer;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.educonnect.admin.Constants;
+import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
+import com.educonnect.common.bean.InfoBean;
+import com.educonnect.common.bean.payload.DatabasePayload;
+import com.educonnect.common.bean.payload.InfoPayload;
 
 public class EditPanel extends JPanel {
 
@@ -35,90 +31,90 @@ public class EditPanel extends JPanel {
 	
 	private JTabbedPane tabbedPane = null;
 	private ImageIcon icon = null;
-	private FileInputStream xlsxFIS = null;
+	private JPanel[] panels = null;
 	
 	public EditPanel() {
 		super();
 		super.setBackground( Color.WHITE );
 		super.setLayout( new BorderLayout() );
 		tabbedPane = new JTabbedPane();
-		super.add( tabbedPane, BorderLayout.CENTER );		
+		tabbedPane.setBackground( Color.WHITE );
+		tabbedPane.addChangeListener( new ChangeListener() {
+			
+			@Override
+			public void stateChanged( ChangeEvent e ) {
+				AdminEngine.getInstance().send( 
+					new InfoBean( "Requesting table " +  
+						tabbedPane.getTitleAt( 
+							tabbedPane.getSelectedIndex() 
+						) 
+					) 
+				);
+				
+				System.out.println( "Sent request " + "Requesting table " +  
+						tabbedPane.getTitleAt( 
+							tabbedPane.getSelectedIndex() ) );
+			}
+		} );
+		super.add( tabbedPane, BorderLayout.CENTER );
 	}
 	
-	public void load() {
-		icon = new ImageIcon( "src/main/resources/db.png", "lool" );
-
-		try {
-			xlsxFIS = new FileInputStream( new File( Constants.XLSX_FILE_PATH ) );
-			XSSFWorkbook workbook = new XSSFWorkbook( xlsxFIS );
-			Iterator<XSSFSheet> sheetIterator = workbook.iterator();
+	public void load( InfoPayload p ) {
 		
-			while( sheetIterator.hasNext() ) {
-				XSSFSheet sheet = sheetIterator.next();
-				JPanel sheetPanel = new JPanel( new BorderLayout() );
-				sheetPanel.setBackground( Color.WHITE );
-				String sheetName = sheet.getSheetName();
-
-				System.out.println( sheet.getPhysicalNumberOfRows() );
-				System.out.println( sheet.getRow(0).getPhysicalNumberOfCells() ); 
-				
-				String[] columnNames = new String[sheet.getRow(0).getPhysicalNumberOfCells()];
-				String[][] tableData = new String[100]
-												 [sheet.getRow(0).getPhysicalNumberOfCells()];
-				Row tableHeaders = sheet.getRow(0);
-				Iterator<Cell> tableHeaderIterator = tableHeaders.cellIterator();
-				
-				for( int i=0; tableHeaderIterator.hasNext(); i++ ) {
-					columnNames[i] = tableHeaderIterator.next().getStringCellValue();
-				}
-
-				for( int i=0, c=1; c<sheet.getPhysicalNumberOfRows(); i++, c++ ) {
-					
-					Row r = sheet.getRow( c );
-					
-					for( int j=0; j<r.getPhysicalNumberOfCells(); j++ ) {
-						
-						Cell cell = r.getCell( j );
-						
-						if( cell.getCellType() == Cell.CELL_TYPE_NUMERIC ) {
-							// quite hacky :P
-							tableData[i][j] = (int)cell.getNumericCellValue() + "";
-						}
-						else if( cell.getCellType() == Cell.CELL_TYPE_STRING ) {
-							tableData[i][j] = cell.getStringCellValue();
-						}
-					}
-				}
-				
-				JTable table = new JTable( tableData, columnNames );
-				table.setDefaultRenderer( Object.class, new CustomRenderer( table ) );
-				table.setGridColor( Color.GRAY );
-				table.setFont( UIConstants.FONT.deriveFont( 13f ) );
-				table.getTableHeader().setBorder(new MatteBorder(0,0,1,0, Color.BLACK));
-				table.getTableHeader().setFont( UIConstants.FONT.deriveFont( 13f ) );
-				table.setRowHeight( 20 );
-				
-				JScrollPane scrollPane = new JScrollPane( table );
-				table.setFillsViewportHeight( true );
-				sheetPanel.add( scrollPane, BorderLayout.CENTER );
-				
-				JTextField field = new JTextField();
-				field.setFont( UIConstants.FONT.deriveFont( 13f ) );
-				field.setBorder( new EmptyBorder( 1, 1, 1, 1 ) );
-				field.setBackground( new Color( 92, 170, 248 ) );
-				field.setForeground( Color.WHITE );
-				DefaultCellEditor editor = new DefaultCellEditor( field );
-				editor.setClickCountToStart( 1 );
-				
-				for (int i = 0; i < table.getColumnCount(); i++) {
-					table.setDefaultEditor( table.getColumnClass(i), editor );
-				} 
-				tabbedPane.addTab( sheetName, icon, sheetPanel, sheetName );
-			}
-			
-		} catch( IOException e ) {
-			e.printStackTrace();
+		icon = new ImageIcon( "src/main/resources/db.png", "lool" );
+		
+		String[] parts = p.getInfo().split( " " );
+		
+		panels = new JPanel[parts.length];
+		
+		for( int i=0; i<panels.length; i++ ) {
+			System.out.println( "Made panel" );   
+			panels[i] = new JPanel();
+			panels[i].setBackground( Color.WHITE );
+			panels[i].setLayout( new BorderLayout() );
 		}
+		
+		for( int i=0; i<parts.length; i++ ) {
+			tabbedPane.addTab( parts[i], icon, panels[i], parts[i] );
+		}
+		System.out.println( "loaded" ); 
+	}
+	
+	public void display( DatabasePayload d ) {
+		
+		String[] headers = d.getHeaders();
+		String[][] data  = d.getData();
+		
+		JTable table = new JTable( data, headers );
+		table.setDefaultRenderer( Object.class, new CustomRenderer( table ) );
+		table.setGridColor( Color.GRAY );
+		table.setFont( UIConstants.FONT.deriveFont( 13f ) );
+		table.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
+		table.getTableHeader().setFont( UIConstants.FONT.deriveFont( 13f ) );
+		table.setRowHeight( 20 );
+		
+		JScrollPane scrollPane = new JScrollPane( table );
+		table.setFillsViewportHeight( true );
+		
+		JTextField field = new JTextField();
+		field.setFont( UIConstants.FONT.deriveFont( 13f ) );
+		field.setBorder( new EmptyBorder( 1, 1, 1, 1 ) );
+		field.setBackground( new Color( 92, 170, 248 ) );
+		field.setForeground( Color.WHITE );
+		DefaultCellEditor editor = new DefaultCellEditor( field );
+		editor.setClickCountToStart( 1 );
+		
+		for ( int i=0; i<table.getColumnCount(); i++ ) {
+			table.setDefaultEditor( table.getColumnClass(i), editor );
+		} 
+		
+		if( panels[0] == null ) {
+			System.out.println( "Bjørk!" );
+		}
+		System.out.println( "displaying panel " );
+		this.panels[tabbedPane.getSelectedIndex()].add( scrollPane, BorderLayout.CENTER );
+		tabbedPane.repaint();
+		System.out.println( "Displayed panel" );
 	}
 	
 	public static class CustomRenderer implements TableCellRenderer{
