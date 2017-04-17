@@ -1,5 +1,7 @@
 package com.educonnect.common.bean.payload;
 
+import java.util.Arrays;
+
 import com.educonnect.common.client.ClientType;
 
 /**
@@ -13,7 +15,7 @@ import com.educonnect.common.client.ClientType;
 public class LoginPayload extends Payload {
 	
 	private String     emailId    = null;
-	private String     password   = null;
+	private char[]     password   = null;
 	private ClientType clientType = null;
 
 	/**
@@ -24,7 +26,7 @@ public class LoginPayload extends Payload {
 	 * @param clientType The type of user logging in - can either be an ADMIN or 
 	 * a STUDENT
 	 */
-	public LoginPayload( String emailId, String password, ClientType clientType ) {
+	public LoginPayload( String emailId, char[] password, ClientType clientType ) {
 		this.emailId    = emailId;
 		this.password   = password;
 		this.clientType = clientType;
@@ -34,7 +36,7 @@ public class LoginPayload extends Payload {
 		return emailId;
 	}
 	
-	public String getPassword() {
+	public char[] getPassword() {
 		return password;
 	}
 	
@@ -56,7 +58,7 @@ public class LoginPayload extends Payload {
 	public int hashCode() {
 		
 		int emailHash       = emailId     == null  ? 7  : emailId.hashCode();
-		int passwordHash    = password    == null  ? 11 : password.hashCode();
+		int passwordHash    = password    == null  ? 11 : Arrays.hashCode( password );
 		int clientTypeHash  = clientType  == null  ? 13 : clientType.hashCode();
 		
 		return emailHash + passwordHash + clientTypeHash;

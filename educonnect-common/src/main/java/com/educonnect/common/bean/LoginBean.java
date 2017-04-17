@@ -22,7 +22,7 @@ public class LoginBean extends Bean {
 	 * @param clientType The type of user logging in - Can either be an ADMIN or 
 	 * a STUDENT
 	 */
-	public LoginBean( String emailId, String password, ClientType clientType ) {
+	public LoginBean( String emailId, char[] password, ClientType clientType ) {
 		super( Header.LOGIN, new LoginPayload( emailId, password, clientType ) );
 	}	
 }

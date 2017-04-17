@@ -29,6 +29,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	private BlockingQueue<Payload> receivedPayload = null;
 	
 	private SSLSocket sslSocket = null;
+	private String ipAddress = null;
+	private int    port      = -1;
 
 	private BufferedWriter writer = null;
 	
@@ -39,19 +41,11 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	
 	public SecureSocketNetworkAdapter( String ipAddress, int port, Engine engine ) {
 		this.engine = engine;
-		this.sslSocket = setUpSSLSocket( ipAddress, port );
+		this.ipAddress = ipAddress;
+		this.port = port;
 		
 		receivedPayload = new LinkedBlockingQueue<>();
 		
-		try {
-			writer = new BufferedWriter( new OutputStreamWriter( sslSocket.getOutputStream() ) );
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
-		receiver = new SecureSocketReceiver( sslSocket, this );
-		
-		receiverThread = new Thread( receiver, "Receiver" );
-		receiverThread.start();
 	}
 	
 	private SSLSocket setUpSSLSocket( String ipAddress, int port ) {
@@ -67,6 +61,19 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		}
 		
 		return socket;
+	}
+	
+	public void connect() {
+		this.sslSocket = setUpSSLSocket( ipAddress, port );
+		try {
+			writer = new BufferedWriter( new OutputStreamWriter( sslSocket.getOutputStream() ) );
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		}
+		receiver = new SecureSocketReceiver( sslSocket, this );
+		
+		receiverThread = new Thread( receiver, "Receiver" );
+		receiverThread.start();
 	}
 	
 	public Thread getReceiverThread() {

@@ -15,7 +15,7 @@ public class PayloadEqualsTests {
 	@Test
 	public void loginPayloadTest() {
 		
-		LoginPayload loginPayload = new LoginPayload( EMAIL_ID, PASSWORD, ClientType.STUDENT );
+		LoginPayload loginPayload = new LoginPayload( EMAIL_ID, PASSWORD.toCharArray(), ClientType.STUDENT );
 		assertThat( loginPayload, equalTo( loginPayload ) );
 		
 		LoginPayload nullPayload = null;
@@ -26,7 +26,7 @@ public class PayloadEqualsTests {
 		assertThat( textPayload, not( equalTo( loginPayload ) ) );
 		assertThat( textPayload, equalTo( textPayload ) );
 
-		LoginPayload duplicateLoginPayload = new LoginPayload( EMAIL_ID, PASSWORD, ClientType.STUDENT );
+		LoginPayload duplicateLoginPayload = new LoginPayload( EMAIL_ID, PASSWORD.toCharArray(), ClientType.STUDENT );
 		assertThat( duplicateLoginPayload, equalTo( loginPayload ) );
 		assertThat( loginPayload, equalTo( duplicateLoginPayload ) );
 	}

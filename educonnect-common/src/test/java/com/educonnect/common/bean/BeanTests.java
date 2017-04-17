@@ -1,12 +1,13 @@
 package com.educonnect.common.bean;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +49,7 @@ public class BeanTests {
 	
 	@Test
 	public void loginBeanTest() {
-		LoginBean loginBean = new LoginBean( EMAIL_ID, PASSWORD, ClientType.ADMIN );
+		LoginBean loginBean = new LoginBean( EMAIL_ID, PASSWORD.toCharArray(), ClientType.ADMIN );
 		log.debug( "Created login bean" );
 		Header loginHeader = loginBean.getHeader();
 		assertEquals( loginHeader, Header.LOGIN );
@@ -57,7 +58,7 @@ public class BeanTests {
 		LoginPayload loginPayload = (LoginPayload)loginBean.getPayload();
 		
 		assertEquals( loginPayload.getEmailId(), EMAIL_ID );
-		assertEquals( loginPayload.getPassword(), PASSWORD );
+		assertThat( Arrays.equals( loginPayload.getPassword(), PASSWORD.toCharArray() ), equalTo( true ) );
 		assertEquals( loginPayload.getClientType(), ClientType.ADMIN );
 		log.debug( "Login bean test passed" );
 	}

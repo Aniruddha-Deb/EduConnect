@@ -46,7 +46,7 @@ public class SecureSocketReceiver implements Receiver {
 				adapter.receive( p );
 				s = reader.readLine();
 				
-				if( !(s == null) ) {
+				if( s != null ) {
 					p = Parser.parse( s );
 				}
 			}

@@ -14,8 +14,9 @@ public class ParserTest {
 
 	@Test
 	public void loginParserTest() {
-		LoginBean bean = new LoginBean( EMAIL_ID, PASSWORD, ClientType.STUDENT );
+		LoginBean bean = new LoginBean( EMAIL_ID, PASSWORD.toCharArray(), ClientType.STUDENT );
 		String serializedBean = Serializer.serialize( bean );
+		System.out.println( serializedBean );
 		LoginPayload parsedPayload = (LoginPayload)Parser.parse( serializedBean );
 		LoginPayload beanPayload = (LoginPayload)bean.getPayload();
 		

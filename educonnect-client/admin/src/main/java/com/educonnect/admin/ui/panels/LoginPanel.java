@@ -139,7 +139,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	public void actionPerformed( ActionEvent e ) {
 		UIUtils.serialize( emailIdField, "emailIdField" );
 		AdminEngine.getInstance().sendLoginRequest( emailIdField.getText(), 
-													   new String( passwordField.getPassword() ) 
+													passwordField.getPassword()  
 												  );
 	}
 }

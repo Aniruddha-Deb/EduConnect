@@ -33,17 +33,20 @@ public class AdminEngine extends Engine{
 		return instance;
 	}
 	
-	public void sendLoginRequest( String emailId, String password ) {
+	public void sendLoginRequest( String emailId, char[] password ) {
+		adapter.connect();
 		adapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
 		Payload p = adapter.get();
+		System.out.println( "got p" );
 		if( p instanceof FailPayload ) {
 			mainFrame.alert( ((FailPayload) p).getCause() );
+			adapter.shutdown();
 		}
 		else if( p instanceof InfoPayload ) {
 			Constants.userName = ((InfoPayload) p).getInfo();
+			System.out.println( "Passed" );  
+			mainFrame.showEditPanel();
 		}
-		System.out.println( "Passed" );  
-		mainFrame.showEditPanel();
 	}
 	
 	@Override
