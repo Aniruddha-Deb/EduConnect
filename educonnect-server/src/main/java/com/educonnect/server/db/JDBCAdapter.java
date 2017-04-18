@@ -1,12 +1,11 @@
 package com.educonnect.server.db;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import com.educonnect.common.bean.CommunicationConstants;
 import com.educonnect.common.client.ClientType;
 
 public class JDBCAdapter {
