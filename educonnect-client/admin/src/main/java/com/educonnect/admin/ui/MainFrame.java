@@ -2,84 +2,77 @@ package com.educonnect.admin.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Enumeration;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.plaf.FontUIResource;
 
 import com.educonnect.admin.engine.AdminEngine;
-import com.educonnect.admin.ui.panels.EditPanel;
 import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.admin.ui.panels.MainPanel;
-import com.educonnect.common.bean.payload.DatabasePayload;
-import com.educonnect.common.bean.payload.InfoPayload;
+import com.educonnect.admin.ui.panels.editpanel.EditPanel;
+
+import static com.educonnect.admin.ui.UIConstants.*;
 
 public class MainFrame extends JFrame implements WindowListener{
 
 	private static final long serialVersionUID = 2981649205219251588L;
-	
-	private LoginPanel loginPanel = null;
-	private EditPanel editPanel = null;
+
 	private MainPanel  mainPanel  = null;
-	
-	private static MainFrame instance = null;
-	
+	private LoginPanel loginPanel = null;
+	private EditPanel  editPanel  = null;
+		
 	private CardLayout c = null;
 	
-	public MainFrame() {
+	private AdminEngine instance = null;
+	
+	public MainFrame( AdminEngine instance ) {
 		super( "EduConnect admin" );
+
+		this.instance = instance;
+		
+		setUpUI();
+	}
+	
+	private void setUpUI() {
+		setUpFrame();
+		setUIDefaults();
+		createPanels();
+		createCardLayout();
+		addMainPanel();
+	}
+	
+	private void setUpFrame() {
 		super.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		super.setSize( 500, 400 );
 		super.addWindowListener( this );
 		super.setLocationRelativeTo( null );
 		super.setBackground( new Color( 255, 255, 255 ) );
+	}
 	
+	private void setUIDefaults() {
 		UIManager.getLookAndFeelDefaults().put( "Panel.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "TextField.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Button.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Label.background", Color.WHITE );
-		
 		UIManager.getLookAndFeelDefaults().put( "Label.font", UIConstants.FONT.deriveFont( 12f ) );
-		
-		instance = this;
-		
+	}
+	
+	private void createPanels() {
 		mainPanel = new MainPanel();
-		editPanel = new EditPanel();
-		loginPanel = new LoginPanel();
-		
+		editPanel = new EditPanel( instance );
+		loginPanel = new LoginPanel( instance );
+	}
+
+	private void createCardLayout() {
 		c = (CardLayout)mainPanel.getLayout();
-		
-		mainPanel.add( loginPanel, "loginPanel" );
-		mainPanel.add( editPanel, "editPanel" );
+	}
+	
+	private void addMainPanel() {
+		mainPanel.add( loginPanel, LOGIN_PANEL );
+		mainPanel.add( editPanel, EDIT_PANEL );
 		super.add( mainPanel );
-		
-		setUIFont( new FontUIResource( UIConstants.FONT.deriveFont( 12f ) ) );
-	}
-	
-    public static void setUIFont( FontUIResource f ) {
-        Enumeration<?> keys = UIManager.getDefaults().keys();
-        while (keys.hasMoreElements()) {
-            Object key = keys.nextElement();
-            Object value = UIManager.get(key);
-            if (value instanceof FontUIResource) {
-                FontUIResource orig = (FontUIResource) value;
-                Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
-                UIManager.put(key, new FontUIResource(font));
-            }
-        }
-    }
-	
-	public void alert( String cause ) {
-		JOptionPane.showMessageDialog( this, cause, "EduConnect admin", JOptionPane.ERROR_MESSAGE );
-	}
-	
-	public static MainFrame getInstance() {
-		return instance;
 	}
 	
 	public EditPanel getEditPanel() {
@@ -90,13 +83,15 @@ public class MainFrame extends JFrame implements WindowListener{
 		return mainPanel;
 	}
 	
-	public CardLayout getCardLayout() {
-		return c;
+	public void showPanel( String panelName ) {
+		c.show( mainPanel, panelName );
 	}
 	
 	public void display() {
 		super.setVisible( true );
 	}
+	
+	//------------------- WindowAdapter methods --------------------------------
 	
 	@Override
 	public void windowOpened(WindowEvent e) {}
@@ -104,7 +99,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent e) {
 		System.out.println( "Close button pressed" ); 
-		AdminEngine.getInstance().shutdown();
+		instance.shutdown();
 	}
 
 	@Override

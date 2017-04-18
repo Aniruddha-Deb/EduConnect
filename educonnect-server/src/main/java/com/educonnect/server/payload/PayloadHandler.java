@@ -1,5 +1,6 @@
 package com.educonnect.server.payload;
 
+import com.educonnect.common.bean.CommunicationConstants;
 import com.educonnect.common.bean.DatabaseBean;
 import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.Payload;
@@ -17,17 +18,10 @@ public class PayloadHandler {
 	}
 	
 	private static void handleInfoPayload( String info, Client c ) {
-		info = info.toLowerCase();
-		System.out.println( "Got infoPayload" );
 		if( c.getClientType().equals( ClientType.ADMIN ) ) {
-			System.out.println( "Payload sent by admin" );
-			System.out.println( info );
-			if( info.startsWith( "requesting table " ) ) {
-				System.out.println( "Client " + c.getClientName() + " " + info );
-				String[] parts = info.split( " " );
-				String requestedTable = parts[parts.length-1];
-				
-				sendRequestedTableTo( c, requestedTable );
+			
+			if( info.startsWith( CommunicationConstants.REQUEST_TABLE_INFO ) ) {
+				sendRequestedTableTo( c, CommunicationConstants.getRequestedTable( info ) );
 			}
 		}
 	}

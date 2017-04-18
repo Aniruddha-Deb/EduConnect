@@ -30,13 +30,19 @@ public class LoginPanel extends JPanel implements ActionListener{
 	private JLabel         passwordPromptLabel = null;
 	private JLabel         emailIdPromptLabel  = null;
 	
-	private GridBagConstraints c = null;
+	private AdminEngine instance = null;
 	
-	public LoginPanel() {
+	public LoginPanel( AdminEngine instance ) {
 		super();
 		super.setLayout( new GridBagLayout() );
 		super.setBorder( new EmptyBorder( 75, 75, 75, 75 ) );
 		
+		this.instance = instance;
+		
+		setUpUI();
+	}
+	
+	private void setUpUI() {
 		createLoginLabel();
 		createEmailIdPromptLabel();
 		createEmailIdField();
@@ -47,7 +53,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 
 	private void createLoginLabel() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		loginLabel = new JLabel( "Login: " );
 		loginLabel.setFont( UIConstants.FONT.deriveFont( 40f ) );
 		c.gridx = 0;
@@ -59,7 +65,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 		
 	private void createEmailIdPromptLabel() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		emailIdPromptLabel = new JLabel( "Email id: " );
 		emailIdPromptLabel.setFont( UIConstants.FONT.deriveFont( 20f ) );
 		c.gridx = 0;
@@ -70,7 +76,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 	
 	private void createEmailIdField() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		if( UIUtils.isSerialized( "emailIdField" ) ) {
 			emailIdField = (JTextField)UIUtils.deserialize( "emailIdField" );
 		}
@@ -87,7 +93,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 	
 	private void createVerticalStrut() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 2;
@@ -96,7 +102,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 	
 	private void createPasswordPromptLabel() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		passwordPromptLabel = new JLabel( "Password: " );
 		passwordPromptLabel.setFont( UIConstants.FONT.deriveFont( 20f ) );
 		c.gridx = 0;
@@ -107,7 +113,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 	
 	private void createPasswordField() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		passwordField = new JPasswordField();
 		passwordField.setEchoChar( '•' );
 		passwordField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
@@ -120,7 +126,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 	}
 	
 	private void createLoginButton() {
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		loginButton = new JButton( "Log in" );
 		loginButton.addActionListener( this );
 		loginButton.setFont( UIConstants.FONT.deriveFont( 20f ) );
@@ -137,8 +143,8 @@ public class LoginPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed( ActionEvent e ) {
 		UIUtils.serialize( emailIdField, "emailIdField" );
-		AdminEngine.getInstance().sendLoginRequest( emailIdField.getText(), 
-													passwordField.getPassword()  
-												  );
+		instance.sendLoginRequest( emailIdField.getText(), 
+								   passwordField.getPassword()  
+							 	 );
 	}
 }

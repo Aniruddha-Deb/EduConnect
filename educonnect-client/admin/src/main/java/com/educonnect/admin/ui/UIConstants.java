@@ -6,6 +6,9 @@ import java.io.File;
 public class UIConstants {
 	
 	public static Font FONT = null;
+	public static final String LOGIN_PANEL = "Login Panel";
+	public static final String EDIT_PANEL  = "Login Panel";
+	
 	
 	static {
 		String pathName = null;

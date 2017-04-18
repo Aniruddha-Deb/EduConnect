@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import com.educonnect.common.bean.Bean;
+import com.educonnect.common.bean.CommunicationConstants;
 import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.ShutdownBean;
 import com.educonnect.common.bean.payload.Payload;
@@ -40,8 +41,9 @@ public class Client {
 		
 		if( clientType.equals( ClientType.ADMIN ) ) {			
 			this.clientName = JDBCAdapter.getInstance().getAdminName( UID );
-			send( new InfoBean( clientName ) );
-			send( new InfoBean( JDBCAdapter.getInstance().getEditableClasses() ) );
+			send( new InfoBean( CommunicationConstants.NAME_INFO + clientName ) );
+			send( new InfoBean( CommunicationConstants.DB_HEADER_INFO + 
+								JDBCAdapter.getInstance().getEditableClasses() ) );
 		}
 	}
 	

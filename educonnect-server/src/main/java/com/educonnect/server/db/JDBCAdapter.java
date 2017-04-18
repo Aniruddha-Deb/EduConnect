@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.educonnect.common.bean.CommunicationConstants;
 import com.educonnect.common.client.ClientType;
 
 public class JDBCAdapter {
@@ -116,7 +117,7 @@ public class JDBCAdapter {
 
 	public String getEditableClasses() {
 		String query = "SELECT DISTINCT class, section FROM students";
-		StringBuilder b = new StringBuilder( "DB headers:" );
+		StringBuilder b = new StringBuilder();
 				 	
 		try {
 			Statement st = connection.createStatement();
