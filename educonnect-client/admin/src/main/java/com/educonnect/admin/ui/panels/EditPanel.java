@@ -3,15 +3,28 @@ package com.educonnect.admin.ui.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -19,6 +32,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellRenderer;
 
+import com.educonnect.admin.Constants;
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.common.bean.InfoBean;
@@ -30,13 +44,22 @@ public class EditPanel extends JPanel {
 	private static final long serialVersionUID = 8043632711448308358L;
 	
 	private JTabbedPane tabbedPane = null;
+	private JPanel optionPanel = null;
+	private JLabel infoLabel = null;
 	private ImageIcon icon = null;
 	private JPanel[] panels = null;
+	private GridBagConstraints c = null;
 	
 	public EditPanel() {
 		super();
 		super.setBackground( Color.WHITE );
 		super.setLayout( new BorderLayout() );
+		optionPanel = new JPanel();
+		optionPanel.setLayout( new GridBagLayout() );
+		super.add( optionPanel, BorderLayout.NORTH );
+		infoLabel = new JLabel( "Test" );
+		super.add( infoLabel, BorderLayout.SOUTH );
+		
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setBackground( Color.WHITE );
 		tabbedPane.addChangeListener( new ChangeListener() {
@@ -59,9 +82,72 @@ public class EditPanel extends JPanel {
 		super.add( tabbedPane, BorderLayout.CENTER );
 	}
 	
+	private void setUpOptionPanel() {
+		
+		JPopupMenu menu = new JPopupMenu();
+		menu.setFont( UIConstants.FONT.deriveFont( 12f ) );
+		menu.setBackground( Color.WHITE );
+		menu.add( "Logout" );
+		
+		optionPanel.setBackground( Color.BLACK );
+		c = new GridBagConstraints();
+		JButton nameButton = new JButton( Constants.userName );
+		nameButton.setForeground( Color.WHITE );
+		nameButton.setHorizontalAlignment( SwingConstants.LEFT );
+		nameButton.setFont( UIConstants.FONT.deriveFont( Font.BOLD, 15f ) );
+		nameButton.setBorder( new EmptyBorder( 0, 3, 0, 0 ) );
+		nameButton.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed( ActionEvent e ) {
+				menu.show( nameButton, 3, nameButton.getHeight() );
+			}
+		} );
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.fill = GridBagConstraints.BOTH ;
+		optionPanel.add( nameButton, c );
+		
+		Image image1 = null;
+		try {
+			image1 = ImageIO.read( new File( "src/main/resources/save_to_db.png" ) );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ImageIcon saveIcon = new ImageIcon( image1 );
+		JButton saveButton = new JButton( saveIcon );
+		saveButton.setBorder( new EmptyBorder( 4, 4, 4, 4 ) );
+		saveButton.setBackground( Color.BLACK );
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		optionPanel.add( saveButton, c );
+		
+		Image image2 = null;
+		try {
+			image2 = ImageIO.read( new File( "src/main/resources/export_to_excel.png" ) );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ImageIcon exportIcon = new ImageIcon( image2 );
+		JButton exportButton = new JButton( exportIcon );
+		exportButton.setBorder( new EmptyBorder( 4, 4, 4, 4 ) );
+		exportButton.setBackground( Color.BLACK );
+		c = new GridBagConstraints();
+		c.gridx = 2;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		optionPanel.add( exportButton, c );		
+	}
+	
+	
 	public void load( InfoPayload p ) {
 		
 		icon = new ImageIcon( "src/main/resources/db.png", "lool" );
+		setUpOptionPanel();
+		optionPanel.repaint();
 		
 		String[] parts = p.getInfo().split( " " );
 		
@@ -70,7 +156,6 @@ public class EditPanel extends JPanel {
 		for( int i=0; i<panels.length; i++ ) {
 			System.out.println( "Made panel" );   
 			panels[i] = new JPanel();
-			panels[i].setBackground( Color.WHITE );
 			panels[i].setLayout( new BorderLayout() );
 		}
 		
@@ -94,6 +179,7 @@ public class EditPanel extends JPanel {
 		table.setRowHeight( 20 );
 		
 		JScrollPane scrollPane = new JScrollPane( table );
+		scrollPane.setBackground( Color.WHITE );
 		table.setFillsViewportHeight( true );
 		
 		JTextField field = new JTextField();

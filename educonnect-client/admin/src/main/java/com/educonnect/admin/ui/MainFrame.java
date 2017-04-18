@@ -39,6 +39,13 @@ public class MainFrame extends JFrame implements WindowListener{
 		super.setLocationRelativeTo( null );
 		super.setBackground( new Color( 255, 255, 255 ) );
 	
+		UIManager.getLookAndFeelDefaults().put( "Panel.background", Color.WHITE );
+		UIManager.getLookAndFeelDefaults().put( "TextField.background", Color.WHITE );
+		UIManager.getLookAndFeelDefaults().put( "Button.background", Color.WHITE );
+		UIManager.getLookAndFeelDefaults().put( "Label.background", Color.WHITE );
+		
+		UIManager.getLookAndFeelDefaults().put( "Label.font", UIConstants.FONT.deriveFont( 12f ) );
+		
 		instance = this;
 		
 		mainPanel = new MainPanel();

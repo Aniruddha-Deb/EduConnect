@@ -34,7 +34,6 @@ public class LoginPanel extends JPanel implements ActionListener{
 	
 	public LoginPanel() {
 		super();
-		super.setBackground( Color.WHITE );
 		super.setLayout( new GridBagLayout() );
 		super.setBorder( new EmptyBorder( 75, 75, 75, 75 ) );
 		
