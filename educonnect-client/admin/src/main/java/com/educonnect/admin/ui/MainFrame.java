@@ -84,7 +84,17 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 	
 	public void showPanel( String panelName ) {
+		System.out.println( "Showing panel " + panelName );
 		c.show( mainPanel, panelName );
+		mainPanel.revalidate();
+	}
+	
+	public void showPrevious() {
+		c.previous( mainPanel );
+	}
+	
+	public void showNext() {
+		c.next( mainPanel );
 	}
 	
 	public void display() {

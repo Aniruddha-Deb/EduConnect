@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -18,8 +19,6 @@ public class NameButton extends JButton implements ActionListener{
 
 	private static final long serialVersionUID = -744490786481075169L;
 	private NameButtonPopupMenu menu = null;
-	// TODO remove this when logout is implemented
-	@SuppressWarnings("unused")
 	private AdminEngine instance = null;
 	
 	public NameButton( AdminEngine instance ) {
@@ -55,15 +54,17 @@ public class NameButton extends JButton implements ActionListener{
 			super();
 			super.setFont( UIConstants.FONT.deriveFont( 12f ) );
 			super.setBackground( Color.WHITE );
-			super.add( LOGOUT_COMMAND );
+			
+			JMenuItem logout = new JMenuItem( LOGOUT_COMMAND );
+			logout.addActionListener( this );
+			super.add( logout );
 		}
 
 		@Override
 		public void actionPerformed( ActionEvent e ) {
 			switch( e.getActionCommand() ) {
-				case LOGOUT_COMMAND: 
-					System.out.println( "Admin is trapped in the system! HAHAAAAAA" );
-					// TODO jokes aside, implement logout through the engine.
+				case LOGOUT_COMMAND:
+					instance.logout();
 			}
 		}
 		

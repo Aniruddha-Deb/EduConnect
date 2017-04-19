@@ -42,8 +42,10 @@ public class Client {
 		if( clientType.equals( ClientType.ADMIN ) ) {			
 			this.clientName = JDBCAdapter.getInstance().getAdminName( UID );
 			send( new InfoBean( CommunicationConstants.NAME_INFO + clientName ) );
+			System.out.println( "Sent name" );
 			send( new InfoBean( CommunicationConstants.DB_HEADER_INFO + 
 								JDBCAdapter.getInstance().getEditableClasses() ) );
+			System.out.println( "Sent headers" );
 		}
 	}
 	

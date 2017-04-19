@@ -139,12 +139,13 @@ public class LoginPanel extends JPanel implements ActionListener{
 		c.anchor = GridBagConstraints.SOUTH;
 		super.add( loginButton, c );
 	}
-
+	
 	@Override
 	public void actionPerformed( ActionEvent e ) {
 		UIUtils.serialize( emailIdField, "emailIdField" );
-		instance.sendLoginRequest( emailIdField.getText(), 
+		instance.login( emailIdField.getText(), 
 								   passwordField.getPassword()  
 							 	 );
+		passwordField.setText( null );
 	}
 }

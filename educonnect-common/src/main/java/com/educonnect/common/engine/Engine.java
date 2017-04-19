@@ -59,6 +59,8 @@ public abstract class Engine {
 	 */
 	public abstract void start();
 	
+	public abstract void login( String emailId, char[] password );
+	
 	/**
 	 * This method (on the client side) is called by the UI MainFrame when the 
 	 * close button is pressed. It tends to shutdown the receiver thread and the 
@@ -67,5 +69,7 @@ public abstract class Engine {
 	 * the server main thread can close.
 	 */
 	public abstract void shutdown();
+	
+	public abstract void logout();
 	
 }

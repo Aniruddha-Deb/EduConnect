@@ -137,6 +137,8 @@ public class EditPanel extends JPanel implements ChangeListener{
 	
 	public void load( String s ) {
 		
+		tabbedPane.removeAll();
+		
 		ImageIcon icon = new ImageIcon( DB_RESOURCE );
 		loadOptionPanel();
 		
@@ -240,8 +242,13 @@ public class EditPanel extends JPanel implements ChangeListener{
 
 	@Override
 	public void stateChanged( ChangeEvent e ) {
-		instance.send( new InfoBean( "Requesting table " + 
-						tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );				
+		try {
+			instance.send( new InfoBean( "Requesting table " + 
+							tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
+		} catch( IndexOutOfBoundsException ex ) {
+			instance.send( new InfoBean( "Requesting table " + 
+					tabbedPane.getTitleAt( 0 ) ) );			
+		}
 	}
 }
 

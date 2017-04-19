@@ -33,19 +33,11 @@ public class AdminEngine extends Engine{
 		adapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
 	}
 	
-	public void sendLoginRequest( String emailId, char[] password ) {
+	@Override
+	public void login( String emailId, char[] password ) {
 		adapter.connect();
 		adapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
-		Payload p = adapter.get();
-		
-		if( p instanceof FailPayload ) {
-			loginRequestFailed( (FailPayload)p );
-		}
-		else if( p instanceof InfoPayload ) {
-			if( ((InfoPayload) p).getInfo().startsWith( CommunicationConstants.NAME_INFO ) ) {
-				loginRequestSucceded( (InfoPayload)p );
-			}
-		}
+		System.out.println( "Sent login bean" );
 	}
 	
 	private void loginRequestFailed( FailPayload p ) {
@@ -55,6 +47,7 @@ public class AdminEngine extends Engine{
 	
 	private void loginRequestSucceded( InfoPayload p ) {
 		Constants.userName = CommunicationConstants.getName( p.getInfo() );
+		System.out.println( "Showing edit panel" );
 		mainFrame.showPanel( UIConstants.EDIT_PANEL );
 	}
 	
@@ -66,6 +59,9 @@ public class AdminEngine extends Engine{
 		else if( p instanceof DatabasePayload ) {
 			handleDatabasePayload( (DatabasePayload)p );
 		}
+		else if( p instanceof FailPayload ) {
+			loginRequestFailed( (FailPayload)p );
+		}
 	}
 	
 	private void handleInfoPayload( InfoPayload p ) {
@@ -76,6 +72,11 @@ public class AdminEngine extends Engine{
 				CommunicationConstants.getDBHeaders( info )
 			);
 		}
+		else if( ((InfoPayload) p).getInfo().startsWith( CommunicationConstants.NAME_INFO ) ) {
+			System.out.println( "Showing stuff" );
+			loginRequestSucceded( (InfoPayload)p );
+		}
+
 	}
 	
 	private void handleDatabasePayload( DatabasePayload p ) {
@@ -97,6 +98,13 @@ public class AdminEngine extends Engine{
 
 	@Override
 	public void shutdown() {
+		disconnectAdapter();
+		mainFrame.setVisible( false );
+		mainFrame.dispose();
+		System.exit( 0 );
+	}
+	
+	private void disconnectAdapter() {
 		if( adapter.isConnected() ) {
 			adapter.shutdown();
 			while( adapter.getReceiverThread().isAlive() ) {
@@ -107,8 +115,11 @@ public class AdminEngine extends Engine{
 				}
 			}
 		}
-		mainFrame.setVisible( false );
-		mainFrame.dispose();
-		System.exit( 0 );
+	}
+
+	@Override
+	public void logout() {
+		disconnectAdapter();
+		mainFrame.showPanel( UIConstants.LOGIN_PANEL );
 	}	
 }

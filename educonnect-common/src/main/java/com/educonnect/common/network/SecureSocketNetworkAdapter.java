@@ -81,7 +81,11 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	}
 	
 	public boolean isConnected() {
-		return (sslSocket != null);
+		return (sslSocket != null && sslSocket.isConnected() );
+	}
+	
+	public boolean isClosed() {
+		return (sslSocket.isClosed());
 	}
 
 	@Override
