@@ -2,7 +2,6 @@ package com.educonnect.admin.ui.panels.editpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -17,24 +16,22 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.admin.ui.util.TableUtils;
 import com.educonnect.common.bean.InfoBean;
+import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.bean.payload.db.DatabasePayload;
 
 public class EditPanel extends JPanel implements ChangeListener, ActionListener{
@@ -165,13 +162,11 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 	}
 	
 	public void display( DatabasePayload d ) {
-		
-		String[] headers = d.getHeaders();
-		String[][] data  = d.getData();
-		System.out.println( headers[0] );
+
+		Student[] students = d.getStudents();
 		String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
 
-		JTable table = setUpEditTable( data, headers );
+		JTable table = setUpEditTable( students );
 		tables.put( title, table );
 		
 		JScrollPane scrollPane = new JScrollPane( table );
@@ -182,15 +177,15 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		tabbedPane.repaint();
 	}
 	
-	private JTable setUpEditTable( String[][] data, String[] headers ) {
-		JTable table = createTable( data, headers );
+	private JTable setUpEditTable( Student[] students ) {
+		JTable table = createTable( students );
 		table = setOneClickEditable( table );
 		return table;
 	}
 	
-	private JTable createTable( String[][] data, String[] headers ) {
-		JTable table = new JTable( data, headers );
-		table.setDefaultRenderer( Object.class, new CustomRenderer( table ) );
+	private JTable createTable( Student[] students ) {
+		JTable table = new JTable( new EditTableModel( students ) );
+		table.setDefaultRenderer( Object.class, new EditTableRenderer( table ) );
 		table.setGridColor( Color.GRAY );
 		table.setFont( UIConstants.FONT.deriveFont( 13f ) );
 		table.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
@@ -217,42 +212,6 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		return table;
 	}
 	
-	public static class CustomRenderer implements TableCellRenderer{
-		TableCellRenderer render;
-		Border b;
-		
-		private CustomRenderer( JTable t ) {
-			this.render = t.getDefaultRenderer( Object.class );
-		}
-		
-		@Override
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			JComponent result = (JComponent)render.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if( isSelected ) {
-				result.setBackground( Color.LIGHT_GRAY );
-				result.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-			}
-			else {
-				result.setBackground( Color.WHITE );
-				result.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-			}
-			
-			if( hasFocus ) {
-				result.setBackground( new Color( 92, 170, 248) );
-				result.setForeground( Color.WHITE );
-				result.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-			}
-			else {
-				result.setForeground( Color.BLACK );				
-				result.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-			}
-			
-			return result;
-		}
-	}
-
 	@Override
 	public void stateChanged( ChangeEvent e ) {
 		try {
