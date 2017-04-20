@@ -76,7 +76,9 @@ public enum Header {
 	 * @see DatabaseBean
 	 * @see DatabasePayload
 	 */
-
-	DATABASE;	
+	DATABASE,
+	
+	DBUPDATE, 
+	DBFEEDBACK;
 
 }

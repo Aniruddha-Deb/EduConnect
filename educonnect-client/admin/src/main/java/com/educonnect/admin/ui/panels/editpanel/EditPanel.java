@@ -6,8 +6,12 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultCellEditor;
@@ -29,26 +33,29 @@ import javax.swing.table.TableCellRenderer;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
+import com.educonnect.admin.ui.util.TableUtils;
 import com.educonnect.common.bean.InfoBean;
-import com.educonnect.common.bean.payload.DatabasePayload;
+import com.educonnect.common.bean.payload.db.DatabasePayload;
 
-public class EditPanel extends JPanel implements ChangeListener{
+public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 
 	private static final long   serialVersionUID         = 8043632711448308358L;
 	private static final String DB_RESOURCE              = "src/main/resources/db.png"; 
 	private static final String SAVE_TO_DB_RESOURCE      = "src/main/resources/save_to_db.png";
 	private static final String EXPORT_TO_EXCEL_RESOURCE = "src/main/resources/export_to_excel.png";
+
+	private HashMap<String, JTable> tables = null;
 	
-	private JTabbedPane tabbedPane  = null;
+	private JTabbedPane  tabbedPane  = null;
 	
-	private JPanel      optionPanel = null;
-	private NameButton  nameButton  = null;
+	private JPanel       optionPanel = null;
+	private NameButton   nameButton  = null;
 	
-	private JPanel[]    panels      = null;
+	private JPanel[]     panels      = null;
 	
-	private JLabel      infoLabel   = null;
+	private JLabel       infoLabel   = null;
 	
-	private AdminEngine instance    = null;
+	private AdminEngine  instance    = null;
 	
 	public EditPanel( AdminEngine instance ) {		
 		super();
@@ -93,6 +100,7 @@ public class EditPanel extends JPanel implements ChangeListener{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		JButton saveButton = createImageButton( SAVE_TO_DB_RESOURCE );
+		saveButton.addActionListener( this );
 		c.gridx = 1;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.EAST;
@@ -137,6 +145,7 @@ public class EditPanel extends JPanel implements ChangeListener{
 	
 	public void load( String s ) {
 		
+		tables = new LinkedHashMap<>();
 		tabbedPane.removeAll();
 		
 		ImageIcon icon = new ImageIcon( DB_RESOURCE );
@@ -145,6 +154,7 @@ public class EditPanel extends JPanel implements ChangeListener{
 		String[] parts = s.split( " " );
 		
 		panels = new JPanel[parts.length];
+		tables.put( s, new JTable() );
 		
 		for( int i=0; i<panels.length; i++ ) {
 			panels[i] = new JPanel();
@@ -158,8 +168,11 @@ public class EditPanel extends JPanel implements ChangeListener{
 		
 		String[] headers = d.getHeaders();
 		String[][] data  = d.getData();
+		System.out.println( headers[0] );
+		String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
 
 		JTable table = setUpEditTable( data, headers );
+		tables.put( title, table );
 		
 		JScrollPane scrollPane = new JScrollPane( table );
 		scrollPane.setBackground( Color.WHITE );
@@ -249,6 +262,68 @@ public class EditPanel extends JPanel implements ChangeListener{
 			instance.send( new InfoBean( "Requesting table " + 
 					tabbedPane.getTitleAt( 0 ) ) );			
 		}
+	}
+
+	@Override
+	public void actionPerformed( ActionEvent e ) {
+		for( String s : tables.keySet() ) {
+			JTable t = tables.get( s );
+			String[]   headers = null;
+			String[][] data    = null;
+			
+			if( t != null ) {
+				headers = getHeaders( t );
+				data = getData( s, t );
+				for( int i=0; i<headers.length; i++ ) {
+					System.out.print( headers[i] + " " );
+				}
+				System.out.println();
+				for( int i=0; i<data.length; i++ ) {
+					for( int j=0; j<data[i].length; j++ ) {
+						System.out.print( data[i][j] + " " );
+					}
+					System.out.println();
+				}
+			}
+		}
+	}
+	
+	private String[] getHeaders( JTable table ) {
+		
+		String[] tableHeaders = TableUtils.scrapeHeaders( table );
+		String[] headers   = new String[tableHeaders.length + 2];
+		headers[0] = "class";
+		headers[1] = "section";
+		
+		for( int i=0, c=2; i<tableHeaders.length; c++, i++ ) {
+			headers[c] = tableHeaders[i]; 
+		}
+		return headers;
+	}
+	
+	private String[][] getData( String clazz, JTable table ) {
+		
+		String[][] tableData = TableUtils.scrapeData( table );
+		String[][] data = null;
+		try {
+			data = new String[tableData.length]
+					[tableData[0].length + 2];
+			String[] clazzParts = clazz.split( "-" );
+			
+			for( int i=0; i<data.length; i++ ) {
+				data[i][0] = clazzParts[0];
+				data[i][1] = clazzParts[1];
+
+				for( int j=0, c=2; j<data[i].length; c++, j++ ) {
+					data[i][c] = tableData[i][j]; 
+				}
+			}
+		} catch( ArrayIndexOutOfBoundsException e ) {
+			System.out.println( "le lulz" );
+			return new String[0][0];
+		}
+		
+		return data;
 	}
 }
 

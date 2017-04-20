@@ -1,7 +1,6 @@
 package com.educonnect.common.parser;
 
 import com.educonnect.common.bean.payload.AuthPayload;
-import com.educonnect.common.bean.payload.DatabasePayload;
 import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
 import com.educonnect.common.bean.payload.InfoPayload;
@@ -10,6 +9,7 @@ import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.bean.payload.RegisterPayload;
 import com.educonnect.common.bean.payload.ShutdownPayload;
 import com.educonnect.common.bean.payload.TextPayload;
+import com.educonnect.common.bean.payload.db.DatabasePayload;
 import com.google.gson.Gson;
 
 /**

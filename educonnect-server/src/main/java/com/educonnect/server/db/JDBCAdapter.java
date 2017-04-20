@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.client.ClientType;
 
 public class JDBCAdapter {
@@ -86,27 +89,26 @@ public class JDBCAdapter {
 		return new String[]{ "rollNo", "firstName", "lastName" }; 
 	}
 	
-	public String[][] getStudentDatabaseData( int clazz, char section ) {
+	public Student[] getStudentDatabaseData( int clazz, char section ) {
 		String query = "SELECT rollNo, firstName, lastName FROM students WHERE "
 				+ "class=" + clazz + " AND section='" + section + "'";
 		
-		String[][] data = new String[100][3];				 	
+		List<Student> students = new ArrayList<>();				 	
 		try {
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery( query );
 			
-			for( int i=0; rs.next(); i++ ) {
-				data[i][0] = rs.getInt( "rollNo" ) + "" ;
-				System.out.println( data[i][0] );
-				data[i][1] = rs.getString( "firstName" );
-				System.out.println( data[i][1] );
-				data[i][2] = rs.getString( "lastName" );
-				System.out.println( data[i][2] );
+			while( rs.next() ) {
+				int    rollNo    = rs.getInt( "rollNo" );
+				String firstName = rs.getString( "firstName" );
+				String lastName  = rs.getString( "lastName" );
+				Student s = new Student( rollNo, firstName, lastName );
+				students.add( s );
 			}
 		} catch( SQLException e ) {
 			e.printStackTrace();
 		}
-		return data;
+		return students.toArray( new Student[students.size()] );
 	}
 	
 	private int getStudentClient( String emailId, char[] password ) {
@@ -115,7 +117,7 @@ public class JDBCAdapter {
 	}
 
 	public String getEditableClasses() {
-		String query = "SELECT DISTINCT class, section FROM students";
+		String query = "SELECT DISTINCT class, section FROM classes";
 		StringBuilder b = new StringBuilder();
 				 	
 		try {

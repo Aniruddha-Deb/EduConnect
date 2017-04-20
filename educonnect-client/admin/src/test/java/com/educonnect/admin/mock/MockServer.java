@@ -10,10 +10,10 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.common.bean.DatabaseBean;
 import com.educonnect.common.bean.FailBean;
 import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.ShutdownBean;
+import com.educonnect.common.bean.db.DatabaseBean;
 import com.educonnect.common.bean.payload.FilePayload;
 import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.LoginPayload;

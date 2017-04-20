@@ -1,7 +1,8 @@
 package com.educonnect.server.payload;
 
 import com.educonnect.common.bean.CommunicationConstants;
-import com.educonnect.common.bean.DatabaseBean;
+import com.educonnect.common.bean.db.DatabaseBean;
+import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.bean.payload.InfoPayload;
 import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.client.ClientType;
@@ -29,12 +30,12 @@ public class PayloadHandler {
 	private static void sendRequestedTableTo( Client c, String database ) {
 		String[] databaseParts = database.split( "-" );
 		
-		String[] headers = JDBCAdapter.getInstance().getStudentDatabaseHeaders();
-		String[][] data  = JDBCAdapter.getInstance().getStudentDatabaseData( 
-								Integer.parseInt( databaseParts[0] ),
-								databaseParts[1].charAt(0) );
-		
-		c.send( new DatabaseBean( headers, data ) );
+		int clazz = Integer.parseInt( databaseParts[0] );
+		char section = databaseParts[1].charAt(0);
+		Student[] students = JDBCAdapter.getInstance().getStudentDatabaseData( 
+							 clazz, section );
+				
+		c.send( new DatabaseBean( clazz, section, students ) );
 	}
 
 }
