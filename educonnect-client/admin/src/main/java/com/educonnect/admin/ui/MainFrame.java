@@ -86,7 +86,6 @@ public class MainFrame extends JFrame implements WindowListener{
 	public void showPanel( String panelName ) {
 		System.out.println( "Showing panel " + panelName );
 		c.show( mainPanel, panelName );
-		mainPanel.revalidate();
 	}
 	
 	public void showPrevious() {
@@ -104,7 +103,8 @@ public class MainFrame extends JFrame implements WindowListener{
 	//------------------- WindowAdapter methods --------------------------------
 	
 	@Override
-	public void windowOpened(WindowEvent e) {}
+	public void windowOpened(WindowEvent e) {
+	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -119,10 +119,12 @@ public class MainFrame extends JFrame implements WindowListener{
 	public void windowIconified(WindowEvent e) {}
 
 	@Override
-	public void windowDeiconified(WindowEvent e) {}
+	public void windowDeiconified(WindowEvent e) {
+	}
 
 	@Override
-	public void windowActivated(WindowEvent e) {}
+	public void windowActivated(WindowEvent e) {
+	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {}

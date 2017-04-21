@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import com.educonnect.common.bean.db.Student;
 
 class EditTableModel extends AbstractTableModel{
-
+	
 	private static final long serialVersionUID = 7094246511409713404L;
 	private static final int  NUM_COLS = 3;
 	private static final String[] headers  = { "roll no", "first name", "last name" };
@@ -50,7 +50,17 @@ class EditTableModel extends AbstractTableModel{
 				}
 			}
 			else if( serverCopy.size() < goldenCopy.size() ) {
-				// There has been a deletion in the server				
+				// There has been a deletion in the server
+				// figure out what has been deleted and where
+				// if the row deleted has not been edited, then just delete it.
+				// if the row
+				for( int i=0; i<serverCopy.size(); i++ ) {
+					if( !( goldenCopy.contains( serverCopy.get(i) ) ) ) {
+						System.out.println( "Server copy edited!" );
+						goldenCopy.add( serverCopy.get(i) );
+						addToEditCopy( serverCopy.get(i) );
+					}
+				}
 			}
 			else {
 				// There has been an update on an item
@@ -84,9 +94,17 @@ class EditTableModel extends AbstractTableModel{
 		}
 	}
 	
+	public void addRow( int rowIndex ) {
+		editCopy.add( new Student( -1, null, null ) );
+		Student addedStudent = editCopy.get( editCopy.size()-1 );
+		setValueAt( "", rowIndex, 0 );
+		setValueAt( addedStudent.getFirstName(), rowIndex, 1 );
+		setValueAt( addedStudent.getLastName() , rowIndex, 2 );
+	}
+	
 	@Override
 	public int getRowCount() {
-		return goldenCopy.size();
+		return editCopy.size();
 	}
 
 	@Override
@@ -106,23 +124,37 @@ class EditTableModel extends AbstractTableModel{
 	
 	@Override
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex ) {
-		super.setValueAt( aValue, rowIndex, columnIndex );
+		Student s = editCopy.get( rowIndex );
+		switch ( columnIndex ) {
+		case 0:
+			try {
+				s.setRollNo( Integer.parseInt( (String)aValue ) );
+			} catch( NumberFormatException ex ) {
+				s.setRollNo( editCopy.get( rowIndex-1 ).getRollNo() + 1 );
+			}
+			break;
+		case 1:
+			s.setFirstName( (String)aValue );
+			break;
+		case 2:
+			s.setLastName( (String)aValue );
+			break;
+		}
 		fireTableCellUpdated( rowIndex, columnIndex );
 	}
-
+	
 	@Override
 	public Object getValueAt( int rowIndex, int columnIndex ) {
 		
 		switch( columnIndex ) {
 		case 0:
-			return goldenCopy.get(rowIndex).getRollNo();
+			return editCopy.get(rowIndex).getRollNo();
 		case 1:
-			return goldenCopy.get(rowIndex).getFirstName();
+			return editCopy.get(rowIndex).getFirstName();
 		case 2:
-			return goldenCopy.get(rowIndex).getLastName();
+			return editCopy.get(rowIndex).getLastName();
 		}
 		
 		return null;
 	}
-
 }

@@ -7,12 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
@@ -34,7 +38,7 @@ import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.bean.payload.db.DatabasePayload;
 
-public class EditPanel extends JPanel implements ChangeListener, ActionListener{
+public class EditPanel extends JPanel implements ChangeListener, ActionListener, KeyListener{
 
 	private static final long   serialVersionUID         = 8043632711448308358L;
 	private static final String DB_RESOURCE              = "src/main/resources/db.png"; 
@@ -153,9 +157,10 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		panels = new JPanel[parts.length];
 		
 		for( int i=0; i<panels.length; i++ ) {
-			tables.put( parts[i], new JTable( new EditTableModel() ) );
+			tables.put( parts[i], createEditTable() );
 			panels[i] = new JPanel();
 			panels[i].setLayout( new BorderLayout() );
+			panels[i].addKeyListener( this );
 			tabbedPane.addTab( parts[i], icon, panels[i], parts[i] );
 		}		
 		System.out.println( "loaded" ); 
@@ -183,20 +188,38 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		tabbedPane.repaint();
 	}
 	
-	private JTable setUpEditTable( Student[] students ) {
-		JTable table = createTable( students );
+	private JTable createEditTable() {
+		JTable table = createTable();
 		table = setOneClickEditable( table );
 		return table;
 	}
 	
-	private JTable createTable( Student[] students ) {
-		JTable table = new JTable( new EditTableModel().withStudents( students ) );
+	private JTable createTable() {
+		JTable table = new JTable( new EditTableModel() );
 		table.setDefaultRenderer( Object.class, new EditTableRenderer( table ) );
 		table.setGridColor( Color.GRAY );
 		table.setFont( UIConstants.FONT.deriveFont( 13f ) );
 		table.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
 		table.getTableHeader().setFont( UIConstants.FONT.deriveFont( 13f ) );
 		table.setRowHeight( 20 );
+		KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
+		table.getInputMap( JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put( enter, "newRow" );
+		table.getActionMap().put( "newRow", new AbstractAction() {
+			
+			private static final long serialVersionUID = -2036038687905519612L;
+
+			@Override
+			public void actionPerformed( ActionEvent e ) {
+				EditTableModel model = (EditTableModel)table.getModel();
+				int selectedRow = table.getSelectedRow();
+				if( table.getSelectedRow() == model.getRowCount()-1 ) {
+					model.addRow( selectedRow+1 );
+					table.changeSelection( selectedRow+1, 1, false, false );
+				}
+			}
+		} );
+		System.out.println( "Put enterAction in input map" );
+		
 		return table;
 	}
 	
@@ -289,6 +312,23 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		}
 		
 		return data;
+	}
+
+	@Override
+	public void keyTyped( KeyEvent e ) {
+		if( e.getKeyCode() == KeyEvent.VK_ENTER ) {
+			System.out.println( "detected an enter key" );
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
 	}
 }
 

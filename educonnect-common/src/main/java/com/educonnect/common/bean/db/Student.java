@@ -25,6 +25,18 @@ public class Student {
 		return lastName;
 	}
 	
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public void setRollNo(int rollNo) {
+		this.rollNo = rollNo;
+	}
+	
 	@Override
 	public boolean equals( Object obj ) {
 		if( obj == this ) return true;
