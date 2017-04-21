@@ -151,9 +151,9 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		String[] parts = s.split( " " );
 		
 		panels = new JPanel[parts.length];
-		tables.put( s, new JTable() );
 		
 		for( int i=0; i<panels.length; i++ ) {
+			tables.put( parts[i], new JTable( new EditTableModel() ) );
 			panels[i] = new JPanel();
 			panels[i].setLayout( new BorderLayout() );
 			tabbedPane.addTab( parts[i], icon, panels[i], parts[i] );
@@ -166,8 +166,14 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 		Student[] students = d.getStudents();
 		String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
 
-		JTable table = setUpEditTable( students );
-		tables.put( title, table );
+		JTable table = tables.get( title );
+		EditTableModel etm = (EditTableModel)table.getModel();
+		if( etm.isGoldenCopyPresent() ) {
+			etm.updateServerCopy( students );
+		}
+		else {
+			table.setModel( etm.withStudents( students ) );
+		}
 		
 		JScrollPane scrollPane = new JScrollPane( table );
 		scrollPane.setBackground( Color.WHITE );
@@ -184,7 +190,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener{
 	}
 	
 	private JTable createTable( Student[] students ) {
-		JTable table = new JTable( new EditTableModel( students ) );
+		JTable table = new JTable( new EditTableModel().withStudents( students ) );
 		table.setDefaultRenderer( Object.class, new EditTableRenderer( table ) );
 		table.setGridColor( Color.GRAY );
 		table.setFont( UIConstants.FONT.deriveFont( 13f ) );
