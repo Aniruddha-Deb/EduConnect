@@ -197,6 +197,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 	private JTable createTable() {
 		JTable table = new JTable( new EditTableModel() );
 		table.setDefaultRenderer( Object.class, new EditTableRenderer( table ) );
+		table.setEnabled( true );
 		table.setGridColor( Color.GRAY );
 		table.setFont( UIConstants.FONT.deriveFont( 13f ) );
 		table.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
@@ -248,6 +249,8 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		try {
 			instance.send( new InfoBean( "Requesting table " + 
 							tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
+			boolean b = panels[tabbedPane.getSelectedIndex()].requestFocusInWindow();
+			System.out.println( b );
 		} catch( IndexOutOfBoundsException ex ) {
 			instance.send( new InfoBean( "Requesting table " + 
 					tabbedPane.getTitleAt( 0 ) ) );			

@@ -1,7 +1,11 @@
 package com.educonnect.common.bean.db;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
 	
+	private static final long serialVersionUID = 8437060009660430333L;
+
 	private int rollNo = -1;
 	
 	private String firstName = null;

@@ -1,11 +1,16 @@
 package com.educonnect.admin.ui.panels.editpanel;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import com.educonnect.common.bean.db.Student;
@@ -26,7 +31,21 @@ class EditTableModel extends AbstractTableModel{
 		this.goldenCopy = new ArrayList<Student>( Arrays.asList( students ) );
 		goldenCopyPresent   = true;
 		this.editCopy   = new ArrayList<>();
-		editCopy.addAll( goldenCopy );
+		for( Student s : goldenCopy ) {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(bos);
+				oos.writeObject( s );
+				oos.flush();
+				oos.close();
+				bos.close();
+				byte[] byteData = bos.toByteArray();
+				ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+				editCopy.add( (Student)new ObjectInputStream(bais).readObject() );
+			} catch( Exception ex ) {
+				ex.printStackTrace();
+			}
+		}
 		return this;
 	}
 	
@@ -53,12 +72,25 @@ class EditTableModel extends AbstractTableModel{
 				// There has been a deletion in the server
 				// figure out what has been deleted and where
 				// if the row deleted has not been edited, then just delete it.
-				// if the row
-				for( int i=0; i<serverCopy.size(); i++ ) {
-					if( !( goldenCopy.contains( serverCopy.get(i) ) ) ) {
-						System.out.println( "Server copy edited!" );
-						goldenCopy.add( serverCopy.get(i) );
-						addToEditCopy( serverCopy.get(i) );
+				// if the row has been edited, show a popup
+				System.out.println( "There's been a delete" ); 
+				for( int i=0; i<goldenCopy.size(); i++ ) {
+					Student gcStudent = goldenCopy.get(i);
+					System.out.println( gcStudent.getRollNo() );
+					System.out.println( gcStudent.getFirstName() );
+					System.out.println( gcStudent.getLastName() );
+					if( !( serverCopy.contains( gcStudent ) ) ) {
+						if( editCopy.contains( gcStudent ) ) {
+							System.out.println( "index > -1" );
+							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getRollNo() );
+							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getFirstName() );
+							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getLastName() );
+							editCopy.remove( editCopy.indexOf( gcStudent ) );
+							goldenCopy.remove( i );
+						}
+						else {
+							JOptionPane.showMessageDialog( null, "You're screwed!" );
+						}
 					}
 				}
 			}
@@ -125,13 +157,21 @@ class EditTableModel extends AbstractTableModel{
 	@Override
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex ) {
 		Student s = editCopy.get( rowIndex );
+		System.out.println( "Got a student with name " + s.getFirstName() );
 		switch ( columnIndex ) {
 		case 0:
 			try {
 				s.setRollNo( Integer.parseInt( (String)aValue ) );
 			} catch( NumberFormatException ex ) {
-				s.setRollNo( editCopy.get( rowIndex-1 ).getRollNo() + 1 );
+				try {
+					s.setRollNo( editCopy.get( rowIndex-1 ).getRollNo() + 1 );
+				} catch( ArrayIndexOutOfBoundsException e ) {
+					s.setRollNo( editCopy.get( rowIndex ).getRollNo() + 1 );					
+				}
+			} catch( ClassCastException exe ) {
+				s.setRollNo( ((Integer)aValue).intValue() );
 			}
+			
 			break;
 		case 1:
 			s.setFirstName( (String)aValue );
