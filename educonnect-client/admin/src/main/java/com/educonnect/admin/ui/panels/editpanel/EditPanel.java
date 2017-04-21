@@ -190,7 +190,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 	
 	private JTable createEditTable() {
 		JTable table = createTable();
-		table = setOneClickEditable( table );
+		table = setCellEditor( table );
 		return table;
 	}
 	
@@ -216,6 +216,9 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 					model.addRow( selectedRow+1 );
 					table.changeSelection( selectedRow+1, 1, false, false );
 				}
+				else {
+					table.changeSelection( selectedRow+1, table.getSelectedColumn(), false, false );					
+				}
 			}
 		} );
 		System.out.println( "Put enterAction in input map" );
@@ -223,7 +226,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		return table;
 	}
 	
-	private JTable setOneClickEditable( JTable table ) {
+	private JTable setCellEditor( JTable table ) {
 		
 		JTextField field = new JTextField();
 		field.setFont( UIConstants.FONT.deriveFont( 13f ) );
@@ -232,7 +235,6 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		field.setForeground( Color.WHITE );
 		
 		DefaultCellEditor editor = new DefaultCellEditor( field );
-		editor.setClickCountToStart( 1 );
 		
 		for ( int i=0; i<table.getColumnCount(); i++ ) {
 			table.setDefaultEditor( table.getColumnClass(i), editor );
