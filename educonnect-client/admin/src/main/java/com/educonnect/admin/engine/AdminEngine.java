@@ -98,14 +98,16 @@ public class AdminEngine extends Engine{
 
 	@Override
 	public void shutdown() {
-		disconnectAdapter();
+		if( adapter != null ) {
+			disconnectAdapter();
+		}
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
 		System.exit( 0 );
 	}
 	
 	private void disconnectAdapter() {
-		if( adapter.isConnected() ) {
+		if( adapter.isOpen() ) {
 			adapter.shutdown();
 			while( adapter.getReceiverThread().isAlive() ) {
 				try {

@@ -31,20 +31,9 @@ class EditTableModel extends AbstractTableModel{
 		this.goldenCopy = new ArrayList<Student>( Arrays.asList( students ) );
 		goldenCopyPresent   = true;
 		this.editCopy   = new ArrayList<>();
+		
 		for( Student s : goldenCopy ) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			try {
-				ObjectOutputStream oos = new ObjectOutputStream(bos);
-				oos.writeObject( s );
-				oos.flush();
-				oos.close();
-				bos.close();
-				byte[] byteData = bos.toByteArray();
-				ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
-				editCopy.add( (Student)new ObjectInputStream(bais).readObject() );
-			} catch( Exception ex ) {
-				ex.printStackTrace();
-			}
+			editCopy.add( deepCopy( s ) );
 		}
 		return this;
 	}
@@ -100,8 +89,26 @@ class EditTableModel extends AbstractTableModel{
 		}
 	}
 	
+	private Student deepCopy( Student s ) {
+		Student student = null;
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject( s );
+			oos.flush();
+			oos.close();
+			bos.close();
+			byte[] byteData = bos.toByteArray();
+			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+			student = (Student)new ObjectInputStream(bais).readObject();
+		} catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return student;
+	}
+	
 	private void addToEditCopy( Student student ) {
-		editCopy.add( student );
+		editCopy.add( deepCopy( student ) );
 		Collections.sort( editCopy, new Comparator<Student>() {
 
 			@Override

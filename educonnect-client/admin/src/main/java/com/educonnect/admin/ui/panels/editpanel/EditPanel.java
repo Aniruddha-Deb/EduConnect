@@ -249,7 +249,8 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		try {
 			instance.send( new InfoBean( "Requesting table " + 
 							tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
-			boolean b = panels[tabbedPane.getSelectedIndex()].requestFocusInWindow();
+			String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
+			boolean b = tables.get( title ).requestFocusInWindow();
 			System.out.println( b );
 		} catch( IndexOutOfBoundsException ex ) {
 			instance.send( new InfoBean( "Requesting table " + 

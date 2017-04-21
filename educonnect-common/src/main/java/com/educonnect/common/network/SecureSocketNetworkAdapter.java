@@ -80,8 +80,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		return receiverThread;
 	}
 	
-	public boolean isConnected() {
-		return (sslSocket != null && sslSocket.isConnected() );
+	public boolean isOpen() {
+		return (sslSocket != null && !(sslSocket.isClosed()) );
 	}
 	
 	public boolean isClosed() {
