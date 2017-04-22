@@ -65,15 +65,8 @@ class EditTableModel extends AbstractTableModel{
 				System.out.println( "There's been a delete" ); 
 				for( int i=0; i<goldenCopy.size(); i++ ) {
 					Student gcStudent = goldenCopy.get(i);
-					System.out.println( gcStudent.getRollNo() );
-					System.out.println( gcStudent.getFirstName() );
-					System.out.println( gcStudent.getLastName() );
 					if( !( serverCopy.contains( gcStudent ) ) ) {
 						if( editCopy.contains( gcStudent ) ) {
-							System.out.println( "index > -1" );
-							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getRollNo() );
-							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getFirstName() );
-							System.out.println( editCopy.get( editCopy.indexOf( gcStudent ) ).getLastName() );
 							editCopy.remove( editCopy.indexOf( gcStudent ) );
 							goldenCopy.remove( i );
 						}
@@ -162,7 +155,6 @@ class EditTableModel extends AbstractTableModel{
 	@Override
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex ) {
 		Student s = editCopy.get( rowIndex );
-		System.out.println( "Got a student with name " + s.getFirstName() );
 		switch ( columnIndex ) {
 		case 0:
 			try {
