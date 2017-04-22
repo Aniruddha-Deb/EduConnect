@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,12 +32,11 @@ import javax.swing.event.ChangeListener;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.UIConstants;
-import com.educonnect.admin.ui.util.TableUtils;
 import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.bean.payload.db.DatabasePayload;
 
-public class EditPanel extends JPanel implements ChangeListener, ActionListener, KeyListener{
+public class EditPanel extends JPanel implements ChangeListener {
 
 	private static final long   serialVersionUID         = 8043632711448308358L;
 	private static final String DB_RESOURCE              = "src/main/resources/db.png"; 
@@ -130,7 +128,6 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		GridBagConstraints c = new GridBagConstraints();
 		JButton saveButton = createImageButton( SAVE_TO_DB_RESOURCE );
 		saveButton.setToolTipText( "Save all tables to database" );
-		saveButton.addActionListener( this );
 		c.gridx = 2;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.EAST;
@@ -190,7 +187,6 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 			tables.put( parts[i], createEditTable() );
 			panels[i] = new JPanel();
 			panels[i].setLayout( new BorderLayout() );
-			panels[i].addKeyListener( this );
 			tabbedPane.addTab( parts[i], icon, panels[i], parts[i] );
 		}		
 		System.out.println( "loaded" ); 
@@ -289,84 +285,4 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 					tabbedPane.getTitleAt( 0 ) ) );			
 		}
 	}
-
-	@Override
-	public void actionPerformed( ActionEvent e ) {
-		for( String s : tables.keySet() ) {
-			JTable t = tables.get( s );
-			String[]   headers = null;
-			String[][] data    = null;
-			
-			if( t != null ) {
-				headers = getHeaders( t );
-				data = getData( s, t );
-				for( int i=0; i<headers.length; i++ ) {
-					System.out.print( headers[i] + " " );
-				}
-				System.out.println();
-				for( int i=0; i<data.length; i++ ) {
-					for( int j=0; j<data[i].length; j++ ) {
-						System.out.print( data[i][j] + " " );
-					}
-					System.out.println();
-				}
-			}
-		}
-	}
-	
-	private String[] getHeaders( JTable table ) {
-		
-		String[] tableHeaders = TableUtils.scrapeHeaders( table );
-		String[] headers   = new String[tableHeaders.length + 2];
-		headers[0] = "class";
-		headers[1] = "section";
-		
-		for( int i=0, c=2; i<tableHeaders.length; c++, i++ ) {
-			headers[c] = tableHeaders[i]; 
-		}
-		return headers;
-	}
-	
-	private String[][] getData( String clazz, JTable table ) {
-		
-		String[][] tableData = TableUtils.scrapeData( table );
-		String[][] data = null;
-		try {
-			data = new String[tableData.length]
-					[tableData[0].length + 2];
-			String[] clazzParts = clazz.split( "-" );
-			
-			for( int i=0; i<data.length; i++ ) {
-				data[i][0] = clazzParts[0];
-				data[i][1] = clazzParts[1];
-
-				for( int j=0, c=2; j<data[i].length; c++, j++ ) {
-					data[i][c] = tableData[i][j]; 
-				}
-			}
-		} catch( ArrayIndexOutOfBoundsException e ) {
-			System.out.println( "le lulz" );
-			return new String[0][0];
-		}
-		
-		return data;
-	}
-
-	@Override
-	public void keyTyped( KeyEvent e ) {
-		if( e.getKeyCode() == KeyEvent.VK_ENTER ) {
-			System.out.println( "detected an enter key" );
-		}
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
 }
-
