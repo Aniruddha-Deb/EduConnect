@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,6 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
@@ -174,18 +178,25 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		JTable table = tables.get( title );
 		EditTableModel etm = (EditTableModel)table.getModel();
 		if( etm.isGoldenCopyPresent() ) {
+			System.out.println( "Updating server copy" );
 			etm.updateServerCopy( students );
 		}
 		else {
+			System.out.println( "Initializeing server copy" );
 			table.setModel( etm.withStudents( students ) );
+			table.setPreferredSize( null );
+			
+			JScrollPane scrollPane = new JScrollPane( table );
+			scrollPane.setBackground( Color.WHITE );
+			scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
+			table.setFillsViewportHeight( true );
+			
+			this.panels[tabbedPane.getSelectedIndex()].add( scrollPane, BorderLayout.CENTER );
+			tabbedPane.repaint();
 		}
-		
-		JScrollPane scrollPane = new JScrollPane( table );
-		scrollPane.setBackground( Color.WHITE );
-		table.setFillsViewportHeight( true );
-		
-		this.panels[tabbedPane.getSelectedIndex()].add( scrollPane, BorderLayout.CENTER );
-		tabbedPane.repaint();
+//		table.setEnabled( true );
+//		table.requestFocus();
+//		table.requestFocusInWindow();
 	}
 	
 	private JTable createEditTable() {
@@ -203,6 +214,16 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		table.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
 		table.getTableHeader().setFont( UIConstants.FONT.deriveFont( 13f ) );
 		table.setRowHeight( 20 );
+		table.addMouseListener( new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.rowAtPoint( e.getPoint() );
+		        int col = table.columnAtPoint( e.getPoint() );
+		        System.out.println( row + " " + col );
+			};
+		} );
+		
 		KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
 		table.getInputMap( JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put( enter, "newRow" );
 		table.getActionMap().put( "newRow", new AbstractAction() {
@@ -249,9 +270,6 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		try {
 			instance.send( new InfoBean( "Requesting table " + 
 							tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
-			String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
-			boolean b = tables.get( title ).requestFocusInWindow();
-			System.out.println( b );
 		} catch( IndexOutOfBoundsException ex ) {
 			instance.send( new InfoBean( "Requesting table " + 
 					tabbedPane.getTitleAt( 0 ) ) );			

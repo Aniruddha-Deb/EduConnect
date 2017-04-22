@@ -134,11 +134,9 @@ class EditTableModel extends AbstractTableModel{
 	}
 	
 	public void addRow( int rowIndex ) {
-		editCopy.add( new Student( -1, null, null ) );
-		Student addedStudent = editCopy.get( editCopy.size()-1 );
-		setValueAt( "", rowIndex, 0 );
-		setValueAt( addedStudent.getFirstName(), rowIndex, 1 );
-		setValueAt( addedStudent.getLastName() , rowIndex, 2 );
+		Student previousStudent = editCopy.get( editCopy.size()-1 );
+		editCopy.add( new Student( previousStudent.getRollNo()+1, null, null ) );
+		fireTableDataChanged();
 	}
 	
 	@Override
