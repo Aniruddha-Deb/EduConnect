@@ -78,6 +78,44 @@ class EditTableModel extends AbstractTableModel{
 			}
 			else {
 				// There has been an update on an item
+				// figure out what has been updated and where
+				for( int i=0; i<serverCopy.size(); i++ ) {
+					Student serverStudent = serverCopy.get(i);
+					Student gcStudent     = goldenCopy.get(i);
+					
+					if( !( serverStudent.equals( gcStudent ) ) ) {
+						if( serverStudent.getRollNo() != gcStudent.getRollNo() ) {
+							if( editCopy.contains( gcStudent ) ) {
+								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+								editStudent.setRollNo( serverStudent.getRollNo() );
+								gcStudent.setRollNo( serverStudent.getRollNo() );
+							}
+							else {
+								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+							}
+						}
+						if( !( serverStudent.getFirstName().equals( gcStudent.getFirstName() ) ) ) {
+							if( editCopy.contains( gcStudent ) ) {
+								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+								editStudent.setFirstName( serverStudent.getFirstName() );
+								gcStudent.setFirstName( serverStudent.getFirstName() );
+							}
+							else {
+								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+							}							
+						}
+						if( !( serverStudent.getLastName().equals( gcStudent.getLastName() ) ) ) {
+							if( editCopy.contains( gcStudent ) ) {
+								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+								editStudent.setLastName( serverStudent.getLastName() );
+								gcStudent.setLastName( serverStudent.getLastName() );
+							}
+							else {
+								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+							}
+						}
+					}
+				}
 			}
 		}
 	}
