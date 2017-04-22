@@ -57,6 +57,7 @@ public class MainFrame extends JFrame implements WindowListener{
 		UIManager.getLookAndFeelDefaults().put( "Button.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Label.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Label.font", UIConstants.FONT.deriveFont( 12f ) );
+		UIManager.getLookAndFeelDefaults().put( "OptionPane.background", Color.WHITE );
 	}
 	
 	private void createPanels() {

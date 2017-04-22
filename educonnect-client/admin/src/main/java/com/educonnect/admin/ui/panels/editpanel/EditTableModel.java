@@ -91,17 +91,19 @@ class EditTableModel extends AbstractTableModel{
 								gcStudent.setRollNo( serverStudent.getRollNo() );
 							}
 							else {
-								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+								JOptionPane.showMessageDialog( null, "Roll number conflict" );								
 							}
 						}
 						if( !( serverStudent.getFirstName().equals( gcStudent.getFirstName() ) ) ) {
 							if( editCopy.contains( gcStudent ) ) {
 								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
 								editStudent.setFirstName( serverStudent.getFirstName() );
+								System.out.println( gcStudent.getFirstName() );
 								gcStudent.setFirstName( serverStudent.getFirstName() );
+								System.out.println( gcStudent.getFirstName() );
 							}
 							else {
-								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+								JOptionPane.showMessageDialog( null, "First name conflict" );								
 							}							
 						}
 						if( !( serverStudent.getLastName().equals( gcStudent.getLastName() ) ) ) {
@@ -111,12 +113,13 @@ class EditTableModel extends AbstractTableModel{
 								gcStudent.setLastName( serverStudent.getLastName() );
 							}
 							else {
-								JOptionPane.showMessageDialog( null, "You're screwed!" );								
+								JOptionPane.showMessageDialog( null, "Last name conflict" );								
 							}
 						}
 					}
 				}
 			}
+			fireTableDataChanged();
 		}
 	}
 	

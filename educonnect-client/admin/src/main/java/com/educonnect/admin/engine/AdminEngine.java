@@ -1,5 +1,8 @@
 package com.educonnect.admin.engine;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import javax.swing.JOptionPane;
 
 import com.educonnect.admin.Constants;
@@ -25,10 +28,13 @@ public class AdminEngine extends Engine{
 	private static final int    PORT       = 1132;
 	private static final String TRUSTSTORE_PASSWD   = "public";
 	private static final String TRUSTSTORE_LOCATION = 
-										"src/main/resources/client.truststore"; 
+										"src/main/resources/client.truststore";
+	
+	private static ServerSocket ss = null;
 		
 	public AdminEngine() {
-		super( TRUSTSTORE_PASSWD, TRUSTSTORE_LOCATION );	
+		super( TRUSTSTORE_PASSWD, TRUSTSTORE_LOCATION );
+		setInstanceRunning();
 		mainFrame = new MainFrame( this );
 		adapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
 	}
@@ -79,6 +85,27 @@ public class AdminEngine extends Engine{
 
 	}
 	
+	private void setInstanceRunning() {
+	    try {
+	        ss = new ServerSocket( 11132 );
+	      }
+	      catch ( IOException ex ) {
+	        JOptionPane.showMessageDialog( mainFrame, "Another instance of this \n"
+	        										+ "application is already running" );
+	        System.exit( -1 );
+	      }
+	}
+	
+	private void setInstanceStopped() {
+		if( ss != null ) {
+			try {
+				ss.close();
+			} catch( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private void handleDatabasePayload( DatabasePayload p ) {
 		mainFrame.getEditPanel().display( p );
 	}
@@ -101,6 +128,7 @@ public class AdminEngine extends Engine{
 		if( adapter != null ) {
 			disconnectAdapter();
 		}
+		setInstanceStopped();
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
 		System.exit( 0 );

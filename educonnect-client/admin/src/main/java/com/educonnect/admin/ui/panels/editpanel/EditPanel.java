@@ -44,6 +44,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 	private static final String DB_RESOURCE              = "src/main/resources/db.png"; 
 	private static final String SAVE_TO_DB_RESOURCE      = "src/main/resources/save_to_db.png";
 	private static final String EXPORT_TO_EXCEL_RESOURCE = "src/main/resources/export_to_excel.png";
+	private static final String REFRESH_RESOURCE         = "src/main/resources/refresh.png";
 
 	private HashMap<String, JTable> tables = null;
 	
@@ -75,6 +76,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		optionPanel.setBackground( Color.BLACK );
 		
 		try {
+			setUpRefreshButton();
 			setUpNameButton();
 			setUpSaveToDatabaseButton();
 			setUpExportToExcelButton();
@@ -89,6 +91,7 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 
 		GridBagConstraints c = new GridBagConstraints();
 		nameButton = new NameButton( instance );
+		nameButton.setToolTipText( "Display admin-related menus" );
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1;
@@ -97,12 +100,38 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 
 	}
 	
+	private void setUpRefreshButton() throws IOException {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		JButton refreshButton = createImageButton( REFRESH_RESOURCE );
+		refreshButton.setToolTipText( "Refresh the current table" );
+		refreshButton.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed( ActionEvent e ) {
+				System.out.println( "Clicked refresh button" );
+				try {
+					instance.send( new InfoBean( "Requesting table " + 
+									tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
+				} catch( IndexOutOfBoundsException ex ) {
+					instance.send( new InfoBean( "Requesting table " + 
+							tabbedPane.getTitleAt( 0 ) ) );			
+				}
+			}
+		} );
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		optionPanel.add( refreshButton, c );				
+	}
+	
 	private void setUpSaveToDatabaseButton() throws IOException{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		JButton saveButton = createImageButton( SAVE_TO_DB_RESOURCE );
+		saveButton.setToolTipText( "Save all tables to database" );
 		saveButton.addActionListener( this );
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.EAST;
 		optionPanel.add( saveButton, c );
@@ -112,7 +141,8 @@ public class EditPanel extends JPanel implements ChangeListener, ActionListener,
 		
 		GridBagConstraints c = new GridBagConstraints();
 		JButton exportButton = createImageButton( EXPORT_TO_EXCEL_RESOURCE );
-		c.gridx = 2;
+		exportButton.setToolTipText( "Export all tables to an excel sheet" );
+		c.gridx = 3;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.EAST;
 		optionPanel.add( exportButton, c );				
