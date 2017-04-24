@@ -22,33 +22,34 @@ import com.educonnect.common.network.SecureSocketNetworkAdapter;
 public class AdminEngine extends Engine{
 
 	private MainFrame mainFrame = null;
-	private SecureSocketNetworkAdapter adapter = null;
+	private SecureSocketNetworkAdapter clientAdapter = null;
 	
-	private static final String IP_ADDRESS = "127.0.0.1";
+	private static final String IP_ADDRESS = "192.168.0.100";
 	private static final int    PORT       = 1132;
 	private static final String TRUSTSTORE_PASSWD   = "public";
 	private static final String TRUSTSTORE_LOCATION = 
 										"src/main/resources/client.truststore";
 	
-	private static ServerSocket ss = null;
+	private static ServerSocket singleInstanceSocket = null;
 		
 	public AdminEngine() {
 		super( TRUSTSTORE_PASSWD, TRUSTSTORE_LOCATION );
-		setInstanceRunning();
+		setCurrentInstanceRunning();
 		mainFrame = new MainFrame( this );
-		adapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
+		clientAdapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
 	}
 	
 	@Override
 	public void login( String emailId, char[] password ) {
-		adapter.connect();
-		adapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
+		clientAdapter.connect();
+		clientAdapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
+		
 		System.out.println( "Sent login bean" );
 	}
 	
 	private void loginRequestFailed( FailPayload p ) {
 		JOptionPane.showMessageDialog( mainFrame, p.getCause() );
-		adapter.shutdown();
+		clientAdapter.shutdown();
 	}
 	
 	private void loginRequestSucceded( InfoPayload p ) {
@@ -85,9 +86,9 @@ public class AdminEngine extends Engine{
 
 	}
 	
-	private void setInstanceRunning() {
+	private void setCurrentInstanceRunning() {
 	    try {
-	        ss = new ServerSocket( 11132 );
+	        singleInstanceSocket = new ServerSocket( 11132 );
 	      }
 	      catch ( IOException ex ) {
 	        JOptionPane.showMessageDialog( mainFrame, "Another instance of this \n"
@@ -97,9 +98,9 @@ public class AdminEngine extends Engine{
 	}
 	
 	private void setInstanceStopped() {
-		if( ss != null ) {
+		if( singleInstanceSocket != null ) {
 			try {
-				ss.close();
+				singleInstanceSocket.close();
 			} catch( Exception e ) {
 				e.printStackTrace();
 			}
@@ -111,11 +112,11 @@ public class AdminEngine extends Engine{
 	}
 	
 	public Payload get() {
-		return adapter.get();
+		return clientAdapter.get();
 	}
 	
 	public void send( Bean b ) {
-		adapter.send( b );
+		clientAdapter.send( b );
 	}
 	
 	@Override
@@ -125,7 +126,7 @@ public class AdminEngine extends Engine{
 
 	@Override
 	public void shutdown() {
-		if( adapter != null ) {
+		if( clientAdapter != null ) {
 			disconnectAdapter();
 		}
 		setInstanceStopped();
@@ -135,9 +136,9 @@ public class AdminEngine extends Engine{
 	}
 	
 	private void disconnectAdapter() {
-		if( adapter.isOpen() ) {
-			adapter.shutdown();
-			while( adapter.getReceiverThread().isAlive() ) {
+		if( clientAdapter.isOpen() ) {
+			clientAdapter.shutdown();
+			while( clientAdapter.getReceiverThread().isAlive() ) {
 				try {
 					Thread.sleep( 10 );
 				} catch ( InterruptedException e ) {

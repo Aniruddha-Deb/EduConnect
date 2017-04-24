@@ -1,7 +1,7 @@
 package com.educonnect.admin.ui;
 
 import java.awt.Font;
-import java.io.File;
+import java.io.InputStream;
 
 public class UIConstants {
 	
@@ -15,13 +15,13 @@ public class UIConstants {
 		String sysName = System.getProperty( "os.name" ).toLowerCase();
 		
 		if( sysName.indexOf( "win" ) >= 0 ) {
-			pathName = "src/main/resources/fonts/win.ttf";
+			pathName = "win.ttf";
 		}
 		else if( sysName.indexOf( "mac" ) >= 0 ) {
-			pathName = "src/main/resources/fonts/mac.ttf";
+			pathName = "mac.ttf";
 		}
 		else if( sysName.indexOf( "nix" ) >= 0 ) {
-			pathName = "src/main/resources/fonts/ubuntu.ttf";
+			pathName = "ubuntu.ttf";
 		}
 
 		if( pathName == null ) {
@@ -29,7 +29,9 @@ public class UIConstants {
 		}
 		else {
 			try {
-				FONT = Font.createFont( Font.TRUETYPE_FONT, new File( pathName ) );
+				System.out.println( pathName );
+				InputStream is = UIConstants.class.getResourceAsStream("/" + pathName ) ;
+				FONT = Font.createFont( Font.TRUETYPE_FONT, is );
 			} catch ( Exception e ) {
 				e.printStackTrace();
 			} 

@@ -1,5 +1,7 @@
 package com.educonnect.common.parser;
 
+import java.lang.reflect.Type;
+
 import com.educonnect.common.bean.payload.AuthPayload;
 import com.educonnect.common.bean.payload.FailPayload;
 import com.educonnect.common.bean.payload.FilePayload;
@@ -87,7 +89,7 @@ public class Parser {
 			throw new IllegalArgumentException( "Bad payload in bean passed to parser" );
 		}
 		Gson gson = new Gson();
-		Class<?> payloadInstance = null;
+		Type payloadInstance = null;
 		
 		switch( header ) {
 			

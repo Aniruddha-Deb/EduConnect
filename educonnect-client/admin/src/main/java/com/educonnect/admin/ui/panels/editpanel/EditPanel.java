@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -39,10 +40,10 @@ import com.educonnect.common.bean.payload.db.DatabasePayload;
 public class EditPanel extends JPanel implements ChangeListener {
 
 	private static final long   serialVersionUID         = 8043632711448308358L;
-	private static final String DB_RESOURCE              = "src/main/resources/db.png"; 
-	private static final String SAVE_TO_DB_RESOURCE      = "src/main/resources/save_to_db.png";
-	private static final String EXPORT_TO_EXCEL_RESOURCE = "src/main/resources/export_to_excel.png";
-	private static final String REFRESH_RESOURCE         = "src/main/resources/refresh.png";
+	private static final String DB_RESOURCE              = "db.png"; 
+	private static final String SAVE_TO_DB_RESOURCE      = "save_to_db.png";
+	private static final String EXPORT_TO_EXCEL_RESOURCE = "export_to_excel.png";
+	private static final String REFRESH_RESOURCE         = "refresh.png";
 
 	private HashMap<String, JTable> tables = null;
 	
@@ -146,7 +147,8 @@ public class EditPanel extends JPanel implements ChangeListener {
 	}
 	
 	private JButton createImageButton( String respath ) throws IOException{
-		Image image = ImageIO.read( new File( respath ) );
+		InputStream is = EditPanel.class.getResourceAsStream( "/" + respath ) ;
+		Image image = ImageIO.read( is );
 		ImageIcon icon = new ImageIcon( image );
 		JButton button = new JButton( icon );
 		button.setBorder( new EmptyBorder( 4, 4, 4, 4 ) );
@@ -176,7 +178,14 @@ public class EditPanel extends JPanel implements ChangeListener {
 		tables = new LinkedHashMap<>();
 		tabbedPane.removeAll();
 		
-		ImageIcon icon = new ImageIcon( DB_RESOURCE );
+		InputStream is = EditPanel.class.getResourceAsStream( "/" + DB_RESOURCE ) ;
+	 	Image image = null;
+		try {
+			image = ImageIO.read( is );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ImageIcon icon = new ImageIcon( image );
 		loadOptionPanel();
 		
 		String[] parts = s.split( " " );
