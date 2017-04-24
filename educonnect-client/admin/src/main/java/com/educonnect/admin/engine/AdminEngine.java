@@ -28,7 +28,7 @@ public class AdminEngine extends Engine{
 	private static final int    PORT       = 1132;
 	private static final String TRUSTSTORE_PASSWD   = "public";
 	private static final String TRUSTSTORE_LOCATION = 
-										"src/main/resources/client.truststore";
+										"/Users/Sensei/client.truststore";
 	
 	private static ServerSocket singleInstanceSocket = null;
 		

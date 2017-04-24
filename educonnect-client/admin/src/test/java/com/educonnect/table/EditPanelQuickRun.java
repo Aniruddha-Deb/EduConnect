@@ -7,6 +7,6 @@ public class EditPanelQuickRun {
 	public static void main(String[] args) {
 		AdminEngine e = new AdminEngine();
 		e.start();
-		e.login( "aniruddha.deb.2002@gmail.com" , "@n1ruddh@".toCharArray() );
+		e.login( "raseshr18@gmail.com" , "r@$e$#".toCharArray() );
 	}
 }
