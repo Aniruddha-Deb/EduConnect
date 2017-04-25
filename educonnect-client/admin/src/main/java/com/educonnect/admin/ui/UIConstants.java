@@ -68,16 +68,10 @@ public class UIConstants {
 	}
 
 	private static void setSystemLookAndFeel() {
-		if( osName.indexOf( "mac" ) >= 0 ) {
-			// The mac look and feel is worthy enough to not be changed!
+		try {
+			UIManager.setLookAndFeel( new PgsLookAndFeel() );
+		} catch ( UnsupportedLookAndFeelException e ) {
+			e.printStackTrace();
 		}
-		else {
-			try {
-				UIManager.setLookAndFeel( new PgsLookAndFeel() );
-			} catch ( UnsupportedLookAndFeelException e ) {
-				e.printStackTrace();
-			}
-		}
-		
 	}
 }

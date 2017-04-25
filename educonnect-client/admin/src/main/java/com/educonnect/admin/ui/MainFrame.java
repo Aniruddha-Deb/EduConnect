@@ -30,7 +30,6 @@ public class MainFrame extends JFrame implements WindowListener{
 	
 	public MainFrame( AdminEngine instance ) {
 		super( "EduConnect admin" );
-		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
 				
 		this.instance = instance;
 		
