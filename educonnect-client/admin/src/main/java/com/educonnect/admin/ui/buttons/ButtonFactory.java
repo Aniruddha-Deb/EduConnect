@@ -1,31 +1,39 @@
 package com.educonnect.admin.ui.buttons;
 
-import javax.swing.JButton;
+import java.awt.Color;
 
-import com.educonnect.admin.ui.buttons.impl.ExportButton;
-import com.educonnect.admin.ui.buttons.impl.NameButton;
-import com.educonnect.admin.ui.buttons.impl.RefreshButton;
-import com.educonnect.admin.ui.buttons.impl.SaveButton; 
+import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+
+import com.educonnect.admin.ui.buttons.impl.*; 
 
 public class ButtonFactory {
 
-	public static JButton createButton( ButtonType bType ) {
+	public static JButton createOptionPanelButton( ButtonType bType ) {
+		
+		JButton buttonToReturn = null;
 		
 		switch( bType ) {
 			case EXPORT:
-				return new ExportButton();
+				buttonToReturn = new ExportButton();
+			break;
 				
 			case NAME:
-				return new NameButton();
+				buttonToReturn = new NameButton();
+			break;
 			
 			case REFRESH:
-				return new RefreshButton();
+				buttonToReturn = new RefreshButton();
+			break;
 				
 			case SAVE:
-				return new SaveButton();
-				
-			default:
-				return null;
+				buttonToReturn = new SaveButton();
+			break;
 		}
+		
+		buttonToReturn.setBackground( Color.BLACK );
+		buttonToReturn.setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
+		buttonToReturn.setForeground( Color.WHITE );
+		return buttonToReturn;
 	}
 }

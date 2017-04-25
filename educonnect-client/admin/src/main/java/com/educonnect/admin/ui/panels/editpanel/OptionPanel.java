@@ -38,7 +38,7 @@ public class OptionPanel extends JPanel{
 	}
 	
 	private void createAndAddNameButton() {
-		nameButton = ButtonFactory.createButton( ButtonType.NAME );
+		nameButton = ButtonFactory.createOptionPanelButton( ButtonType.NAME );
 		super.add( nameButton );		
 	}
 	
@@ -47,17 +47,17 @@ public class OptionPanel extends JPanel{
 	}
 	
 	private void createAndAddExportButton() {
-		exportButton = ButtonFactory.createButton( ButtonType.EXPORT );
+		exportButton = ButtonFactory.createOptionPanelButton( ButtonType.EXPORT );
 		super.add( exportButton );		
 	}
 	
 	private void createAndAddRefreshButton() {
-		refreshButton = ButtonFactory.createButton( ButtonType.REFRESH );
+		refreshButton = ButtonFactory.createOptionPanelButton( ButtonType.REFRESH );
 		super.add( refreshButton );
 	}
 
 	private void createAndAddSaveButton() {
-		saveButton = ButtonFactory.createButton( ButtonType.SAVE );
+		saveButton = ButtonFactory.createOptionPanelButton( ButtonType.SAVE );
 		super.add( saveButton );
 	}
 	

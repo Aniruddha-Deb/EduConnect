@@ -1,5 +1,6 @@
 package com.educonnect.admin.engine;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -28,7 +29,8 @@ public class AdminEngine extends Engine{
 	private static final int    PORT       = 1132;
 	private static final String TRUSTSTORE_PASSWD   = "public";
 	private static final String TRUSTSTORE_LOCATION = 
-										"/Users/Sensei/client.truststore";
+										System.getProperty( "user.home" ) + 
+										File.separator + "client.truststore";
 	
 	private static ServerSocket singleInstanceSocket = null;
 		
