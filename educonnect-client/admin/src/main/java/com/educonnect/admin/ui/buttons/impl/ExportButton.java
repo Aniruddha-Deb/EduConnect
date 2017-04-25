@@ -4,11 +4,10 @@ import static com.educonnect.admin.ui.UIConstants.EXPORT_BUTTON_CMD;
 import static com.educonnect.admin.ui.UIConstants.EXPORT_TO_EXCEL_ICON_RES;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 import com.educonnect.admin.ui.util.UIUtils;
 
-public class ExportButton extends JButton {
+public class ExportButton extends OptionPanelButton {
 
 	private static final long serialVersionUID = 3855835775013616664L;
 	

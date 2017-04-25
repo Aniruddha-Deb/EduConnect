@@ -21,6 +21,9 @@ import javax.swing.event.ChangeListener;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
+import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
+import com.educonnect.admin.ui.table.EditTable;
+import com.educonnect.admin.ui.table.EditTableModel;
 import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.bean.InfoBean;
 import com.educonnect.common.bean.db.Student;

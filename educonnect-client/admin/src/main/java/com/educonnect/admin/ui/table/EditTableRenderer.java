@@ -1,4 +1,4 @@
-package com.educonnect.admin.ui.panels.editpanel;
+package com.educonnect.admin.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;

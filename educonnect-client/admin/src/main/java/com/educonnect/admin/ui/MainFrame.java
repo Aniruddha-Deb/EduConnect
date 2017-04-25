@@ -1,5 +1,8 @@
 package com.educonnect.admin.ui;
 
+import static com.educonnect.admin.ui.UIConstants.EDIT_PANEL;
+import static com.educonnect.admin.ui.UIConstants.LOGIN_PANEL;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.WindowEvent;
@@ -12,8 +15,6 @@ import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.LoginPanel;
 import com.educonnect.admin.ui.panels.MainPanel;
 import com.educonnect.admin.ui.panels.editpanel.EditPanel;
-
-import static com.educonnect.admin.ui.UIConstants.*;
 
 public class MainFrame extends JFrame implements WindowListener{
 
@@ -29,7 +30,8 @@ public class MainFrame extends JFrame implements WindowListener{
 	
 	public MainFrame( AdminEngine instance ) {
 		super( "EduConnect admin" );
-
+		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
+				
 		this.instance = instance;
 		
 		setUpUI();
@@ -53,6 +55,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	
 	private void setUIDefaults() {
 		UIManager.getLookAndFeelDefaults().put( "Panel.background", Color.WHITE );
+		UIManager.getLookAndFeelDefaults().put( "Frame.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "TextField.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Button.background", Color.WHITE );
 		UIManager.getLookAndFeelDefaults().put( "Label.background", Color.WHITE );

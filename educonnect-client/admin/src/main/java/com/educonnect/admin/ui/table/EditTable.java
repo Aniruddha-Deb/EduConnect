@@ -1,4 +1,4 @@
-package com.educonnect.admin.ui.panels.editpanel;
+package com.educonnect.admin.ui.table;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -14,16 +14,16 @@ import javax.swing.table.TableModel;
 
 import com.educonnect.admin.ui.UIConstants;
 
-class EditTable extends JTable{
+public class EditTable extends JTable{
 
 	private static final long serialVersionUID = -2558045536129893621L;
 
-	EditTable() {
+	public EditTable() {
 		super( new EditTableModel() );
 		setUpTableAttributes();
 	}
 	
-	EditTable( EditTableModel etm ) {
+	public EditTable( EditTableModel etm ) {
 		super( etm );
 		setUpTableAttributes();
 		setUpTableCellEditor();
@@ -53,7 +53,7 @@ class EditTable extends JTable{
 		}
 	}
 	
-	void setEnterKeystrokeFunction( String function, AbstractAction actionToPerform ) {
+	public void setEnterKeystrokeFunction( String function, AbstractAction actionToPerform ) {
 		KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
 		super.getInputMap( JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put( enter, function );
 		super.getActionMap().put( function, actionToPerform );

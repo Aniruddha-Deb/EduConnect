@@ -5,13 +5,12 @@ import static com.educonnect.admin.ui.UIConstants.NAME_BUTTON_CMD;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.UIConstants;
 
-public class NameButton extends JButton {
+public class NameButton extends OptionPanelButton {
 
 	private static final long serialVersionUID = -744490786481075169L;
 	

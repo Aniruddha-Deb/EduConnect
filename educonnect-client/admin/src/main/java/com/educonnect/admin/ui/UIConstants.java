@@ -3,6 +3,11 @@ package com.educonnect.admin.ui;
 import java.awt.Font;
 import java.io.InputStream;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import com.pagosoft.plaf.PgsLookAndFeel;
+
 public class UIConstants {
 	
 	public static Font FONT = null;
@@ -24,17 +29,27 @@ public class UIConstants {
 	public static final String REFRESH_BUTTON_CMD = "Refresh";
 	public static final String NAME_BUTTON_CMD    = "Name"   ;
 	
+	private static String osName = null;
+	
 	static {
+		getOSName();
+		setSystemFont();
+		setSystemLookAndFeel();
+	}
+	
+	private static void getOSName() {
+		osName = System.getProperty( "os.name" ).toLowerCase();		
+	}
+	
+	private static void setSystemFont() {
 		String pathName = null;
-		String sysName = System.getProperty( "os.name" ).toLowerCase();
-		
-		if( sysName.indexOf( "win" ) >= 0 ) {
+		if( osName.indexOf( "win" ) >= 0 ) {
 			pathName = "win.ttf";
 		}
-		else if( sysName.indexOf( "mac" ) >= 0 ) {
+		else if( osName.indexOf( "mac" ) >= 0 ) {
 			pathName = "mac.ttf";
 		}
-		else if( sysName.indexOf( "nix" ) >= 0 ) {
+		else if( osName.indexOf( "nix" ) >= 0 ) {
 			pathName = "ubuntu.ttf";
 		}
 
@@ -52,4 +67,17 @@ public class UIConstants {
 		}
 	}
 
+	private static void setSystemLookAndFeel() {
+		if( osName.indexOf( "mac" ) >= 0 ) {
+			// The mac look and feel is worthy enough to not be changed!
+		}
+		else {
+			try {
+				UIManager.setLookAndFeel( new PgsLookAndFeel() );
+			} catch ( UnsupportedLookAndFeelException e ) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }

@@ -1,11 +1,11 @@
 package com.educonnect.admin.ui.buttons;
 
-import java.awt.Color;
-
 import javax.swing.JButton;
-import javax.swing.border.EmptyBorder;
 
-import com.educonnect.admin.ui.buttons.impl.*; 
+import com.educonnect.admin.ui.buttons.impl.ExportButton;
+import com.educonnect.admin.ui.buttons.impl.NameButton;
+import com.educonnect.admin.ui.buttons.impl.RefreshButton;
+import com.educonnect.admin.ui.buttons.impl.SaveButton; 
 
 public class ButtonFactory {
 
@@ -31,9 +31,6 @@ public class ButtonFactory {
 			break;
 		}
 		
-		buttonToReturn.setBackground( Color.BLACK );
-		buttonToReturn.setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
-		buttonToReturn.setForeground( Color.WHITE );
 		return buttonToReturn;
 	}
 }

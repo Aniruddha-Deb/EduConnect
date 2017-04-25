@@ -4,11 +4,10 @@ import static com.educonnect.admin.ui.UIConstants.REFRESH_BUTTON_CMD;
 import static com.educonnect.admin.ui.UIConstants.REFRESH_ICON_RES;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 import com.educonnect.admin.ui.util.UIUtils;
 
-public class RefreshButton extends JButton{
+public class RefreshButton extends OptionPanelButton{
 
 	private static final long serialVersionUID = 1856648779708206239L;
 	

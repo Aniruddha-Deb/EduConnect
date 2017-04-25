@@ -1,4 +1,4 @@
-package com.educonnect.admin.ui.panels.editpanel;
+package com.educonnect.admin.ui.table;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.educonnect.common.bean.db.Student;
 
-class EditTableModel extends AbstractTableModel{
+public class EditTableModel extends AbstractTableModel{
 	
 	private static final long serialVersionUID = 7094246511409713404L;
 	private static final int  NUM_COLS = 3;
