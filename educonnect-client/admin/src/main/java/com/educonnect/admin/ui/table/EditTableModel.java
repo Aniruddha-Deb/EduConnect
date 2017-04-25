@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,6 +24,8 @@ public class EditTableModel extends AbstractTableModel{
 	private List<Student> editCopy   = null;
 	private List<Student> serverCopy = null;
 	
+	private Comparator<Student> studentComparator = null;
+	
 	private boolean goldenCopyPresent = false;
 	
 	public EditTableModel withStudents( Student[] students ) {
@@ -35,7 +36,28 @@ public class EditTableModel extends AbstractTableModel{
 		for( Student s : goldenCopy ) {
 			editCopy.add( deepCopy( s ) );
 		}
+		
+		createStudentComparator();
+		editCopy.sort( studentComparator );
 		return this;
+	}
+	
+	private void createStudentComparator() {
+		studentComparator = new Comparator<Student>() {
+			
+			@Override
+			public int compare(Student o1, Student o2) {
+				if( o1.getRollNo() > o2.getRollNo() ) {
+					return 1;
+				}
+				else if( o1.getRollNo() == o2.getRollNo() ) {
+					return 0;
+				}
+				else {
+					return -1;
+				}
+			}
+		};
 	}
 	
 	public boolean isGoldenCopyPresent() {
@@ -47,80 +69,94 @@ public class EditTableModel extends AbstractTableModel{
 		
 		if( !(serverCopy.equals( goldenCopy )) ) {
 			if( serverCopy.size() > goldenCopy.size() ) {
-				// There has been an addition in the server
-				// figure out what has been added and where
-				for( int i=0; i<serverCopy.size(); i++ ) {
-					if( !( goldenCopy.contains( serverCopy.get(i) ) ) ) {
-						System.out.println( "Server copy edited!" );
-						goldenCopy.add( serverCopy.get(i) );
-						addToEditCopy( serverCopy.get(i) );
-					}
-				}
+				addServerCopyChangesToGoldenCopy();
 			}
 			else if( serverCopy.size() < goldenCopy.size() ) {
-				// There has been a deletion in the server
-				// figure out what has been deleted and where
-				// if the row deleted has not been edited, then just delete it.
-				// if the row has been edited, show a popup
-				System.out.println( "There's been a delete" ); 
-				for( int i=0; i<goldenCopy.size(); i++ ) {
-					Student gcStudent = goldenCopy.get(i);
-					if( !( serverCopy.contains( gcStudent ) ) ) {
-						if( editCopy.contains( gcStudent ) ) {
-							editCopy.remove( editCopy.indexOf( gcStudent ) );
-							goldenCopy.remove( i );
-						}
-						else {
-							JOptionPane.showMessageDialog( null, "You're screwed!" );
-						}
-					}
-				}
+				deleteServerCopyChangesFromGoldenCopy();
 			}
 			else {
-				// There has been an update on an item
-				// figure out what has been updated and where
-				for( int i=0; i<serverCopy.size(); i++ ) {
-					Student serverStudent = serverCopy.get(i);
-					Student gcStudent     = goldenCopy.get(i);
-					
-					if( !( serverStudent.equals( gcStudent ) ) ) {
-						if( serverStudent.getRollNo() != gcStudent.getRollNo() ) {
-							if( editCopy.contains( gcStudent ) ) {
-								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
-								editStudent.setRollNo( serverStudent.getRollNo() );
-								gcStudent.setRollNo( serverStudent.getRollNo() );
-							}
-							else {
-								JOptionPane.showMessageDialog( null, "Roll number conflict" );								
-							}
-						}
-						if( !( serverStudent.getFirstName().equals( gcStudent.getFirstName() ) ) ) {
-							if( editCopy.contains( gcStudent ) ) {
-								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
-								editStudent.setFirstName( serverStudent.getFirstName() );
-								System.out.println( gcStudent.getFirstName() );
-								gcStudent.setFirstName( serverStudent.getFirstName() );
-								System.out.println( gcStudent.getFirstName() );
-							}
-							else {
-								JOptionPane.showMessageDialog( null, "First name conflict" );								
-							}							
-						}
-						if( !( serverStudent.getLastName().equals( gcStudent.getLastName() ) ) ) {
-							if( editCopy.contains( gcStudent ) ) {
-								Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
-								editStudent.setLastName( serverStudent.getLastName() );
-								gcStudent.setLastName( serverStudent.getLastName() );
-							}
-							else {
-								JOptionPane.showMessageDialog( null, "Last name conflict" );								
-							}
-						}
-					}
-				}
+				updateGoldenCopy();
 			}
 			fireTableDataChanged();
 		}
+	}
+	
+	private void addServerCopyChangesToGoldenCopy() {
+		for( int i=0; i<serverCopy.size(); i++ ) {
+			if( !( goldenCopy.contains( serverCopy.get(i) ) ) ) {
+				goldenCopy.add( serverCopy.get(i) );
+				addToEditCopy( serverCopy.get(i) );
+			}
+		}
+	}
+	
+	private void deleteServerCopyChangesFromGoldenCopy() {
+		for( int i=0; i<goldenCopy.size(); i++ ) {
+			Student gcStudent = goldenCopy.get(i);
+			if( !( serverCopy.contains( gcStudent ) ) ) {
+				if( editCopy.contains( gcStudent ) ) {
+					editCopy.remove( editCopy.indexOf( gcStudent ) );
+					goldenCopy.remove( i );
+				}
+				else {
+					JOptionPane.showMessageDialog( null, "You're screwed!" );
+				}
+			}
+		}
+	}
+	
+	private void updateGoldenCopy() {
+		for( int i=0; i<serverCopy.size(); i++ ) {
+			Student serverStudent = serverCopy.get(i);
+			Student gcStudent     = goldenCopy.get(i);
+			
+			if( !( serverStudent.equals( gcStudent ) ) ) {
+				if( serverStudent.getRollNo() != gcStudent.getRollNo() ) {
+					updateStudentRollNumber( serverStudent, gcStudent );
+				}
+				if( !( serverStudent.getFirstName().equals( gcStudent.getFirstName() ) ) ) {
+					updateStudentFirstName( serverStudent, gcStudent );
+				}
+				if( !( serverStudent.getLastName().equals( gcStudent.getLastName() ) ) ) {
+					updateStudentLastName( serverStudent, gcStudent );
+				}
+			}
+		}
+	}
+	
+	private void updateStudentRollNumber( Student serverStudent, Student gcStudent ) {
+		if( editCopy.contains( gcStudent ) ) {
+			Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+			editStudent.setRollNo( serverStudent.getRollNo() );
+			gcStudent.setRollNo( serverStudent.getRollNo() );
+		}
+		else {
+			JOptionPane.showMessageDialog( null, "Roll number conflict" );								
+		}
+	}
+	
+	private void updateStudentFirstName( Student serverStudent, Student gcStudent ) {
+		if( editCopy.contains( gcStudent ) ) {
+			Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+			editStudent.setFirstName( serverStudent.getFirstName() );
+			System.out.println( gcStudent.getFirstName() );
+			gcStudent.setFirstName( serverStudent.getFirstName() );
+			System.out.println( gcStudent.getFirstName() );
+		}
+		else {
+			JOptionPane.showMessageDialog( null, "First name conflict" );								
+		}							
+	}
+	
+	private void updateStudentLastName( Student serverStudent, Student gcStudent ) {
+		if( editCopy.contains( gcStudent ) ) {
+			Student editStudent = editCopy.get( editCopy.indexOf( gcStudent ) );
+			editStudent.setLastName( serverStudent.getLastName() );
+			gcStudent.setLastName( serverStudent.getLastName() );
+		}
+		else {
+			JOptionPane.showMessageDialog( null, "Last name conflict" );								
+		}	
 	}
 	
 	private Student deepCopy( Student s ) {
@@ -143,28 +179,7 @@ public class EditTableModel extends AbstractTableModel{
 	
 	private void addToEditCopy( Student student ) {
 		editCopy.add( deepCopy( student ) );
-		Collections.sort( editCopy, new Comparator<Student>() {
-
-			@Override
-			public int compare( Student o1, Student o2 ) {
-				if( o1.getRollNo() > o2.getRollNo() ) {
-					return 1;
-				}
-				else if( o1.getRollNo() == o2.getRollNo() ) {
-					return 0;
-				}
-				else {
-					return -1;
-				}
-			}
-		} );
-		
-		for( int i=0; i<editCopy.size(); i++ ) {
-			Student s = editCopy.get(i); 
-			setValueAt( s.getRollNo(),    i, 0 );
-			setValueAt( s.getFirstName(), i, 1 );
-			setValueAt( s.getLastName(),  i, 2 );
-		}
+		editCopy.sort( studentComparator );		
 	}
 	
 	public void addRow( int rowIndex ) {
