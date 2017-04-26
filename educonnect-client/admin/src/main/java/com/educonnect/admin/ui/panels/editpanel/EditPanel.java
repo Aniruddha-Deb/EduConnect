@@ -26,14 +26,17 @@ import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
 import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.InfoBean;
+import com.educonnect.common.message.db.ClassOfStudents;
+import com.educonnect.common.message.db.DatabaseRequest;
 import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.payload.db.DatabasePayload;
 
 public class EditPanel extends JPanel implements ChangeListener, OptionPanelButtonListener {
 
 	private static final long serialVersionUID = 3873660039173146777L;
 
-	private HashMap<String, EditTable> tables = null;
+	private HashMap<String, JTable> tables = null;
 	
 	private JTabbedPane  tabbedPane  = null;
 	private OptionPanel  optionPanel = null;
@@ -80,23 +83,25 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		tabbedPane.addChangeListener( this );
 	}
 	
-	public void load( String s ) {
+	public void load( DatabaseAllClassesResponse r ) {
 		
 		tables = new LinkedHashMap<>();
 		tabbedPane.removeAll();
 		
 		ImageIcon icon = new ImageIcon( UIUtils.getImageResource( DB_ICON_RES ) );
 		loadOptionPanel();
+
+		ClassOfStudents[] classes = r.getClasses();
 		
-		String[] parts = s.split( " " );
-		
-		tablePanels = new JPanel[parts.length];
+		tablePanels = new JPanel[classes.length];
 		
 		for( int i=0; i<tablePanels.length; i++ ) {
-			tables.put( parts[i], createEditTable() );
+			String classTitle = classes[i].getClazz() + "-" + 
+								classes[i].getSection();
+			tables.put( classTitle, createEditTable() );
 			tablePanels[i] = new JPanel();
 			tablePanels[i].setLayout( new BorderLayout() );
-			tabbedPane.addTab( parts[i], icon, tablePanels[i], parts[i] );
+			tabbedPane.addTab( classTitle, icon, tablePanels[i], classTitle );
 		}		
 		infoLabel.setText( "Loaded tables" );
 	}
@@ -154,6 +159,9 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		
 		return table;
 	}
+	
+	private int getSelectedClass() {
+	}
 		
 	@Override
 	public void stateChanged( ChangeEvent e ) {
@@ -179,8 +187,12 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 	@Override
 	public void onRefreshButtonClicked() {
 		try {
-			adminEngine.send( new InfoBean( "Requesting table " + 
-							tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ) );
+			adminEngine.getClientAdapter().send( 
+				new DatabaseRequest( 
+					getSelectedClass(),
+					getSelectedSection()
+				) 
+			);
 		} catch( IndexOutOfBoundsException ex ) {
 			adminEngine.send( new InfoBean( "Requesting table " + 
 					tabbedPane.getTitleAt( 0 ) ) );			

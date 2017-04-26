@@ -2,6 +2,10 @@ package com.educonnect.common.parser;
 
 import com.educonnect.common.message.MessageType;
 import com.educonnect.common.message.core.Message;
+import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
+import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
+import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
+import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.payload.Payload;
@@ -57,6 +61,18 @@ public class Parser {
 				
 			case MT_SHUTDOWN_RES:
 				return GSON.fromJson( payload, ShutdownResponse.class );
+				
+			case MT_DB_ALL_CLASSES_REQ:
+				return GSON.fromJson( payload, DatabaseAllClassesRequest.class );
+				
+			case MT_DB_ALL_CLASSES_RES:
+				return GSON.fromJson( payload, DatabaseAllClassesResponse.class );
+				
+			case MT_DB_SINGLE_CLASS_REQ:
+				return GSON.fromJson( payload, DatabaseSingleClassRequest.class );
+				
+			case MT_DB_SINGLE_CLASS_RES:
+				return GSON.fromJson( payload, DatabaseSingleClassResponse.class );
 		}
 		return null;
 	}

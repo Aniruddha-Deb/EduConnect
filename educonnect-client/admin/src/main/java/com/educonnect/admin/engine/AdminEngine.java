@@ -11,12 +11,11 @@ import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.engine.Engine;
-import com.educonnect.common.message.Bean;
 import com.educonnect.common.message.CommunicationConstants;
-import com.educonnect.common.message.core.Response;
+import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
+import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
-import com.educonnect.common.message.payload.FailPayload;
 import com.educonnect.common.message.payload.InfoPayload;
 import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.message.payload.db.DatabasePayload;
@@ -39,30 +38,32 @@ public class AdminEngine extends Engine {
 	public AdminEngine() {
 		super( TRUSTSTORE_PASSWD, TRUSTSTORE_LOCATION );
 		setCurrentInstanceRunning();
-		mainFrame = new MainFrame( this );
 		clientAdapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
+		mainFrame = new MainFrame( this );
 	}
 	
 	@Override
 	public void login( String emailId, char[] password ) {
 		clientAdapter.connect();
-		LoginResponse r = (LoginResponse)clientAdapter.send( new LoginRequest( emailId, password, ClientType.ADMIN ) );
+		LoginResponse r = (LoginResponse)clientAdapter.send( 
+					new LoginRequest( emailId, password, ClientType.ADMIN ) );
 		
 		if( !r.getLoginResult() ) {
 			loginRequestFailed( r.getStatusText() );
+			return;
 		}
-		System.out.println( "Sent login message" );
+
+		Constants.userName = r.getStatusText();
+		DatabaseAllClassesResponse dbResponse = (DatabaseAllClassesResponse)
+						clientAdapter.send( new DatabaseAllClassesRequest() );
+		mainFrame.getEditPanel().load( dbResponse );
+		mainFrame.showPanel( UIConstants.EDIT_PANEL );
+		
 	}
 	
 	private void loginRequestFailed( String cause ) {
 		JOptionPane.showMessageDialog( mainFrame, cause );
 		clientAdapter.shutdown();
-	}
-	
-	private void loginRequestSucceded( InfoPayload p ) {
-		Constants.userName = CommunicationConstants.getName( p.getInfo() );
-		System.out.println( "Showing edit panel" );
-		mainFrame.showPanel( UIConstants.EDIT_PANEL );
 	}
 	
 	@Override
@@ -72,9 +73,6 @@ public class AdminEngine extends Engine {
 		}
 		else if( p instanceof DatabasePayload ) {
 			handleDatabasePayload( (DatabasePayload)p );
-		}
-		else if( p instanceof FailPayload ) {
-			loginRequestFailed( (FailPayload)p );
 		}
 	}
 	
@@ -86,11 +84,6 @@ public class AdminEngine extends Engine {
 				CommunicationConstants.getDBHeaders( info )
 			);
 		}
-		else if( ((InfoPayload) p).getInfo().startsWith( CommunicationConstants.NAME_INFO ) ) {
-			System.out.println( "Showing stuff" );
-			loginRequestSucceded( (InfoPayload)p );
-		}
-
 	}
 	
 	private void setCurrentInstanceRunning() {
@@ -118,12 +111,8 @@ public class AdminEngine extends Engine {
 		mainFrame.getEditPanel().display( p );
 	}
 	
-	public Payload get() {
-		return clientAdapter.get();
-	}
-	
-	public void send( Bean b ) {
-		clientAdapter.send( b );
+	public SecureSocketNetworkAdapter getClientAdapter() {
+		return clientAdapter;
 	}
 	
 	@Override
