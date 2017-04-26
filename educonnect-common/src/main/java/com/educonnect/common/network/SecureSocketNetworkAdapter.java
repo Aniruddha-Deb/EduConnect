@@ -10,9 +10,9 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.educonnect.common.engine.Engine;
-import com.educonnect.common.message.Bean;
-import com.educonnect.common.message.ShutdownBean;
-import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.core.Request;
+import com.educonnect.common.message.core.Response;
+import com.educonnect.common.message.shutdown.ShutdownRequest;
 import com.educonnect.common.network.receiver.SecureSocketReceiver;
 import com.educonnect.common.serializer.Serializer;
 
@@ -26,7 +26,7 @@ import com.educonnect.common.serializer.Serializer;
  */
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
-	private BlockingQueue<Payload> receivedPayload = null;
+	private BlockingQueue<Response> responses = null;
 	
 	private SSLSocket sslSocket = null;
 	private String ipAddress = null;
@@ -44,7 +44,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		this.ipAddress = ipAddress;
 		this.port = port;
 		
-		receivedPayload = new LinkedBlockingQueue<>();
+		responses = new LinkedBlockingQueue<>();
 		
 	}
 	
@@ -88,10 +88,24 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		return (sslSocket.isClosed());
 	}
 
+	public BlockingQueue<Response> getResponses() {
+		return responses;
+	}
+	
 	@Override
-	public void send( Bean b ) {
+	public void shutdown() {
 		try {
-			String s = Serializer.serialize( b );
+			writer.write( Serializer.serialize( new ShutdownRequest() ) );
+			writer.flush();
+		} catch( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void sendAsync( Request r ) {
+		try {
+			String s = Serializer.serialize( r );
 			writer.write( s );
 			writer.flush();
 		} catch( Exception e ) {
@@ -100,32 +114,18 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	}
 
 	@Override
-	public void receive( Payload p ) {
+	public Response send( Request r ) {
+		Response response = null;
+		
 		try {
-			receivedPayload.put( p );
-			engine.handle( p );
-		} catch ( InterruptedException e ) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Payload get() {
-		try {
-			return receivedPayload.take();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	@Override
-	public void shutdown() {
-		try {
-			writer.write( Serializer.serialize( new ShutdownBean() ) );
+			String s = Serializer.serialize( r );
+			writer.write( s );
 			writer.flush();
+			response = responses.take();
 		} catch( Exception e ) {
 			e.printStackTrace();
-		}
+		}		
+		return response;
 	}
 	
 }

@@ -1,7 +1,7 @@
 package com.educonnect.common.network;
 
-import com.educonnect.common.message.Bean;
-import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.core.Request;
+import com.educonnect.common.message.core.Response;
 
 /**
  * The NetworkAdapter interface is an interface which needs to be implemented by 
@@ -14,9 +14,9 @@ import com.educonnect.common.message.payload.Payload;
  */
 public interface NetworkAdapter {
 
-	public void send( Bean b );
+	public void sendAsync( Request r );
 	
-	public void receive( Payload p );
+	public Response send( Request r );
 	
 	public void shutdown();
 }

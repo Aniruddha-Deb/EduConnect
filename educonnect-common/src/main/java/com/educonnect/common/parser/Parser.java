@@ -1,17 +1,12 @@
 package com.educonnect.common.parser;
 
-import java.lang.reflect.Type;
-
-import com.educonnect.common.message.payload.AuthPayload;
-import com.educonnect.common.message.payload.FailPayload;
-import com.educonnect.common.message.payload.FilePayload;
-import com.educonnect.common.message.payload.InfoPayload;
-import com.educonnect.common.message.payload.LoginPayload;
+import com.educonnect.common.message.MessageType;
+import com.educonnect.common.message.core.Message;
+import com.educonnect.common.message.login.LoginRequest;
+import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.payload.Payload;
-import com.educonnect.common.message.payload.RegisterPayload;
-import com.educonnect.common.message.payload.ShutdownPayload;
-import com.educonnect.common.message.payload.TextPayload;
-import com.educonnect.common.message.payload.db.DatabasePayload;
+import com.educonnect.common.message.shutdown.ShutdownRequest;
+import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.google.gson.Gson;
 
 /**
@@ -29,10 +24,7 @@ import com.google.gson.Gson;
  */
 public class Parser {
 
-	private static String[] parts = null;
-	
-	private static final String PAYLOAD = "PAYLOAD";
-	private static final String HEADER  = "HEADER";
+	private static final Gson GSON = new Gson();
 	
 	/**
 	 * This is the static method that handles the parsing of received beans and 
@@ -42,88 +34,30 @@ public class Parser {
 	 * @return A deserialized Payload object containing the payload carried by 
 	 * the string 
 	 */
-	public static Payload parse( String receivedString ) {
-		if( receivedString == null ) return null;
+	public static Message parse( String header, String payload ) {
+		if( header == null ) return null;
 		
-		int splitIndex = receivedString.indexOf( ";" ) ;
-		parts = new String[2];
-		parts[0] = receivedString.substring( 0, splitIndex );
-		parts[1] = receivedString.substring( splitIndex+1 );
+		MessageType msgType = GSON.fromJson( header, MessageType.class );
+		Message m = parseMessage( msgType, payload ); 
 		
-		String header = parseHeader( parts[0] );
-		Payload payload = parsePayload( parts[1], header );
-		
-		return payload;
+		return m;
 	}
 	
-	private static String parseHeader( String receivedString ) {
-		String[] headerSubParts = receivedString.split( "=" );
+	private static Message parseMessage( MessageType msgType, String payload ) {
 		
-		if( !headerSubParts[0].equals( HEADER ) ) {
-			throw new IllegalArgumentException( "Header flag missing" );
+		switch( msgType ) {
+			case MT_LOGIN_RES:
+				return GSON.fromJson( payload, LoginResponse.class );
+				
+			case MT_LOGIN_REQ:
+				return GSON.fromJson( payload, LoginRequest.class );
+				
+			case MT_SHUTDOWN_REQ:
+				return GSON.fromJson( payload, ShutdownRequest.class );				
+				
+			case MT_SHUTDOWN_RES:
+				return GSON.fromJson( payload, ShutdownResponse.class );
 		}
-		
-		String header;
-		try {
-			header = headerSubParts[1];
-		} catch( ArrayIndexOutOfBoundsException e ) {
-			throw new IllegalArgumentException( "Bad bean passed to parser" );
-		}
-		
-		return header.trim();
+		return null;
 	}
-
-	private static Payload parsePayload( String receivedString, String header ) {
-		receivedString.trim();
-		String[] payloadSubParts = receivedString.split( "=" );
-		payloadSubParts[0] = payloadSubParts[0].trim();
-		
-		if( !payloadSubParts[0].equals( PAYLOAD ) ) {
-			throw new IllegalArgumentException( "Payload flag missing" );			
-		}
-		
-		String payload;
-		try {
-			payload = payloadSubParts[1];
-		} catch( ArrayIndexOutOfBoundsException e ) {
-			throw new IllegalArgumentException( "Bad payload in bean passed to parser" );
-		}
-		Gson gson = new Gson();
-		Type payloadInstance = null;
-		
-		switch( header ) {
-			
-			case "LOGIN" : payloadInstance = LoginPayload.class;
-			break;
-			
-			case "TEXT"  : payloadInstance = TextPayload.class;
-			break;
-			
-			case "FILE"  : payloadInstance = FilePayload.class;
-			break;
-			
-			case "AUTH"  : payloadInstance = AuthPayload.class;
-			break;
-			
-			case "FAIL"  : payloadInstance = FailPayload.class;
-			break;
-			
-			case "INFO"  : payloadInstance = InfoPayload.class;
-			break;
-			
-			case "SHUTDOWN"  : payloadInstance = ShutdownPayload.class;
-			break;
-			
-			case "REGISTER" : payloadInstance = RegisterPayload.class;
-			break;
-			
-			case "DATABASE" : payloadInstance = DatabasePayload.class;
-			break;
-			
-			default: throw new IllegalArgumentException( "Bad header passed to parsePayload" );
-		}
-		
-		return gson.fromJson( payload, payloadInstance );
-	}
-
 }

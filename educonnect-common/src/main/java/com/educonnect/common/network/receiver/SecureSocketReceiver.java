@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.common.message.payload.Payload;
-import com.educonnect.common.message.payload.ShutdownPayload;
+import com.educonnect.common.message.core.Response;
+import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 import com.educonnect.common.parser.Parser;
 
@@ -18,7 +18,7 @@ import com.educonnect.common.parser.Parser;
  * 
  * @author Sensei 
  */
-public class SecureSocketReceiver implements Receiver {
+public class SecureSocketReceiver implements Runnable {
 
 	private BufferedReader reader = null;
 	private SSLSocket sslSocket = null;
@@ -37,24 +37,48 @@ public class SecureSocketReceiver implements Receiver {
 	@Override
 	public void run() {
 		
-		Payload p;
+		Response r = null;
 		try {		
-			String s = reader.readLine();
-			p = Parser.parse( s );
+			r = (Response)Parser.parse( readHeader(), readPayload() );
 			
-			while( !( p instanceof ShutdownPayload ) ) {
-				adapter.receive( p );
-				s = reader.readLine();
-				
-				if( s != null ) {
-					p = Parser.parse( s );
-				}
+			while( !( r instanceof ShutdownResponse ) ) {
+				adapter.getResponses().put( r );
+				r = (Response)Parser.parse( readHeader(), readPayload() );
 			}
-			System.out.println( "Closing" );
 			sslSocket.close();
 			reader.close();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
+	}
+	
+	private String readHeader() {
+		String header = null;
+		try {
+			int headerLength = Integer.parseInt( reader.readLine() );
+			header = new String();
+			for( int i=0; i<headerLength; i++ ) {
+				char charRead = (char)reader.read();
+				header += charRead;
+			}
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+		return header;
+	}
+	
+	private String readPayload() {
+		String payload = null;
+		try {
+			int payloadLength = Integer.parseInt( reader.readLine() );
+			payload = new String();
+			for( int i=0; i<payloadLength; i++ ) {
+				char charRead = (char)reader.read();
+				payload += charRead;
+			}
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+		return payload;
 	}
 }

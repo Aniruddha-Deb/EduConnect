@@ -1,7 +1,9 @@
 package com.educonnect.common.serializer;
 
-import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.core.Message;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * This class handles the serializing of Java object beans into strings which 
@@ -16,6 +18,8 @@ import com.google.gson.Gson;
  */
 public class Serializer {
 	
+	private static Gson GSON = new Gson();
+
 	/**
 	 * The static method which handles the serialization of a bean to a string which 
 	 * can readily be sent over the connection. 
@@ -23,13 +27,28 @@ public class Serializer {
 	 * @param bean The bean object to be serialized
 	 * @return A serialized bean in the form of a String
 	 */
-	public static String serialize( Bean bean ) {
-		StringBuilder serializedBean = new StringBuilder();
-		Gson gson = new Gson();
+	public static String serialize( Message msg ) {
+		StringBuilder msgStr = new StringBuilder();
 		
-		serializedBean.append( "HEADER=" + bean.getHeader().toString() + ";" );
-		serializedBean.append( "PAYLOAD=" + gson.toJson( bean.getPayload() ) + "\n");
+		String msgHeader  = getMessageHeaderAsJSON( msg );
+		String msgPayload = getMessagePayloadAsJSON( msg );
 		
-		return serializedBean.toString();
+		msgStr.append( msgHeader.length() ).append( "\n" ) ;
+		msgStr.append( msgHeader ).append( "\n" ) ;
+		msgStr.append( msgPayload.length() ).append( "\n" ) ;
+		msgStr.append( msgPayload ) .append( "\n" ) ;
+		
+		return msgStr.toString();
+	}
+	
+	private static String getMessageHeaderAsJSON( Message m ) {
+		JsonObject jsonObj = new JsonObject() ;
+		JsonPrimitive msgType = new JsonPrimitive( m.getMessageType().name() ) ;
+		jsonObj.add( "msgType", msgType ) ;
+		return GSON.toJson( jsonObj ) ;
+	}
+	
+	private static String getMessagePayloadAsJSON( Message m ) {
+		return GSON.toJson( m ) ;
 	}
 }

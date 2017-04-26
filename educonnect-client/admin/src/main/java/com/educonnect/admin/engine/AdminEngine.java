@@ -13,14 +13,16 @@ import com.educonnect.common.client.ClientType;
 import com.educonnect.common.engine.Engine;
 import com.educonnect.common.message.Bean;
 import com.educonnect.common.message.CommunicationConstants;
-import com.educonnect.common.message.LoginBean;
+import com.educonnect.common.message.core.Response;
+import com.educonnect.common.message.login.LoginRequest;
+import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.payload.FailPayload;
 import com.educonnect.common.message.payload.InfoPayload;
 import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.message.payload.db.DatabasePayload;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 
-public class AdminEngine extends Engine{
+public class AdminEngine extends Engine {
 
 	private MainFrame mainFrame = null;
 	private SecureSocketNetworkAdapter clientAdapter = null;
@@ -44,13 +46,16 @@ public class AdminEngine extends Engine{
 	@Override
 	public void login( String emailId, char[] password ) {
 		clientAdapter.connect();
-		clientAdapter.send( new LoginBean( emailId, password, ClientType.ADMIN ) );
+		LoginResponse r = (LoginResponse)clientAdapter.send( new LoginRequest( emailId, password, ClientType.ADMIN ) );
 		
-		System.out.println( "Sent login bean" );
+		if( !r.getLoginResult() ) {
+			loginRequestFailed( r.getStatusText() );
+		}
+		System.out.println( "Sent login message" );
 	}
 	
-	private void loginRequestFailed( FailPayload p ) {
-		JOptionPane.showMessageDialog( mainFrame, p.getCause() );
+	private void loginRequestFailed( String cause ) {
+		JOptionPane.showMessageDialog( mainFrame, cause );
 		clientAdapter.shutdown();
 	}
 	
