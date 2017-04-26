@@ -12,6 +12,8 @@ import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.message.shutdown.ShutdownRequest;
 import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * This is the class which handles the parsing of the String coming over the 
@@ -41,7 +43,9 @@ public class Parser {
 	public static Message parse( String header, String payload ) {
 		if( header == null ) return null;
 		
-		MessageType msgType = GSON.fromJson( header, MessageType.class );
+		System.out.println( "Parsing header " + header );
+	    MessageType msgType = GSON.fromJson( header, MessageType.class );
+		System.out.println( "Parsing payload " + payload );
 		Message m = parseMessage( msgType, payload ); 
 		
 		return m;

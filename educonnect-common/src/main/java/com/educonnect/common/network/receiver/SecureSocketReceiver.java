@@ -61,6 +61,7 @@ public class SecureSocketReceiver implements Runnable {
 				char charRead = (char)reader.read();
 				header += charRead;
 			}
+			reader.readLine();
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -76,6 +77,7 @@ public class SecureSocketReceiver implements Runnable {
 				char charRead = (char)reader.read();
 				payload += charRead;
 			}
+			reader.readLine();
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}

@@ -42,10 +42,7 @@ public class Serializer {
 	}
 	
 	private static String getMessageHeaderAsJSON( Message m ) {
-		JsonObject jsonObj = new JsonObject() ;
-		JsonPrimitive msgType = new JsonPrimitive( m.getMessageType().name() ) ;
-		jsonObj.add( "msgType", msgType ) ;
-		return GSON.toJson( jsonObj ) ;
+		return GSON.toJson( m.getMessageType() ) ;
 	}
 	
 	private static String getMessagePayloadAsJSON( Message m ) {

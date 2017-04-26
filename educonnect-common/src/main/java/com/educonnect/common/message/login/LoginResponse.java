@@ -10,8 +10,9 @@ public class LoginResponse extends Response {
 	
 	private boolean loginResult = false ;
 	
-	public LoginResponse( ResponseStatus status, String requestUID ) {
+	public LoginResponse( ResponseStatus status, String requestUID, boolean loginResult ) {
 		super( MessageType.MT_LOGIN_RES, status, requestUID ) ;
+		this.loginResult = loginResult;
 	}
 	
 	public void setLoginResult( boolean result ) {
@@ -20,5 +21,10 @@ public class LoginResponse extends Response {
 	
 	public boolean getLoginResult() {
 		return this.loginResult ;
+	}
+	
+	public LoginResponse withStatusText( String statusText ) {
+		super.setStatusText( statusText );
+		return this;
 	}
 }

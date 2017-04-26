@@ -17,7 +17,7 @@ public class DatabaseSingleClassResponse extends Response {
 		this.classOfStudents = c;
 	}
 
-	public ClassOfStudents getStudents() {
+	public ClassOfStudents getClassOfStudents() {
 		return classOfStudents;
 	}
 }

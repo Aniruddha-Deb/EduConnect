@@ -11,13 +11,12 @@ import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.engine.Engine;
-import com.educonnect.common.message.CommunicationConstants;
+import com.educonnect.common.message.core.Response;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
+import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
-import com.educonnect.common.message.payload.InfoPayload;
-import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.message.payload.db.DatabasePayload;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 
@@ -67,22 +66,9 @@ public class AdminEngine extends Engine {
 	}
 	
 	@Override
-	public void handle( Payload p ) {
-		if( p instanceof InfoPayload ) {
-			handleInfoPayload( (InfoPayload)p );
-		}
-		else if( p instanceof DatabasePayload ) {
-			handleDatabasePayload( (DatabasePayload)p );
-		}
-	}
-	
-	private void handleInfoPayload( InfoPayload p ) {
-		String info = p.getInfo();
-		if( info.startsWith( CommunicationConstants.DB_HEADER_INFO ) ) {
-			System.out.println( CommunicationConstants.getDBHeaders( info ) );
-			mainFrame.getEditPanel().load( 
-				CommunicationConstants.getDBHeaders( info )
-			);
+	public void handleAsyncResponse( Response r ) {
+		if( r instanceof DatabaseSingleClassResponse ) {
+			mainFrame.getEditPanel().display( (DatabaseSingleClassResponse) r );
 		}
 	}
 	
@@ -105,10 +91,6 @@ public class AdminEngine extends Engine {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	private void handleDatabasePayload( DatabasePayload p ) {
-		mainFrame.getEditPanel().display( p );
 	}
 	
 	public SecureSocketNetworkAdapter getClientAdapter() {

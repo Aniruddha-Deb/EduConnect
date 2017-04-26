@@ -6,11 +6,11 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import com.educonnect.common.client.ClientType;
-import com.educonnect.common.message.Bean;
-import com.educonnect.common.message.CommunicationConstants;
-import com.educonnect.common.message.InfoBean;
-import com.educonnect.common.message.ShutdownBean;
-import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.ResponseStatus;
+import com.educonnect.common.message.core.Message;
+import com.educonnect.common.message.core.Request;
+import com.educonnect.common.message.login.LoginResponse;
+import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;
 import com.educonnect.server.payload.PayloadHandler;
@@ -41,11 +41,13 @@ public class Client {
 		
 		if( clientType.equals( ClientType.ADMIN ) ) {			
 			this.clientName = JDBCAdapter.getInstance().getAdminName( UID );
-			send( new InfoBean( CommunicationConstants.NAME_INFO + clientName ) );
+			send( new LoginResponse( 
+								ResponseStatus.SERVER_ERROR, 
+								null,
+								true
+				  ).withStatusText( clientName )
+			);
 			System.out.println( "Sent name" );
-			send( new InfoBean( CommunicationConstants.DB_HEADER_INFO + 
-								JDBCAdapter.getInstance().getEditableClasses() ) );
-			System.out.println( "Sent headers" );
 		}
 	}
 	
@@ -61,8 +63,8 @@ public class Client {
 		return UID;
 	}
 	
-	public void send( Bean b ) {
-		String stringToSend = Serializer.serialize( b );
+	public void send( Message m ) {
+		String stringToSend = Serializer.serialize( m );
 		
 		try {
 			writer.write( stringToSend );
@@ -81,28 +83,17 @@ public class Client {
 		}
 	}
 
-	public void receive( Payload p ) {
-		PayloadHandler.handlePayload( p, this );
+	public void receive( Request r ) {
+		PayloadHandler.handleResponse( r, this );
 	}
 	
-	public void shutdown() {
+	public void shutdown( String UID ) {
 		ClientHandler.remove( this );
 		try {
-			writer.write( Serializer.serialize( new ShutdownBean() ) );
+			writer.write( Serializer.serialize( new ShutdownResponse( UID ) ) );
 			writer.flush();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void forceShutdown() {
-		try {
-			writer.write( Serializer.serialize( new ShutdownBean() ) );
-			writer.flush();
-			receiverThread.stop();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	}	
 }

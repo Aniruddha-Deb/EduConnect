@@ -1,6 +1,6 @@
 package com.educonnect.common.engine;
 
-import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.core.Response;
 
 /**
  * The Engine is the orchestrator of both the client side and server side programs. 
@@ -50,7 +50,7 @@ public abstract class Engine {
 	 * 
 	 * @param p The payload received to be handled by the engine.
 	 */
-	public abstract void handle( Payload p );
+	public abstract void handleAsyncResponse( Response s );
 	
 	/**
 	 * This method is the method called by the entry point of the application 

@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import com.educonnect.common.message.payload.Payload;
-import com.educonnect.common.message.payload.ShutdownPayload;
+import com.educonnect.common.message.core.Request;
+import com.educonnect.common.message.shutdown.ShutdownRequest;
 import com.educonnect.common.parser.Parser;
 
 public class ClientSocketReader implements Runnable{
@@ -29,21 +29,15 @@ public class ClientSocketReader implements Runnable{
 	@Override
 	public void run() {
 		
-		Payload p;
+		Request r = null;
 		try {		
-			String s = reader.readLine();
-			p = Parser.parse( s );
+			r = (Request)Parser.parse( ClientHandler.readHeader(), ClientHandler.readPayload() );
 			
-			while( !( p instanceof ShutdownPayload ) ) {
-				client.receive( p );
-				s = reader.readLine();
-				
-				if( s != null ) {
-					p = Parser.parse( s );
-				}
+			while( !( r instanceof ShutdownRequest ) ) {
+				client.receive( r );
+				r = (Request)Parser.parse( ClientHandler.readHeader(), ClientHandler.readPayload() );
 			}
-			System.out.println( "Client " + client.getClientName() + " is shutting down" );
-			client.shutdown();
+			client.shutdown( r.getUID() );
 			socket.close();
 			reader.close();
 		} catch( Exception e ) {
