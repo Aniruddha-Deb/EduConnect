@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.CommunicationConstants;
-import com.educonnect.common.bean.InfoBean;
-import com.educonnect.common.bean.ShutdownBean;
-import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.CommunicationConstants;
+import com.educonnect.common.message.InfoBean;
+import com.educonnect.common.message.ShutdownBean;
+import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;
 import com.educonnect.server.payload.PayloadHandler;

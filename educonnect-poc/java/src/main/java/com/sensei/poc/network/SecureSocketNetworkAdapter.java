@@ -7,9 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.ShutdownBean;
-import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.ShutdownBean;
+import com.educonnect.common.message.payload.Payload;
 import com.sensei.poc.network.receiver.SecureSocketReceiver;
 import com.sensei.poc.network.sender.SecureSocketSender;
 

@@ -1,7 +1,7 @@
 package com.sensei.poc.network;
 
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.payload.Payload;
 
 public interface NetworkAdapter {
 

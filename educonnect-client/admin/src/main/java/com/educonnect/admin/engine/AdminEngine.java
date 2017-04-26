@@ -9,15 +9,15 @@ import javax.swing.JOptionPane;
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.CommunicationConstants;
-import com.educonnect.common.bean.LoginBean;
-import com.educonnect.common.bean.payload.FailPayload;
-import com.educonnect.common.bean.payload.InfoPayload;
-import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.bean.payload.db.DatabasePayload;
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.engine.Engine;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.CommunicationConstants;
+import com.educonnect.common.message.LoginBean;
+import com.educonnect.common.message.payload.FailPayload;
+import com.educonnect.common.message.payload.InfoPayload;
+import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.payload.db.DatabasePayload;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 
 public class AdminEngine extends Engine{

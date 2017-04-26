@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.bean.payload.ShutdownPayload;
+import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.payload.ShutdownPayload;
 import com.educonnect.common.parser.Parser;
 import com.sensei.poc.network.SecureSocketNetworkAdapter;
 

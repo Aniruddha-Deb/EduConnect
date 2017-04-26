@@ -1,6 +1,6 @@
 package com.educonnect.common.engine;
 
-import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.message.payload.Payload;
 
 /**
  * The Engine is the orchestrator of both the client side and server side programs. 

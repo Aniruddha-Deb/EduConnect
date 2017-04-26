@@ -7,8 +7,8 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.educonnect.common.bean.payload.*;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.payload.*;
 
 public class PayloadEqualsTests {
 

@@ -1,11 +1,11 @@
 package com.educonnect.server.payload;
 
-import com.educonnect.common.bean.CommunicationConstants;
-import com.educonnect.common.bean.db.DatabaseBean;
-import com.educonnect.common.bean.db.Student;
-import com.educonnect.common.bean.payload.InfoPayload;
-import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.CommunicationConstants;
+import com.educonnect.common.message.db.DatabaseBean;
+import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.payload.InfoPayload;
+import com.educonnect.common.message.payload.Payload;
 import com.educonnect.server.client.Client;
 import com.educonnect.server.db.JDBCAdapter;
 

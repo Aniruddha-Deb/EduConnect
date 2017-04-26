@@ -2,16 +2,16 @@ package com.educonnect.common.parser;
 
 import java.lang.reflect.Type;
 
-import com.educonnect.common.bean.payload.AuthPayload;
-import com.educonnect.common.bean.payload.FailPayload;
-import com.educonnect.common.bean.payload.FilePayload;
-import com.educonnect.common.bean.payload.InfoPayload;
-import com.educonnect.common.bean.payload.LoginPayload;
-import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.bean.payload.RegisterPayload;
-import com.educonnect.common.bean.payload.ShutdownPayload;
-import com.educonnect.common.bean.payload.TextPayload;
-import com.educonnect.common.bean.payload.db.DatabasePayload;
+import com.educonnect.common.message.payload.AuthPayload;
+import com.educonnect.common.message.payload.FailPayload;
+import com.educonnect.common.message.payload.FilePayload;
+import com.educonnect.common.message.payload.InfoPayload;
+import com.educonnect.common.message.payload.LoginPayload;
+import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.payload.RegisterPayload;
+import com.educonnect.common.message.payload.ShutdownPayload;
+import com.educonnect.common.message.payload.TextPayload;
+import com.educonnect.common.message.payload.db.DatabasePayload;
 import com.google.gson.Gson;
 
 /**

@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.educonnect.common.bean.db.Student;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.db.Student;
 
 public class JDBCAdapter {
 

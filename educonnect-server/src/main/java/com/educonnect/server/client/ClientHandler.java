@@ -9,10 +9,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.educonnect.common.bean.FailBean;
-import com.educonnect.common.bean.payload.LoginPayload;
-import com.educonnect.common.bean.payload.Payload;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.FailBean;
+import com.educonnect.common.message.payload.LoginPayload;
+import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.parser.Parser;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;

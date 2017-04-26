@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.educonnect.common.bean.*;
-import com.educonnect.common.bean.payload.*;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.*;
+import com.educonnect.common.message.payload.*;
 import com.educonnect.common.serializer.Serializer;
 
 public class ParserTest {

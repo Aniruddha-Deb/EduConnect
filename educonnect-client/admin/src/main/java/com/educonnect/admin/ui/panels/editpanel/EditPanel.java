@@ -25,9 +25,9 @@ import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
 import com.educonnect.admin.ui.util.UIUtils;
-import com.educonnect.common.bean.InfoBean;
-import com.educonnect.common.bean.db.Student;
-import com.educonnect.common.bean.payload.db.DatabasePayload;
+import com.educonnect.common.message.InfoBean;
+import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.payload.db.DatabasePayload;
 
 public class EditPanel extends JPanel implements ChangeListener, OptionPanelButtonListener {
 

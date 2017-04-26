@@ -1,7 +1,7 @@
 package com.educonnect.common.network;
 
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.payload.Payload;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.payload.Payload;
 
 /**
  * The NetworkAdapter interface is an interface which needs to be implemented by 

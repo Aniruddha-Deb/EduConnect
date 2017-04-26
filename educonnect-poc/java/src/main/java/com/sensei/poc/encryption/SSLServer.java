@@ -9,10 +9,10 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.common.bean.InfoBean;
-import com.educonnect.common.bean.ShutdownBean;
-import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.bean.payload.ShutdownPayload;
+import com.educonnect.common.message.InfoBean;
+import com.educonnect.common.message.ShutdownBean;
+import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.payload.ShutdownPayload;
 import com.educonnect.common.parser.Parser;
 import com.educonnect.common.serializer.Serializer;
 

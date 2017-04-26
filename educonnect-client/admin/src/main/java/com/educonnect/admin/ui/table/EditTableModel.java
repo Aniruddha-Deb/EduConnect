@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-import com.educonnect.common.bean.db.Student;
+import com.educonnect.common.message.db.Student;
 
 public class EditTableModel extends AbstractTableModel{
 	

@@ -7,8 +7,8 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.net.ssl.SSLSocket;
 
-import com.educonnect.common.bean.Bean;
-import com.educonnect.common.bean.ShutdownBean;
+import com.educonnect.common.message.Bean;
+import com.educonnect.common.message.ShutdownBean;
 import com.educonnect.common.serializer.Serializer;
 
 public class SecureSocketSender implements Sender {

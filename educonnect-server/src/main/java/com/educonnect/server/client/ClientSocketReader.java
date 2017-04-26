@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import com.educonnect.common.bean.payload.Payload;
-import com.educonnect.common.bean.payload.ShutdownPayload;
+import com.educonnect.common.message.payload.Payload;
+import com.educonnect.common.message.payload.ShutdownPayload;
 import com.educonnect.common.parser.Parser;
 
 public class ClientSocketReader implements Runnable{

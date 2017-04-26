@@ -14,16 +14,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
-import com.educonnect.common.bean.header.Header;
-import com.educonnect.common.bean.payload.AuthPayload;
-import com.educonnect.common.bean.payload.FailPayload;
-import com.educonnect.common.bean.payload.FilePayload;
-import com.educonnect.common.bean.payload.InfoPayload;
-import com.educonnect.common.bean.payload.LoginPayload;
-import com.educonnect.common.bean.payload.RegisterPayload;
-import com.educonnect.common.bean.payload.ShutdownPayload;
-import com.educonnect.common.bean.payload.TextPayload;
 import com.educonnect.common.client.ClientType;
+import com.educonnect.common.message.AuthBean;
+import com.educonnect.common.message.FailBean;
+import com.educonnect.common.message.FileBean;
+import com.educonnect.common.message.InfoBean;
+import com.educonnect.common.message.LoginBean;
+import com.educonnect.common.message.RegisterBean;
+import com.educonnect.common.message.ShutdownBean;
+import com.educonnect.common.message.TextBean;
+import com.educonnect.common.message.header.Header;
+import com.educonnect.common.message.payload.AuthPayload;
+import com.educonnect.common.message.payload.FailPayload;
+import com.educonnect.common.message.payload.FilePayload;
+import com.educonnect.common.message.payload.InfoPayload;
+import com.educonnect.common.message.payload.LoginPayload;
+import com.educonnect.common.message.payload.RegisterPayload;
+import com.educonnect.common.message.payload.ShutdownPayload;
+import com.educonnect.common.message.payload.TextPayload;
 
 public class BeanTests {
 

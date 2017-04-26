@@ -1,6 +1,6 @@
 package com.educonnect.common.serializer;
 
-import com.educonnect.common.bean.Bean;
+import com.educonnect.common.message.Bean;
 import com.google.gson.Gson;
 
 /**
