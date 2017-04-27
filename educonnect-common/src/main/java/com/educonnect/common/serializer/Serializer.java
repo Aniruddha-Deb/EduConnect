@@ -2,8 +2,6 @@ package com.educonnect.common.serializer;
 
 import com.educonnect.common.message.core.Message;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * This class handles the serializing of Java object beans into strings which 

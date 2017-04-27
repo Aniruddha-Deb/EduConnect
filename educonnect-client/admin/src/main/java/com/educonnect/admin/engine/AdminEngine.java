@@ -3,11 +3,10 @@ package com.educonnect.admin.engine;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import javax.swing.JOptionPane;
-
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
+import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.engine.Engine;
 import com.educonnect.common.message.core.Response;
@@ -44,18 +43,27 @@ public class AdminEngine extends Engine {
 			loginRequestFailed( r.getStatusText() );
 			return;
 		}
-
-		Constants.USER_NAME = r.getStatusText();
-		DatabaseAllClassesResponse dbResponse = (DatabaseAllClassesResponse)
-						clientAdapter.send( new DatabaseAllClassesRequest() );
-		mainFrame.getEditPanel().load( dbResponse );
-		mainFrame.showPanel( UIConstants.EDIT_PANEL );
-		
+		else {
+			setUserName( r.getStatusText() );
+			loadEditPanel();
+		}
 	}
 	
 	private void loginRequestFailed( String cause ) {
-		JOptionPane.showMessageDialog( mainFrame, cause );
+		UIUtils.showError( Constants.ERROR_LOGIN_REQUEST_FAILED, "Login request fail!\n" + 
+																  cause );
 		clientAdapter.shutdown();
+	}
+	
+	private void setUserName( String userName ) {
+		Constants.USER_NAME = userName;
+	}
+	
+	private void loadEditPanel() {
+		DatabaseAllClassesResponse dbResponse = (DatabaseAllClassesResponse)
+				clientAdapter.send( new DatabaseAllClassesRequest() );
+		mainFrame.getEditPanel().load( dbResponse );
+		mainFrame.showPanel( UIConstants.EDIT_PANEL );	
 	}
 	
 	@Override
@@ -70,8 +78,8 @@ public class AdminEngine extends Engine {
 	        singleInstanceSocket = new ServerSocket( 11132 );
 	      }
 	      catch ( IOException ex ) {
-	        JOptionPane.showMessageDialog( mainFrame, "Another instance of this \n"
-	        										+ "application is already running" );
+	    	  UIUtils.showError( Constants.ERROR_INSTANCE_ALREADY_RUNNING, 
+	    			 "Another instance of this application is already running" );
 	        System.exit( -1 );
 	      }
 	}
@@ -97,9 +105,6 @@ public class AdminEngine extends Engine {
 
 	@Override
 	public void shutdown() {
-		if( clientAdapter != null ) {
-			disconnectAdapter();
-		}
 		setInstanceStopped();
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
@@ -107,11 +112,11 @@ public class AdminEngine extends Engine {
 	}
 	
 	private void disconnectAdapter() {
-		if( clientAdapter.isOpen() ) {
+		if( clientAdapter != null && clientAdapter.isOpen() ) {
 			clientAdapter.shutdown();
 		}
 	}
-
+	
 	@Override
 	public void logout() {
 		disconnectAdapter();

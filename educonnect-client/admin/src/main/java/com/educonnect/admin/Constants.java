@@ -8,6 +8,7 @@ public class Constants {
 
 	public static final int ERROR_NO_TRUSTSTORE_CODE = 0000;
 	public static final int ERROR_LOGIN_REQUEST_FAILED = 0001;
+	public static final int ERROR_INSTANCE_ALREADY_RUNNING = 0101;
 
 	public static final String DIR_PATH  = System.getProperty( "user.home" ) + 
 											File.separator + 

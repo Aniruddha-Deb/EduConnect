@@ -21,12 +21,10 @@ import com.educonnect.common.parser.Parser;
 public class SecureSocketReceiver implements Runnable {
 
 	private BufferedReader reader = null;
-	private SSLSocket sslSocket = null;
 	private SecureSocketNetworkAdapter adapter = null;
 	
 	public SecureSocketReceiver( SSLSocket sslSocket, SecureSocketNetworkAdapter adapter ) {
 		this.adapter = adapter;
-		this.sslSocket = sslSocket;
 		try {
 			this.reader = new BufferedReader( new InputStreamReader( sslSocket.getInputStream() ) );
 		} catch ( IOException e ) {

@@ -8,12 +8,9 @@ import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
-import com.educonnect.common.message.payload.Payload;
 import com.educonnect.common.message.shutdown.ShutdownRequest;
 import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 /**
  * This is the class which handles the parsing of the String coming over the 
