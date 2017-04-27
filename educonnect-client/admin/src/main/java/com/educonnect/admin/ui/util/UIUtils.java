@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import com.educonnect.admin.ui.panels.editpanel.EditPanel;
 
@@ -63,5 +64,10 @@ public class UIUtils {
 			ex.printStackTrace();
 		}
 		return image;
+	}
+	
+	public static void showError( int errorCode, String errorMessage ) {
+		JOptionPane.showMessageDialog( null, "ERROR " + errorCode + ": \n" + 
+											 errorMessage );
 	}
 }

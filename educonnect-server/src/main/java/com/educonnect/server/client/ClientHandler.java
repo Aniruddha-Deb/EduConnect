@@ -14,6 +14,7 @@ import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
+import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.parser.Parser;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;
@@ -52,6 +53,8 @@ public class ClientHandler {
 						.withStatusText( "Admin not registered with system" )
 					)
 				);
+				writer.flush();
+				writer.write( Serializer.serialize( new ShutdownResponse( lr.getUID() ) ) );
 				writer.flush();
 				System.out.println( "Wrote the fail bean" );
 			}

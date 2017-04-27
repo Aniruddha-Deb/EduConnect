@@ -62,7 +62,7 @@ public class OptionPanel extends JPanel{
 	}
 	
 	public void loadNameOntoNameButton() {
-		nameButton.setText( Constants.userName );
+		nameButton.setText( Constants.USER_NAME );
 	}
 	
 	public void addOptionPaneButtonListener( OptionPanelButtonListener l ) {

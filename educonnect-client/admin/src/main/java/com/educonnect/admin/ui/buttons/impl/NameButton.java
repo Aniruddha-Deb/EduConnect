@@ -27,6 +27,6 @@ public class NameButton extends OptionPanelButton {
 	}
 
 	public void load() {
-		super.setText( Constants.userName );
+		super.setText( Constants.USER_NAME );
 	}
 }

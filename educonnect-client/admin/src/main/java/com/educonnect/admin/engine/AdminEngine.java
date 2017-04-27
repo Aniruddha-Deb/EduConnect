@@ -1,6 +1,5 @@
 package com.educonnect.admin.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -24,19 +23,14 @@ public class AdminEngine extends Engine {
 	private MainFrame mainFrame = null;
 	private SecureSocketNetworkAdapter clientAdapter = null;
 	
-	private static final String IP_ADDRESS = "192.168.0.100";
-	private static final int    PORT       = 1132;
-	private static final String TRUSTSTORE_PASSWD   = "public";
-	private static final String TRUSTSTORE_LOCATION = 
-										System.getProperty( "user.home" ) + 
-										File.separator + "client.truststore";
-	
 	private static ServerSocket singleInstanceSocket = null;
 		
 	public AdminEngine() {
-		super( TRUSTSTORE_PASSWD, TRUSTSTORE_LOCATION );
+		super( Constants.TRUSTSTORE_PASSWD, Constants.TRUSTSTORE_LOC );
 		setCurrentInstanceRunning();
-		clientAdapter = new SecureSocketNetworkAdapter( IP_ADDRESS, PORT, this );
+		clientAdapter = new SecureSocketNetworkAdapter( Constants.SERVER_IP_ADDRESS,
+														Constants.SERVER_PORT, 
+														this );
 		mainFrame = new MainFrame( this );
 	}
 	
@@ -51,7 +45,7 @@ public class AdminEngine extends Engine {
 			return;
 		}
 
-		Constants.userName = r.getStatusText();
+		Constants.USER_NAME = r.getStatusText();
 		DatabaseAllClassesResponse dbResponse = (DatabaseAllClassesResponse)
 						clientAdapter.send( new DatabaseAllClassesRequest() );
 		mainFrame.getEditPanel().load( dbResponse );
@@ -115,13 +109,6 @@ public class AdminEngine extends Engine {
 	private void disconnectAdapter() {
 		if( clientAdapter.isOpen() ) {
 			clientAdapter.shutdown();
-			while( clientAdapter.getReceiverThread().isAlive() ) {
-				try {
-					Thread.sleep( 10 );
-				} catch ( InterruptedException e ) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

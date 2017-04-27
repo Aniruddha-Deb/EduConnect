@@ -45,8 +45,6 @@ public class SecureSocketReceiver implements Runnable {
 				adapter.getResponses().put( r );
 				r = (Response)Parser.parse( readHeader(), readPayload() );
 			}
-			sslSocket.close();
-			reader.close();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

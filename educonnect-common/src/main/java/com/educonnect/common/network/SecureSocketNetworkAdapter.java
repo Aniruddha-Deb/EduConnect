@@ -97,6 +97,15 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		try {
 			writer.write( Serializer.serialize( new ShutdownRequest() ) );
 			writer.flush();
+			
+			while( receiverThread.isAlive() ) {
+				try {
+					Thread.sleep( 10 );
+				} catch ( InterruptedException e ) {
+					e.printStackTrace();
+				}
+			}
+			sslSocket.close();
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
