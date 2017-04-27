@@ -26,8 +26,9 @@ public class ClientHandler {
 	private static BufferedReader reader = null;
 	private static BufferedWriter writer = null;
 	
-	public static void handle( Socket s ) throws IOException{
+	public static void handle( Socket s ) throws IOException {
 		
+		System.out.println( "Client connected!" );
 		reader = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
 		writer = new BufferedWriter( new OutputStreamWriter( s.getOutputStream() ) );
 		
@@ -40,6 +41,7 @@ public class ClientHandler {
 			char[] password = lr.getPassword();
 			ClientType clientType = lr.getClientType();
 			
+			System.out.println( "Client sent first request as LoginRequest" );
 			int UID = JDBCAdapter.getInstance().getClient( emailId, password, clientType );
 			System.out.println( UID );
 			if( UID == -1 ) {
@@ -75,8 +77,9 @@ public class ClientHandler {
 			}
 			reader.readLine();
 			System.out.println( header );
-		} catch (NumberFormatException | IOException e) {
+		} catch ( NumberFormatException | IOException e ) {
 			e.printStackTrace();
+			System.exit( -1 );
 		}
 		return header;
 	}
@@ -92,8 +95,9 @@ public class ClientHandler {
 			}
 			System.out.println( payload );
 			reader.readLine();
-		} catch (NumberFormatException | IOException e) {
+		} catch ( NumberFormatException | IOException e ) {
 			e.printStackTrace();
+			System.exit( -1 );
 		}
 		return payload;
 	}

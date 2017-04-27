@@ -105,6 +105,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 					e.printStackTrace();
 				}
 			}
+			System.out.println( "Closed receiverThread" );
+			writer.close();
 			sslSocket.close();
 		} catch( Exception e ) {
 			e.printStackTrace();

@@ -106,6 +106,7 @@ public class AdminEngine extends Engine {
 	@Override
 	public void shutdown() {
 		setInstanceStopped();
+		disconnectAdapter();
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
 		System.exit( 0 );
@@ -113,7 +114,11 @@ public class AdminEngine extends Engine {
 	
 	private void disconnectAdapter() {
 		if( clientAdapter != null && clientAdapter.isOpen() ) {
+			System.out.println( "Shutting down adapter" );
 			clientAdapter.shutdown();
+		}
+		else {
+			System.out.println( "Adapter is null, no need to shutdown" );
 		}
 	}
 	
