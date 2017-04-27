@@ -95,22 +95,26 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		tablePanels = new JPanel[classes.length];
 		
 		for( int i=0; i<tablePanels.length; i++ ) {
-			String classTitle = classes[i].getClazz() + "-" + 
-								classes[i].getSection();
-			JTable table = initEditTable( classes[i] );
-			tables.put( classTitle, table );
-			
-			JScrollPane scrollPane = new JScrollPane( table );
-			scrollPane.setBackground( Color.WHITE );
-			scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
-			table.setFillsViewportHeight( true );
-			
-			tablePanels[i] = new JPanel();
-			tablePanels[i].setLayout( new BorderLayout() );
-			tablePanels[i].add( scrollPane, BorderLayout.CENTER );
+			String classTitle = classes[i].getClazz() + "-" + classes[i].getSection();
+			setUpTablePanelAt( i, classes[i] );
 			tabbedPane.addTab( classTitle, icon, tablePanels[i], classTitle );
 		}		
 		infoLabel.setText( "Loaded tables" );
+	}
+	
+	private void setUpTablePanelAt( int index, ClassOfStudents c ) {
+		String classTitle = c.getClazz() + "-" + c.getSection();
+		JTable table = initEditTable( c );
+		tables.put( classTitle, table );
+		
+		JScrollPane scrollPane = new JScrollPane( table );
+		scrollPane.setBackground( Color.WHITE );
+		scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
+		table.setFillsViewportHeight( true );
+		
+		tablePanels[index] = new JPanel();
+		tablePanels[index].setLayout( new BorderLayout() );
+		tablePanels[index].add( scrollPane, BorderLayout.CENTER );
 	}
 	
 	private JTable initEditTable( ClassOfStudents c ) {
