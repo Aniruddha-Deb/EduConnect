@@ -25,7 +25,6 @@ import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
 import com.educonnect.admin.ui.util.UIUtils;
-import com.educonnect.common.message.InfoBean;
 import com.educonnect.common.message.db.ClassOfStudents;
 import com.educonnect.common.message.db.Student;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
@@ -165,11 +164,6 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		
 		this.tablePanels[tabbedPane.getSelectedIndex()].add( scrollPane, BorderLayout.CENTER );
 		tabbedPane.repaint();
-	}
-	
-	private EditTable createEditTable() {
-		EditTable table = new EditTable();
-		return table;
 	}
 	
 	private int getSelectedClass() {

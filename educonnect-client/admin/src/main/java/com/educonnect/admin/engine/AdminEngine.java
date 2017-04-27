@@ -17,7 +17,6 @@ import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
-import com.educonnect.common.message.payload.db.DatabasePayload;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
 
 public class AdminEngine extends Engine {
