@@ -23,4 +23,8 @@ public class ClassOfStudents {
 	public Student[] getStudents() {
 		return students;
 	}
+	
+	public String getClassName() {
+		return getClazz() + "-" + getSection() ;
+	}
 }

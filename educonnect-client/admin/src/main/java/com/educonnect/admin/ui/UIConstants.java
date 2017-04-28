@@ -44,12 +44,15 @@ public class UIConstants {
 	private static void setSystemFont() {
 		String pathName = null;
 		if( osName.indexOf( "win" ) >= 0 ) {
+			// Windows
 			pathName = "win.ttf";
 		}
 		else if( osName.indexOf( "mac" ) >= 0 ) {
+			// Macintosh
 			pathName = "mac.ttf";
 		}
-		else if( osName.indexOf( "nix" ) >= 0 ) {
+		else if( osName.indexOf( "ix" ) >= 0 || osName.indexOf( "ux" ) >= 0 ) {
+			// UNIX / Linux / AIX 
 			pathName = "ubuntu.ttf";
 		}
 
@@ -65,6 +68,9 @@ public class UIConstants {
 				e.printStackTrace();
 			} 
 		}
+		System.setProperty( "awt.useSystemAAFontSettings", "on" );
+		System.setProperty( "swing.aatext", "true" );
+		
 	}
 
 	private static void setSystemLookAndFeel() {

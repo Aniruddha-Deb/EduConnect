@@ -13,20 +13,28 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.TableModel;
 
 import com.educonnect.admin.ui.UIConstants;
+import com.educonnect.common.message.db.ClassOfStudents;
 
 public class EditTable extends JTable{
 
 	private static final long serialVersionUID = -2558045536129893621L;
+	
+	private ClassOfStudents classOfStudents = null ;
 
 	public EditTable() {
 		super( new EditTableModel() );
 		setUpTableAttributes();
 	}
 	
-	public EditTable( EditTableModel etm ) {
-		super( etm );
+	public EditTable( ClassOfStudents c ) {
+		super( new EditTableModel().withStudents( c.getStudents() ) ) ;
+		this.classOfStudents = c ;
 		setUpTableAttributes();
 		setUpTableCellEditor();
+	}
+	
+	public ClassOfStudents getClassOfStudents() {
+		return this.classOfStudents ;
 	}
 	
 	private void setUpTableAttributes() {

@@ -1,6 +1,7 @@
 package com.educonnect.admin.ui.panels.editpanel;
 
 import static com.educonnect.admin.ui.UIConstants.DB_ICON_RES;
+import static com.educonnect.admin.ui.util.UIUtils.getImageResource;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,22 +25,23 @@ import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
 import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
-import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.db.ClassOfStudents;
 import com.educonnect.common.message.db.Student;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 
-public class EditPanel extends JPanel implements ChangeListener, OptionPanelButtonListener {
+public class EditPanel extends JPanel 
+	implements ChangeListener, OptionPanelButtonListener {
 
 	private static final long serialVersionUID = 3873660039173146777L;
+	
+	private static ImageIcon DB_ICON = new ImageIcon( getImageResource( DB_ICON_RES ) );
 
-	private HashMap<String, JTable> tables = null;
+	private HashMap<String, EditTable> tables = new LinkedHashMap<String, EditTable>() ;
 	
 	private JTabbedPane  tabbedPane  = null;
 	private OptionPanel  optionPanel = null;
-	private JPanel[]     tablePanels = null;
 	private JLabel       infoLabel   = null;
 	
 	private AdminEngine  adminEngine = null;
@@ -56,8 +58,10 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		
 		createOptionPanel();
 		super.add( optionPanel, BorderLayout.NORTH );
+		
 		createInfoLabel();
 		super.add( infoLabel, BorderLayout.SOUTH );
+		
 		createTabbedPane();
 		super.add( tabbedPane, BorderLayout.CENTER );
 	}
@@ -67,11 +71,6 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		optionPanel.addOptionPaneButtonListener( this );
 	}
 		
-	private void loadOptionPanel() {
-		optionPanel.loadNameOntoNameButton();
-		optionPanel.repaint();
-	}
-	
 	private void createInfoLabel() {
 		infoLabel = new JLabel( "Test" );
 	}
@@ -82,139 +81,115 @@ public class EditPanel extends JPanel implements ChangeListener, OptionPanelButt
 		tabbedPane.addChangeListener( this );
 	}
 	
+	private void showStatusMessage( String msg ) {
+		infoLabel.setText( msg ) ;
+	}
+	
 	public void load( DatabaseAllClassesResponse r ) {
 		
-		tables = new LinkedHashMap<>();
-		tabbedPane.removeAll();
-		
-		ImageIcon icon = new ImageIcon( UIUtils.getImageResource( DB_ICON_RES ) );
-		loadOptionPanel();
+		optionPanel.loadNameOntoNameButton();
+		optionPanel.repaint();
 
 		ClassOfStudents[] classes = r.getClasses();
 		
-		tablePanels = new JPanel[classes.length];
+		for( int i=0; i<classes.length; i++ ) {
+			ClassOfStudents c = classes[i] ;
+			JPanel panel = createTablePanel( c ) ;
+			tabbedPane.addTab( c.getClassName(), DB_ICON, panel ) ;
+		}
 		
-		for( int i=0; i<tablePanels.length; i++ ) {
-			String classTitle = classes[i].getClazz() + "-" + classes[i].getSection();
-			setUpTablePanelAt( i, classes[i] );
-			tabbedPane.addTab( classTitle, icon, tablePanels[i], classTitle );
-		}		
-		infoLabel.setText( "Loaded tables" );
+		showStatusMessage( "Loaded tables" );
 	}
 	
-	private void setUpTablePanelAt( int index, ClassOfStudents c ) {
-		String classTitle = c.getClazz() + "-" + c.getSection();
-		JTable table = initEditTable( c );
-		tables.put( classTitle, table );
+	private JPanel createTablePanel( ClassOfStudents c ) {
+		
+		EditTable table = createClassEditTable( c );
+		tables.put( c.getClassName(), table );
 		
 		JScrollPane scrollPane = new JScrollPane( table );
 		scrollPane.setBackground( Color.WHITE );
 		scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
 		table.setFillsViewportHeight( true );
 		
-		tablePanels[index] = new JPanel();
-		tablePanels[index].setLayout( new BorderLayout() );
-		tablePanels[index].add( scrollPane, BorderLayout.CENTER );
+		JPanel panel = new JPanel();
+		panel.setLayout( new BorderLayout() );
+		panel.add( scrollPane, BorderLayout.CENTER );
+		
+		return panel ;
 	}
 	
-	private JTable initEditTable( ClassOfStudents c ) {
-		EditTable table = new EditTable( new EditTableModel().withStudents( c.getStudents() ) );
+	@SuppressWarnings("serial")
+	private EditTable createClassEditTable( ClassOfStudents c ) {
+		
+		EditTable table = new EditTable( c ) ;
 		table.setEnterKeystrokeFunction( "newRow", new AbstractAction() {
-			
-			private static final long serialVersionUID = 1402568481026919305L;
-
 			@Override
 			public void actionPerformed( ActionEvent e ) {
-				EditTableModel model = (EditTableModel)table.getModel();
+				
+				JTable table = ( JTable )e.getSource() ;
+				EditTableModel model = ( EditTableModel )table.getModel() ;
 				int selectedRow = table.getSelectedRow();
+				
 				if( table.getSelectedRow() == model.getRowCount()-1 ) {
 					model.addRow( selectedRow+1 );
 					table.changeSelection( selectedRow+1, 1, false, false );
 				}
 				else {
-					table.changeSelection( selectedRow+1, table.getSelectedColumn(), false, false );					
+					table.changeSelection( selectedRow+1, 
+							               table.getSelectedColumn(), 
+							               false, false );					
 				}
 			}
 		});
 		return table;
 	}
 	
-	public void display( DatabaseSingleClassResponse d ) {
-
-		Student[] students = d.getClassOfStudents().getStudents();
-		String titleOfTab = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
-
-		JTable table = tables.get( titleOfTab );
-		EditTableModel etm = (EditTableModel)table.getModel();
-		
-		if( etm.isGoldenCopyPresent() ) {
-			etm.updateServerCopy( students );
-		}
-		else {
-			initializeTable( table, students );
-		}
-		
-		infoLabel.setText( "Showing table " + titleOfTab );
-	}
-	
-	private void initializeTable( JTable table, Student[] students )  {
-		EditTableModel etm = (EditTableModel)table.getModel();
-		table.setModel( etm.withStudents( students ) );
-		
-		JScrollPane scrollPane = new JScrollPane( table );
-		scrollPane.setBackground( Color.WHITE );
-		scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
-		table.setFillsViewportHeight( true );
-		
-		this.tablePanels[tabbedPane.getSelectedIndex()].add( scrollPane, BorderLayout.CENTER );
-		tabbedPane.repaint();
-	}
-	
-	private int getSelectedClass() {
-		String title = null;
-		
-		try {
-			title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
-			return Integer.parseInt( title.split( "-" )[0] );
-		} catch( IndexOutOfBoundsException e ) {
-			title = tabbedPane.getTitleAt( 0 );
-			return Integer.parseInt( title.split( "-" )[0] );			
-		}
-	}
-	
-	private char getSelectedSection() {
-		String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
-		return title.split( "-" )[1].charAt( 0 );
-	}
-		
+	// This method is called when the user switches tabs. An async request is
+	// sent to the server to fetch an updated copy of the students for the
+	// class representing the now visible tab. 
+	//
+	// The response would be notified by calling back the 
+	// handleDatabaseSingleClassResponse method
 	@Override
 	public void stateChanged( ChangeEvent e ) {
+		
+		String titleOfTab = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ;
+		EditTable table   = tables.get( titleOfTab ) ;
+		
+		ClassOfStudents c = table.getClassOfStudents() ;
+		
 		adminEngine.getClientAdapter().send( 
-				new DatabaseSingleClassRequest( 
-					getSelectedClass(),
-					getSelectedSection()
-				) 
-			);
+				new DatabaseSingleClassRequest( c.getClazz(), 
+						                        c.getSection() ) ) ;
 	}
 
+	public void handleDatabaseSingleClassResponse( DatabaseSingleClassResponse d ) {
+
+		Student[] students = d.getClassOfStudents().getStudents();
+
+		int            selIndex   = tabbedPane.getSelectedIndex() ;
+		String         titleOfTab = tabbedPane.getTitleAt( selIndex ) ;
+		EditTable      table      = tables.get( titleOfTab ) ;
+		EditTableModel etm        = (EditTableModel)table.getModel();
+		
+		etm.updateServerCopy( students );
+		
+		showStatusMessage( "Showing table " + titleOfTab );
+	}
+	
 	@Override
 	public void onSaveButtonClicked() {
-		
+		// TODO
 	}
 
 	@Override
 	public void onExportButtonClicked() {
-		
+		// TODO
 	}
 
 	@Override
 	public void onRefreshButtonClicked() {
-		adminEngine.getClientAdapter().send( 
-			new DatabaseSingleClassRequest( 
-				getSelectedClass(),
-				getSelectedSection()
-			) 
-		);
+		stateChanged( null ) ; 
 	}
 
 	@Override

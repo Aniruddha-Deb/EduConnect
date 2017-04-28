@@ -69,7 +69,7 @@ public class AdminEngine extends Engine {
 	@Override
 	public void handleAsyncResponse( Response r ) {
 		if( r instanceof DatabaseSingleClassResponse ) {
-			mainFrame.getEditPanel().display( (DatabaseSingleClassResponse) r );
+			mainFrame.getEditPanel().handleDatabaseSingleClassResponse( (DatabaseSingleClassResponse) r );
 		}
 	}
 	
