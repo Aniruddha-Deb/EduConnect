@@ -116,7 +116,6 @@ public class LoginPanel extends JPanel implements ActionListener{
 	private void createPasswordField() {
 		GridBagConstraints c = new GridBagConstraints();
 		passwordField = new JPasswordField();
-		passwordField.setEchoChar( '•' );
 		passwordField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
 		passwordField.setFont( UIConstants.FONT.deriveFont( 15f ) );
 		c.gridx = 1;
