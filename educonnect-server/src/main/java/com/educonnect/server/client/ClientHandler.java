@@ -15,13 +15,14 @@ import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.shutdown.ShutdownResponse;
-import com.educonnect.common.parser.Parser;
+import com.educonnect.common.network.NetworkUtils;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.db.JDBCAdapter;
 
 public class ClientHandler {
 	
-	private static List<Client> clients = new ArrayList<>();
+	private static List<Client> clients = new ArrayList<Client>();
+	private static List<Client> adminClients = new ArrayList<Client>();
 	
 	private static BufferedReader reader = null;
 	private static BufferedWriter writer = null;
@@ -32,76 +33,52 @@ public class ClientHandler {
 		reader = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
 		writer = new BufferedWriter( new OutputStreamWriter( s.getOutputStream() ) );
 		
-		Request r = (Request)Parser.parse( readHeader(), readPayload() );
+		Request r = (Request)NetworkUtils.readMessage( reader );
 		
 		if( r instanceof LoginRequest ) {
-			LoginRequest lr = (LoginRequest)r;
+			LoginRequest loginRequest = (LoginRequest)r;
+			int UID = getUID( loginRequest );
 			
-			String emailId = lr.getUserId();
-			char[] password = lr.getPassword();
-			ClientType clientType = lr.getClientType();
-			
-			System.out.println( "Client sent first request as LoginRequest" );
-			int UID = JDBCAdapter.getInstance().getClient( emailId, password, clientType );
-			System.out.println( UID );
 			if( UID == -1 ) {
-				writer.write( 
+				tellClientAuthenticationFailed( loginRequest );
+			}
+			else {
+				clients.add( new Client( s, UID, loginRequest.getClientType() ) );
+			}
+		}
+		else {
+			// Ignore the request
+		}
+	}
+	
+	private static int getUID( LoginRequest r ) {
+		String emailId = r.getUserId();
+		char[] password = r.getPassword();
+		ClientType clientType = r.getClientType();
+		
+		int UID = JDBCAdapter.getInstance().getClient( emailId, password, clientType );
+		return UID;
+	}
+	
+	private static void tellClientAuthenticationFailed( LoginRequest r ) {
+		try {
+			writer.write( 
 					Serializer.serialize( 
 						new LoginResponse( 
 							ResponseStatus.SERVER_ERROR, 
-							lr.getUID(),
+							r.getUID(),
 							false
 						)
 						.withStatusText( "Admin not registered with system" )
 					)
 				);
-				writer.flush();
-				writer.write( Serializer.serialize( new ShutdownResponse( lr.getUID() ) ) );
-				writer.flush();
-				System.out.println( "Wrote the fail bean" );
-			}
-			else {
-				clients.add( new Client( s, UID, clientType ) );
-			}
-		}
-	}
-	
-	static String readHeader() {
-		String header = null;
-		try {
-			int headerLength = Integer.parseInt( reader.readLine() );
-			header = new String();
-			for( int i=0; i<headerLength; i++ ) {
-				char charRead = (char)reader.read();
-				header += charRead;
-			}
-			reader.readLine();
-			System.out.println( header );
-		} catch ( NumberFormatException | IOException e ) {
+			writer.flush();
+			writer.write( Serializer.serialize( new ShutdownResponse( r.getUID() ) ) );
+			writer.flush();
+		} catch ( sIOException e ) {
 			e.printStackTrace();
-			System.exit( -1 );
 		}
-		return header;
 	}
-	
-	static String readPayload() {
-		String payload = null;
-		try {
-			int payloadLength = Integer.parseInt( reader.readLine() );
-			payload = new String();
-			for( int i=0; i<payloadLength; i++ ) {
-				char charRead = (char)reader.read();
-				payload += charRead;
-			}
-			System.out.println( payload );
-			reader.readLine();
-		} catch ( NumberFormatException | IOException e ) {
-			e.printStackTrace();
-			System.exit( -1 );
-		}
-		return payload;
-	}
-
 	
 	public static void remove( Client client ) {
 		for( Client c : clients ) {
@@ -111,5 +88,4 @@ public class ClientHandler {
 			}
 		}
 	}
-
 }
