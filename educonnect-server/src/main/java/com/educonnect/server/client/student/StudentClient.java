@@ -12,7 +12,7 @@ public class StudentClient extends Client {
 
 	public StudentClient( Socket socket, int UID ) {
 		super( socket, UID, ClientType.STUDENT );
-		super.clientName = JDBCAdapter.getInstance().getClientName( UID );
+		super.clientName = JDBCAdapter.getInstance().getStudentName( UID );
 		send( new LoginResponse( 
 							ResponseStatus.PROCESS_OK, 
 							null,

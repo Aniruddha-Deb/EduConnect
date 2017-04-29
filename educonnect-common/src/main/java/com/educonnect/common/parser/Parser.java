@@ -6,6 +6,7 @@ import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
+import com.educonnect.common.message.info.InfoResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.shutdown.ShutdownRequest;
@@ -74,6 +75,9 @@ public class Parser {
 				
 			case MT_DB_SINGLE_CLASS_RES:
 				return GSON.fromJson( payload, DatabaseSingleClassResponse.class );
+				
+			case MT_INFO_RES:
+				return GSON.fromJson( payload, InfoResponse.class );
 		}
 		return null;
 	}

@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.shutdown.ShutdownRequest;
-import com.educonnect.common.parser.Parser;
+import com.educonnect.common.network.NetworkUtils;
 
 public class ClientSocketReader implements Runnable{
 
@@ -31,11 +31,11 @@ public class ClientSocketReader implements Runnable{
 		
 		Request r = null;
 		try {		
-			r = (Request)Parser.parse( ClientHandler.readHeader(), ClientHandler.readPayload() );
+			r = (Request)NetworkUtils.readMessage( reader );
 			
 			while( !( r instanceof ShutdownRequest ) ) {
 				client.receive( r );
-				r = (Request)Parser.parse( ClientHandler.readHeader(), ClientHandler.readPayload() );
+				r = (Request)NetworkUtils.readMessage( reader );
 			}
 			client.shutdown( r.getUID() );
 			socket.close();

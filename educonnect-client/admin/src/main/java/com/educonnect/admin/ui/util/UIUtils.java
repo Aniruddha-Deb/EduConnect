@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.editpanel.EditPanel;
 
 public class UIUtils {
@@ -70,4 +71,15 @@ public class UIUtils {
 		JOptionPane.showMessageDialog( null, "ERROR " + errorCode + ": \n" + 
 											 errorMessage );
 	}
+	
+	public static void showYesNoPrompt( String errorMessage, AdminEngine e ) {
+		int response = JOptionPane.showConfirmDialog( null, errorMessage );
+		if( response == JOptionPane.NO_OPTION ) {
+			e.shutdown();
+		}
+		else {
+			// Let the user continue
+		}
+	}
+
 }

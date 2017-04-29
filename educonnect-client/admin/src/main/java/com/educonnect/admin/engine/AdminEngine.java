@@ -13,6 +13,7 @@ import com.educonnect.common.message.core.Response;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
+import com.educonnect.common.message.info.InfoResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
@@ -70,6 +71,9 @@ public class AdminEngine extends Engine {
 	public void handleAsyncResponse( Response r ) {
 		if( r instanceof DatabaseSingleClassResponse ) {
 			mainFrame.getEditPanel().handleDatabaseSingleClassResponse( (DatabaseSingleClassResponse) r );
+		}
+		else if( r instanceof InfoResponse ) {
+			UIUtils.showYesNoPrompt( ((InfoResponse) r).getInfo(), this );
 		}
 	}
 	

@@ -17,12 +17,13 @@ import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.network.NetworkUtils;
 import com.educonnect.common.serializer.Serializer;
+import com.educonnect.server.client.admin.AdminClient;
+import com.educonnect.server.client.student.StudentClient;
 import com.educonnect.server.db.JDBCAdapter;
 
 public class ClientHandler {
 	
 	private static List<Client> clients = new ArrayList<Client>();
-	private static List<Client> adminClients = new ArrayList<Client>();
 	
 	private static BufferedReader reader = null;
 	private static BufferedWriter writer = null;
@@ -36,18 +37,27 @@ public class ClientHandler {
 		Request r = (Request)NetworkUtils.readMessage( reader );
 		
 		if( r instanceof LoginRequest ) {
-			LoginRequest loginRequest = (LoginRequest)r;
-			int UID = getUID( loginRequest );
-			
-			if( UID == -1 ) {
-				tellClientAuthenticationFailed( loginRequest );
-			}
-			else {
-				clients.add( new Client( s, UID, loginRequest.getClientType() ) );
-			}
+			logInUser( (LoginRequest)r, s );
 		}
 		else {
 			// Ignore the request
+		}
+	}
+	
+	private static void logInUser( LoginRequest r, Socket s ) {
+		LoginRequest loginRequest = (LoginRequest)r;
+		int UID = getUID( loginRequest );
+		
+		if( UID == -1 ) {
+			tellClientAuthenticationFailed( loginRequest );
+		}
+		else {
+			if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {				
+				clients.add( new AdminClient( s, UID ) );
+			}
+			else {
+				clients.add( new StudentClient( s, UID ) );				
+			}
 		}
 	}
 	
@@ -75,7 +85,7 @@ public class ClientHandler {
 			writer.flush();
 			writer.write( Serializer.serialize( new ShutdownResponse( r.getUID() ) ) );
 			writer.flush();
-		} catch ( sIOException e ) {
+		} catch ( IOException e ) {
 			e.printStackTrace();
 		}
 	}
@@ -87,5 +97,17 @@ public class ClientHandler {
 				break;
 			}
 		}
+	}
+	
+	public static List<Client> getLoggedOnAdminClients() {
+		List<Client> loggedOnAdminClients = new ArrayList<>();
+		
+		for( Client c : clients ) {
+			if( c.getClientType().equals( ClientType.ADMIN ) ) {
+				loggedOnAdminClients.add( c );
+			}
+		}
+		
+		return loggedOnAdminClients;
 	}
 }

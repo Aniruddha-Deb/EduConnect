@@ -85,6 +85,24 @@ public class JDBCAdapter {
 		return adminName;		
 	}
 	
+	public String getStudentName( int UID ) {
+		String studentName = null;
+		
+		String query = "SELECT name FROM students WHERE UID=" + UID;					 	
+		try {
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery( query );
+			rs.next();
+			studentName = rs.getString( "firstName" ) + " " + 
+						  rs.getString( "lastName" );
+			
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		}
+		return studentName;		
+	}
+
+	
 	public String[] getStudentDatabaseHeaders() {
 		return new String[]{ "rollNo", "firstName", "lastName" }; 
 	}

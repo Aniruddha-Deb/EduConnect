@@ -12,7 +12,7 @@ import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.payload.PayloadHandler;
 
-public class Client {
+public abstract class Client {
 	
 	private ClientSocketReader reader = null;
 	private BufferedWriter writer = null; 
