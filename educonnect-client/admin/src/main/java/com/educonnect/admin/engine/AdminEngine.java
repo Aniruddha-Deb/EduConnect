@@ -3,6 +3,8 @@ package com.educonnect.admin.engine;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import javax.swing.SwingUtilities;
+
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
@@ -74,10 +76,22 @@ public class AdminEngine extends Engine {
 			return true;
 		}
 		else if( r instanceof InfoResponse ) {
-			UIUtils.showYesNoPrompt( ((InfoResponse) r).getInfo(), this );
+			System.out.println( "Showing yes no prompt" );
+			SwingUtilities.invokeLater( new Runnable() {
+				
+				@Override
+				public void run() {
+					UIUtils.showYesNoPrompt( ((InfoResponse) r).getInfo(), getInstance() );
+				}
+			} );
+			System.out.println( "Showed yes no prompt" );
 			return true;
 		}
 		return false;
+	}
+	
+	private AdminEngine getInstance() {
+		return this;
 	}
 	
 	private void setCurrentInstanceRunning() {

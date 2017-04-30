@@ -3,9 +3,7 @@ package com.educonnect.common.network;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Hashtable;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -15,6 +13,7 @@ import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.core.Response;
 import com.educonnect.common.message.shutdown.ShutdownRequest;
 import com.educonnect.common.network.receiver.SecureSocketReceiver;
+import com.educonnect.common.network.response.ResponseContainer;
 import com.educonnect.common.serializer.Serializer;
 
 /**
@@ -27,7 +26,7 @@ import com.educonnect.common.serializer.Serializer;
  */
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
-	private BlockingQueue<Response> responses = null;
+	private Hashtable<String, ResponseContainer> responses = null;
 	
 	private SSLSocket sslSocket = null;
 	private String ipAddress = null;
@@ -45,7 +44,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		this.ipAddress = ipAddress;
 		this.port = port;
 		
-		responses = new LinkedBlockingQueue<>();
+		responses = new Hashtable<>();
 		
 	}
 	
@@ -81,28 +80,16 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		return receiverThread;
 	}
 	
-	public void putResponse( Response r ) {
-		try {
-			responses.put( r );
-			boolean used = engine.handleAsyncResponse( r );
-			if( used ) {
-				responses.take();
-			}
-		} catch( InterruptedException ex ) {
-			ex.printStackTrace();
-		}
+	public Hashtable<String, ResponseContainer> getResponses() {
+		return responses;
+	}
+	
+	public Engine getEngine() {
+		return engine;
 	}
 	
 	public boolean isOpen() {
 		return (sslSocket != null && !(sslSocket.isClosed()) );
-	}
-	
-	public boolean isClosed() {
-		return (sslSocket.isClosed());
-	}
-
-	public BlockingQueue<Response> getResponses() {
-		return responses;
 	}
 	
 	@Override
@@ -138,31 +125,19 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	}
 
 	@Override
-	public Response send( Request r ) {
+	public Response send( Request request ) {
 		Response response = null;
-		
 		try {
-			String s = Serializer.serialize( r );
-			writer.write( s );
+			writer.write( Serializer.serialize( request ) );
 			writer.flush();
-			
-			ArrayList<Response> tempList = new ArrayList<>();
-			
-			response = responses.take();
-			while( !( response.getCorrelationId().equals( r.getUID() ) ) ) {
-				System.out.println( "Waiting" );
-				responses.add( response );
-				Thread.sleep( 100 );
-				response = responses.take();
-			}
-			responses.addAll( tempList );
+			ResponseContainer r = new ResponseContainer();
+			responses.put( request.getUID(), r );
+			System.out.println( "Waiting for response" );
+			response = r.waitForResponse();
+			System.out.println( "Got response" );
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}	
-		System.out.println( "\tReturning response id " + response.getCorrelationId() + " " );
-		System.out.println( "\tReturning response type " + response.getClass().getSimpleName() );
-		System.out.println( "\tFor request id " + r.getUID() + " " );
-		System.out.println( "\tFor request type " + r.getClass().getSimpleName() );
 		return response;
 	}
 	

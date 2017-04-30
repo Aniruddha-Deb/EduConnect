@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.panels.editpanel.EditPanel;
@@ -74,22 +73,12 @@ public class UIUtils {
 	}
 	
 	public static void showYesNoPrompt( String errorMessage, AdminEngine e ) {
-		try {
-			SwingUtilities.invokeAndWait( new Runnable() {
-				@Override
-				public void run() {
-					int response = JOptionPane.showConfirmDialog( null, errorMessage );
-					if( response == JOptionPane.NO_OPTION ) {
-						e.shutdown();
-					}
-					else {
-						// Let the user continue
-					}				
-				}
-			});
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		int response = JOptionPane.showConfirmDialog( null, errorMessage );
+		if( response == JOptionPane.NO_OPTION ) {
+			e.shutdown();
 		}
+		else {
+			// Let the user continue
+		}				
 	}
 }

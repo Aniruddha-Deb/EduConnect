@@ -38,7 +38,7 @@ public class EditPanel extends JPanel
 	
 	private static ImageIcon DB_ICON = new ImageIcon( getImageResource( DB_ICON_RES ) );
 
-	private HashMap<String, EditTable> tables = new LinkedHashMap<String, EditTable>() ;
+	private HashMap<String, EditTable> tables = null;
 	
 	private JTabbedPane  tabbedPane  = null;
 	private OptionPanel  optionPanel = null;
@@ -86,6 +86,9 @@ public class EditPanel extends JPanel
 	}
 	
 	public void load( DatabaseAllClassesResponse r ) {
+
+		tabbedPane.removeAll();
+		tables = new LinkedHashMap<>();
 		
 		optionPanel.loadNameOntoNameButton();
 		optionPanel.repaint();
@@ -153,14 +156,17 @@ public class EditPanel extends JPanel
 	@Override
 	public void stateChanged( ChangeEvent e ) {
 		
-		String titleOfTab = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ;
-		EditTable table   = tables.get( titleOfTab ) ;
-		
-		ClassOfStudents c = table.getClassOfStudents() ;
-		
-		adminEngine.getClientAdapter().sendAsync( 
-				new DatabaseSingleClassRequest( c.getClazz(), 
-						                        c.getSection() ) ) ;
+		int selectedIndex = tabbedPane.getSelectedIndex();
+		if( selectedIndex != -1 ) {
+			String titleOfTab = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ;
+			EditTable table   = tables.get( titleOfTab ) ;
+			
+			ClassOfStudents c = table.getClassOfStudents() ;
+			
+			adminEngine.getClientAdapter().sendAsync( 
+					new DatabaseSingleClassRequest( c.getClazz(), 
+							                        c.getSection() ) ) ;
+		}
 	}
 
 	public void handleDatabaseSingleClassResponse( DatabaseSingleClassResponse d ) {
