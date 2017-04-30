@@ -10,7 +10,7 @@ public class InfoResponse extends Response{
 	private String info = null;
 	
 	public InfoResponse( String info ) {
-		super( MessageType.MT_INFO_RES, null, null );
+		super( MessageType.MT_INFO_RES, null, "ZZ TOP" );
 		this.info = info;
 	}
 	

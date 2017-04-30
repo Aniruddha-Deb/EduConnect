@@ -158,7 +158,7 @@ public class EditPanel extends JPanel
 		
 		ClassOfStudents c = table.getClassOfStudents() ;
 		
-		adminEngine.getClientAdapter().send( 
+		adminEngine.getClientAdapter().sendAsync( 
 				new DatabaseSingleClassRequest( c.getClazz(), 
 						                        c.getSection() ) ) ;
 	}

@@ -53,7 +53,7 @@ public class ClientHandler {
 		}
 		else {
 			if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {				
-				clients.add( new AdminClient( s, UID ) );
+				clients.add( new AdminClient( s, UID, r.getUID() ) );
 			}
 			else {
 				clients.add( new StudentClient( s, UID ) );				

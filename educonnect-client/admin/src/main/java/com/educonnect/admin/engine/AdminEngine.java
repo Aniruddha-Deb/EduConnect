@@ -27,7 +27,7 @@ public class AdminEngine extends Engine {
 		
 	public AdminEngine() {
 		super( Constants.TRUSTSTORE_PASSWD, Constants.TRUSTSTORE_LOC );
-		setCurrentInstanceRunning();
+//		setCurrentInstanceRunning();
 		clientAdapter = new SecureSocketNetworkAdapter( Constants.SERVER_IP_ADDRESS,
 														Constants.SERVER_PORT, 
 														this );
@@ -68,13 +68,16 @@ public class AdminEngine extends Engine {
 	}
 	
 	@Override
-	public void handleAsyncResponse( Response r ) {
+	public boolean handleAsyncResponse( Response r ) {
 		if( r instanceof DatabaseSingleClassResponse ) {
 			mainFrame.getEditPanel().handleDatabaseSingleClassResponse( (DatabaseSingleClassResponse) r );
+			return true;
 		}
 		else if( r instanceof InfoResponse ) {
 			UIUtils.showYesNoPrompt( ((InfoResponse) r).getInfo(), this );
+			return true;
 		}
+		return false;
 	}
 	
 	private void setCurrentInstanceRunning() {

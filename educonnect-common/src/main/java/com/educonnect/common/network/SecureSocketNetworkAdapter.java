@@ -3,6 +3,7 @@ package com.educonnect.common.network;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -80,6 +81,18 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		return receiverThread;
 	}
 	
+	public void putResponse( Response r ) {
+		try {
+			responses.put( r );
+			boolean used = engine.handleAsyncResponse( r );
+			if( used ) {
+				responses.take();
+			}
+		} catch( InterruptedException ex ) {
+			ex.printStackTrace();
+		}
+	}
+	
 	public boolean isOpen() {
 		return (sslSocket != null && !(sslSocket.isClosed()) );
 	}
@@ -132,10 +145,24 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 			String s = Serializer.serialize( r );
 			writer.write( s );
 			writer.flush();
+			
+			ArrayList<Response> tempList = new ArrayList<>();
+			
 			response = responses.take();
+			while( !( response.getCorrelationId().equals( r.getUID() ) ) ) {
+				System.out.println( "Waiting" );
+				responses.add( response );
+				Thread.sleep( 100 );
+				response = responses.take();
+			}
+			responses.addAll( tempList );
 		} catch( Exception e ) {
 			e.printStackTrace();
-		}		
+		}	
+		System.out.println( "\tReturning response id " + response.getCorrelationId() + " " );
+		System.out.println( "\tReturning response type " + response.getClass().getSimpleName() );
+		System.out.println( "\tFor request id " + r.getUID() + " " );
+		System.out.println( "\tFor request type " + r.getClass().getSimpleName() );
 		return response;
 	}
 	

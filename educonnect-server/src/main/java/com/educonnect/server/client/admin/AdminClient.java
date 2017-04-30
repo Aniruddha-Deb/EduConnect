@@ -13,12 +13,12 @@ import com.educonnect.server.db.JDBCAdapter;
 
 public class AdminClient extends Client {
 
-	public AdminClient( Socket socket, int UID ) {
+	public AdminClient( Socket socket, int UID, String requestUID ) {
 		super( socket, UID, ClientType.ADMIN );
 		super.clientName = JDBCAdapter.getInstance().getAdminName( UID );
 		send( new LoginResponse( 
 							ResponseStatus.PROCESS_OK, 
-							null,
+							requestUID,
 							true
 			  ).withStatusText( clientName )
 		);

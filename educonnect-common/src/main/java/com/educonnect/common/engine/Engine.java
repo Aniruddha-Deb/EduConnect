@@ -50,7 +50,7 @@ public abstract class Engine {
 	 * 
 	 * @param p The payload received to be handled by the engine.
 	 */
-	public abstract void handleAsyncResponse( Response s );
+	public abstract boolean handleAsyncResponse( Response r );
 	
 	/**
 	 * This method is the method called by the entry point of the application 

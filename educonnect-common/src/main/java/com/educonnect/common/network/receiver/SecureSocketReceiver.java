@@ -40,7 +40,7 @@ public class SecureSocketReceiver implements Runnable {
 			r = (Response)Parser.parse( readHeader(), readPayload() );
 			
 			while( !( r instanceof ShutdownResponse ) ) {
-				adapter.getResponses().put( r );
+				adapter.putResponse( r );
 				r = (Response)Parser.parse( readHeader(), readPayload() );
 			}
 		} catch( Exception e ) {

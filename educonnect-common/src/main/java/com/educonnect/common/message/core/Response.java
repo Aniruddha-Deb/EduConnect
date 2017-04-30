@@ -13,6 +13,9 @@ public abstract class Response extends Message {
 
 	public Response( MessageType msgType, ResponseStatus status, String requestUID ) {
 		super( msgType ) ;
+		if( requestUID == null ) {
+			throw new IllegalArgumentException( "requestUID cannot be null" );
+		}
 		this.correlationId = requestUID ;
 		this.status = status ;
 	}

@@ -29,11 +29,8 @@ public class MainFrame extends JFrame implements WindowListener{
 	private AdminEngine instance = null;
 	
 	public MainFrame( AdminEngine instance ) {
-		super( "EduConnect admin" );
-				
-		this.instance = instance;
-		
-		setUpUI();
+		super( "EduConnect admin" );				
+		this.instance = instance;		
 	}
 	
 	private void setUpUI() {
@@ -100,6 +97,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 	
 	public void display() {
+		setUpUI();
 		super.setVisible( true );
 	}
 	
