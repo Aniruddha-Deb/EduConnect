@@ -1,4 +1,4 @@
-package com.educonnect.common.message.db;
+package com.educonnect.common.message.dbclass;
 
 import java.io.Serializable;
 
@@ -7,18 +7,23 @@ public class Student implements Serializable{
 	private static final long serialVersionUID = 8437060009660430333L;
 
 	private int rollNo = -1;
-	
+	private int UID = -1;
 	private String firstName = null;
 	private String lastName  = null;
 	
-	public Student( int rollNo, String firstName, String lastName ) {
+	public Student( int UID, int rollNo, String firstName, String lastName ) {
 		this.rollNo = rollNo;
+		this.UID = UID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 	
 	public int getRollNo() {
 		return rollNo;
+	}
+	
+	public int getUID() {
+		return UID;
 	}
 	
 	public String getFirstName() {

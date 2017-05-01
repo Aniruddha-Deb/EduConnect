@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.dbclass.Student;
 
 public class EditTableModel extends AbstractTableModel{
 	
@@ -71,6 +71,11 @@ public class EditTableModel extends AbstractTableModel{
 			if( !( goldenCopy.contains( s ) ) ) {
 				dirtyStudents.add( s );
 			}
+		}
+		this.goldenCopy = new ArrayList<>();
+		
+		for( Student s : editCopy ) {
+			goldenCopy.add( deepCopy( s ) );
 		}
 		return dirtyStudents;
 	}
@@ -195,7 +200,7 @@ public class EditTableModel extends AbstractTableModel{
 	
 	public void addRow( int rowIndex ) {
 		Student previousStudent = editCopy.get( editCopy.size()-1 );
-		editCopy.add( new Student( previousStudent.getRollNo()+1, null, null ) );
+		editCopy.add( new Student( -1, previousStudent.getRollNo()+1, null, null ) );
 		fireTableDataChanged();
 	}
 	

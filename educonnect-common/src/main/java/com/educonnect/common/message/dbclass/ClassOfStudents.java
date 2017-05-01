@@ -1,4 +1,4 @@
-package com.educonnect.common.message.db;
+package com.educonnect.common.message.dbclass;
 
 public class ClassOfStudents {
 

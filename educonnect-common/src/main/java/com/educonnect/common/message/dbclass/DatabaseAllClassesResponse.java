@@ -3,7 +3,6 @@ package com.educonnect.common.message.dbclass;
 import com.educonnect.common.message.MessageType;
 import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Response;
-import com.educonnect.common.message.db.ClassOfStudents;
 
 public class DatabaseAllClassesResponse extends Response {
 

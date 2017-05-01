@@ -56,9 +56,12 @@ public class AdminEngine extends Engine {
 	}
 	
 	private void loginRequestFailed( String cause ) {
-		UIUtils.showError( Constants.ERROR_LOGIN_REQUEST_FAILED, "Login request fail!\n" + 
-																  cause );
+		UIUtils.showError( mainFrame, "Login request fail!\n" + cause );
 		clientAdapter.shutdown();
+	}
+	
+	public MainFrame getMainFrame() {
+		return mainFrame;
 	}
 	
 	private void setUserName( String userName ) {
@@ -84,8 +87,8 @@ public class AdminEngine extends Engine {
 	        singleInstanceSocket = new ServerSocket( 11132 );
 	      }
 	      catch ( IOException ex ) {
-	    	  UIUtils.showError( Constants.ERROR_INSTANCE_ALREADY_RUNNING, 
-	    			 "Another instance of this application is already running" );
+	    	  UIUtils.showError( mainFrame, 
+	    		"Another instance of this application is already running" );
 	        System.exit( -1 );
 	      }
 	}

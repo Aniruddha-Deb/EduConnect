@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -68,9 +69,8 @@ public class UIUtils {
 		return image;
 	}
 	
-	public static void showError( int errorCode, String errorMessage ) {
-		JOptionPane.showMessageDialog( null, "ERROR " + errorCode + ": \n" + 
-											 errorMessage );
+	public static void showError( JFrame relativeFrame, String errorMessage ) {
+		JOptionPane.showMessageDialog( relativeFrame, errorMessage );
 	}
 	
 	public static void showYesNoPrompt( String errorMessage, AdminEngine e ) {
@@ -78,7 +78,7 @@ public class UIUtils {
 			
 			@Override
 			public void run() {
-				int response = JOptionPane.showConfirmDialog( null, errorMessage );
+				int response = JOptionPane.showConfirmDialog( e.getMainFrame(), errorMessage );
 				if( response == JOptionPane.NO_OPTION ) {
 					e.shutdown();
 				}

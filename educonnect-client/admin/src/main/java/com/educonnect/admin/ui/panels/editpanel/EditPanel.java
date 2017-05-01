@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,11 +28,15 @@ import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
 import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
-import com.educonnect.common.message.db.ClassOfStudents;
-import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.dbclass.ClassOfStudents;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
+import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.Row;
+import com.educonnect.common.message.dbupdate.Row.RowAction;
+import com.educonnect.common.message.dbupdate.RowUpdateRequest;
+import com.educonnect.common.message.dbupdate.RowUpdateResponse;
 
 public class EditPanel extends JPanel 
 	implements ChangeListener, OptionPanelButtonListener {
@@ -153,9 +158,10 @@ public class EditPanel extends JPanel
 	
 	private void stopEditingCurrentCell( CellEditor e ) {
 		if ( e != null ) {
-		    if (e.getCellEditorValue() != null) {
+		    if( e.getCellEditorValue() != null ) {
 		        e.stopCellEditing();
-		    } else {
+		    }
+		    else {
 		        e.cancelCellEditing();
 		    }
 		}					
@@ -199,15 +205,27 @@ public class EditPanel extends JPanel
 	
 	@Override
 	public void onSaveButtonClicked() {
+		List<Row> dirtyRows = new ArrayList<>();
 		for( String s : tables.keySet() ) {
-			System.out.println( "Got table " + s );
+			int clazz = Integer.parseInt( s.split( "-" )[0] );
+			char section =  s.split( "-" )[1].charAt( 0 );
+			
 			EditTable t = tables.get( s );
 			EditTableModel m = (EditTableModel)t.getModel();
 			List<Student> dirtyStudents = m.getDirtyStudents();
+			
 			for( Student student : dirtyStudents ) {
-				System.out.println( "\t" + student.toString() );
+				dirtyRows.add( new Row( RowAction.UPDATE, clazz, section, student ) );
 			}
 		}
+		RowUpdateResponse res = (RowUpdateResponse)adminEngine.getClientAdapter().send( 
+								new RowUpdateRequest( dirtyRows.toArray( 
+										new Row[dirtyRows.size()] ) ) );
+		
+		if( res.isSuccessful() ) {
+			onRefreshButtonClicked();
+		}
+		infoLabel.setText( "Successfully saved all classes" );
 	}
 
 	@Override

@@ -6,10 +6,6 @@ import com.educonnect.admin.ui.util.UIUtils;
 
 public class Constants {
 
-	public static final int ERROR_NO_TRUSTSTORE_CODE = 0000;
-	public static final int ERROR_LOGIN_REQUEST_FAILED = 0001;
-	public static final int ERROR_INSTANCE_ALREADY_RUNNING = 0101;
-
 	public static final String DIR_PATH  = System.getProperty( "user.home" ) + 
 											File.separator + 
 											".educonnect" + 
@@ -28,8 +24,7 @@ public class Constants {
 	static {
 		File f = new File( TRUSTSTORE_LOC );
 		if( !f.exists() ) {
-			UIUtils.showError( ERROR_NO_TRUSTSTORE_CODE, 
-							"TrustStore is not located in intended location." );
+			UIUtils.showError( null, "TrustStore is not located in intended location." );
 			System.exit( -1 );
 		}
 	}

@@ -13,7 +13,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.TableModel;
 
 import com.educonnect.admin.ui.UIConstants;
-import com.educonnect.common.message.db.ClassOfStudents;
+import com.educonnect.common.message.dbclass.ClassOfStudents;
 
 public class EditTable extends JTable{
 

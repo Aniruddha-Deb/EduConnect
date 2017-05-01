@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.educonnect.common.client.ClientType;
-import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.Row;
+import com.educonnect.common.message.dbupdate.Row.RowAction;
 
 public class JDBCAdapter {
 
@@ -102,13 +104,55 @@ public class JDBCAdapter {
 		return studentName;		
 	}
 
+	public void updateRow( Row r ) {
+		int classOfStudent = r.getClassOfStudent();
+		char sectionOfStudent = r.getSectionOfStudent();
+		int rollNo = r.getStudent().getRollNo();
+		int UID = r.getStudent().getUID();
+		String firstName = r.getStudent().getFirstName();
+		String lastName = r.getStudent().getLastName();
+		
+		if( r.getAction().equals( RowAction.CREATE ) ) {
+			
+			String query = "INSERT INTO students " + 
+						   "(class, section, rollNo, firstName, lastName) " + 
+						   "VALUES ( " + classOfStudent + " ,'" + 
+						   				 sectionOfStudent + "' ," + 
+						   				 rollNo + " ,'" + 
+						   				 firstName + "' ,'" + 
+						   				 lastName + "' )";		
+			try {
+				Statement st = connection.createStatement();
+				st.executeUpdate( query );
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			
+			String query = "UPDATE students " + 
+						   "SET class = " + classOfStudent + ", " + 
+						   "section = '" + sectionOfStudent + "', " + 
+						   "rollNo = " + rollNo + ", " + 
+						   "firstName = '" + firstName + "', " + 
+						   "lastName = '" + lastName + "' " +  
+						   "WHERE UID = " + UID;
+						   
+			try {
+				Statement st = connection.createStatement();
+				st.executeUpdate( query );
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public String[] getStudentDatabaseHeaders() {
 		return new String[]{ "rollNo", "firstName", "lastName" }; 
 	}
 	
 	public Student[] getStudentDatabaseData( int clazz, char section ) {
-		String query = "SELECT rollNo, firstName, lastName FROM students WHERE "
+		String query = "SELECT UID, rollNo, firstName, lastName FROM students WHERE "
 				+ "class=" + clazz + " AND section='" + section + "'";
 		
 		List<Student> students = new ArrayList<>();				 	
@@ -117,10 +161,11 @@ public class JDBCAdapter {
 			ResultSet rs = st.executeQuery( query );
 			
 			while( rs.next() ) {
+				int    UID       = rs.getInt( "UID" );
 				int    rollNo    = rs.getInt( "rollNo" );
 				String firstName = rs.getString( "firstName" );
 				String lastName  = rs.getString( "lastName" );
-				Student s = new Student( rollNo, firstName, lastName );
+				Student s = new Student( UID, rollNo, firstName, lastName );
 				students.add( s );
 			}
 		} catch( SQLException e ) {

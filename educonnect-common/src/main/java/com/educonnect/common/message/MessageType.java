@@ -13,4 +13,7 @@ public enum MessageType {
 	
 	MT_DB_ALL_CLASSES_REQ,
 	MT_DB_ALL_CLASSES_RES,
+	
+	MT_DB_ROW_UPDATE_REQ,
+	MT_DB_ROW_UPDATE_RES
 }

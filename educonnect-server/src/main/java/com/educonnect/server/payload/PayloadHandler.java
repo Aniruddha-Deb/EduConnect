@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Request;
-import com.educonnect.common.message.db.ClassOfStudents;
-import com.educonnect.common.message.db.Student;
+import com.educonnect.common.message.dbclass.ClassOfStudents;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
+import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.Row;
+import com.educonnect.common.message.dbupdate.RowUpdateRequest;
+import com.educonnect.common.message.dbupdate.RowUpdateResponse;
 import com.educonnect.server.client.Client;
 import com.educonnect.server.db.JDBCAdapter;
 
@@ -21,6 +24,9 @@ public class PayloadHandler {
 		}
 		else if( r instanceof DatabaseSingleClassRequest ) {
 			sendDBClass( (DatabaseSingleClassRequest)r, c );
+		}
+		else if( r instanceof RowUpdateRequest ) {
+			updateRows( (RowUpdateRequest)r, c );
 		}
 	}
 	
@@ -51,5 +57,13 @@ public class PayloadHandler {
 		client.send( new DatabaseAllClassesResponse( ResponseStatus.OK, 
 													 r.getUID(), 
 													 c.toArray( new ClassOfStudents[c.size()] ) ) );
+	}
+	
+	private static void updateRows( RowUpdateRequest rowUpdateReq, Client c ) {
+		for( Row r : rowUpdateReq.getRows() ) {
+			JDBCAdapter.getInstance().updateRow( r );
+		}
+		c.send( new RowUpdateResponse( ResponseStatus.OK, rowUpdateReq.getUID(),
+										 true ) );
 	}
 }
