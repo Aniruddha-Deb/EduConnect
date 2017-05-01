@@ -5,14 +5,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import com.educonnect.admin.engine.AdminEngine;
@@ -32,11 +36,22 @@ public class LoginPanel extends JPanel implements ActionListener{
 	
 	private AdminEngine instance = null;
 	
+	@SuppressWarnings("serial")
 	public LoginPanel( AdminEngine instance ) {
 		super();
 		super.setLayout( new GridBagLayout() );
 		super.setBorder( new EmptyBorder( 75, 75, 75, 75 ) );
 		super.setBackground( Color.WHITE );
+		super.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
+			 .put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER , 0 ), "Login" );
+		super.getActionMap().put( "Login", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed( ActionEvent e ) {
+				loginButton.doClick();
+				
+			}
+		});
 		
 		this.instance = instance;
 		
@@ -83,8 +98,8 @@ public class LoginPanel extends JPanel implements ActionListener{
 		}
 		else {
 			emailIdField = new JTextField();
-			emailIdField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
 		}
+		emailIdField.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.GRAY ) );
 		emailIdField.setFont( UIConstants.FONT.deriveFont( 15f ) );
 		c.gridx = 1;
 		c.gridy = 1;

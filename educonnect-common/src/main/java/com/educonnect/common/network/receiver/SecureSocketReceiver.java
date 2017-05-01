@@ -9,7 +9,6 @@ import javax.net.ssl.SSLSocket;
 import com.educonnect.common.message.core.Response;
 import com.educonnect.common.message.shutdown.ShutdownResponse;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
-import com.educonnect.common.network.response.ResponseContainer;
 import com.educonnect.common.parser.Parser;
 
 /**
@@ -42,7 +41,7 @@ public class SecureSocketReceiver implements Runnable {
 			
 			while( !( r instanceof ShutdownResponse ) ) {
 				System.out.println( "Received " + r.getClass().getSimpleName() );
-				putResponse( r );
+				adapter.putResponse( r );
 				System.out.println( "Put a response" );
 				r = (Response)Parser.parse( readHeader(), readPayload() );
 			}
@@ -65,19 +64,6 @@ public class SecureSocketReceiver implements Runnable {
 			e.printStackTrace();
 		}
 		return header;
-	}
-	
-	public void putResponse( Response r ) {
-		adapter.getEngine().handleAsyncResponse( r );
-		ResponseContainer resContatiner = adapter.getResponses().get( r.getCorrelationId() );
-		System.out.println( "Got a corellation ID" );
-		if( resContatiner != null ) {
-			System.out.println( "resContainer is not null" );
-			resContatiner.setResponse( r );
-		}
-		else {
-			System.out.println( "resContainer is null" );
-		}
 	}
 	
 	private String readPayload() {

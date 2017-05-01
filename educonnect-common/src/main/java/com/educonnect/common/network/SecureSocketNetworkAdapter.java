@@ -76,16 +76,21 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		receiverThread.start();
 	}
 	
+	public void putResponse( Response r ) {
+		engine.handleAsyncResponse( r );
+		ResponseContainer resContatiner = responses.get( r.getCorrelationId() );
+		System.out.println( "Got a corellation ID" );
+		if( resContatiner != null ) {
+			System.out.println( "resContainer is not null" );
+			resContatiner.setResponse( r );
+		}
+		else {
+			System.out.println( "resContainer is null" );
+		}
+	}
+	
 	public Thread getReceiverThread() {
 		return receiverThread;
-	}
-	
-	public Hashtable<String, ResponseContainer> getResponses() {
-		return responses;
-	}
-	
-	public Engine getEngine() {
-		return engine;
 	}
 	
 	public boolean isOpen() {
