@@ -215,7 +215,13 @@ public class EditPanel extends JPanel
 			List<Student> dirtyStudents = m.getDirtyStudents();
 			
 			for( Student student : dirtyStudents ) {
-				dirtyRows.add( new Row( RowAction.UPDATE, clazz, section, student ) );
+				if( student.getUID() == -1 ) {
+					dirtyRows.add( new Row( RowAction.CREATE, clazz, section, student ) );
+				}
+				else {
+					dirtyRows.add( new Row( RowAction.UPDATE, clazz, section, student ) );					
+				}
+				System.out.println( student.toString() );
 			}
 		}
 		RowUpdateResponse res = (RowUpdateResponse)adminEngine.getClientAdapter().send( 
@@ -226,6 +232,16 @@ public class EditPanel extends JPanel
 			onRefreshButtonClicked();
 		}
 		infoLabel.setText( "Successfully saved all classes" );
+	}
+	
+	public boolean unsavedChangesArePresent() {
+		for( String key : tables.keySet() ) {
+			EditTable t = tables.get( key );
+			if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

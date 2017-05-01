@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.educonnect.admin.engine.AdminEngine;
@@ -109,8 +110,26 @@ public class MainFrame extends JFrame implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		System.out.println( "Close button pressed" ); 
-		instance.shutdown();
+		System.out.println( "Close button pressed" );
+		if( editPanel.unsavedChangesArePresent() ) {
+			int response = JOptionPane.showConfirmDialog( this, 
+					"Unsaved changes present. \n" + 
+					"Would you like to save and exit?" );
+			
+			if( response == JOptionPane.YES_OPTION ) {
+				editPanel.onSaveButtonClicked();
+				instance.shutdown();
+			}
+			else if( response == JOptionPane.NO_OPTION ) {				
+				instance.shutdown();
+			}
+			else {
+				// do nothing
+			}
+		}
+		else {
+			instance.shutdown();
+		}
 	}
 
 	@Override

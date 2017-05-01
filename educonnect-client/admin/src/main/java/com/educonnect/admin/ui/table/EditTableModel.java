@@ -26,11 +26,8 @@ public class EditTableModel extends AbstractTableModel{
 	
 	private Comparator<Student> studentComparator = null;
 	
-	private boolean goldenCopyPresent = false;
-	
 	public EditTableModel withStudents( Student[] students ) {
 		this.goldenCopy = new ArrayList<Student>( Arrays.asList( students ) );
-		goldenCopyPresent   = true;
 		this.editCopy   = new ArrayList<>();
 		
 		for( Student s : goldenCopy ) {
@@ -59,9 +56,19 @@ public class EditTableModel extends AbstractTableModel{
 			}
 		};
 	}
-	
-	public boolean isGoldenCopyPresent() {
-		return goldenCopyPresent;
+
+	public boolean unsavedChangesPresent() {
+		if( editCopy.size() != goldenCopy.size() ) {
+			return true;
+		}
+		
+		for( Student s : editCopy ) {
+			if( !( goldenCopy.contains( s ) ) ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public List<Student> getDirtyStudents() {
@@ -127,6 +134,9 @@ public class EditTableModel extends AbstractTableModel{
 			Student gcStudent     = goldenCopy.get(i);
 			
 			if( !( serverStudent.equals( gcStudent ) ) ) {
+				if( serverStudent.getUID() != gcStudent.getUID() ) {
+					updateStudentUID( serverStudent, gcStudent );
+				}
 				if( serverStudent.getRollNo() != gcStudent.getRollNo() ) {
 					updateStudentRollNumber( serverStudent, gcStudent );
 				}
@@ -138,6 +148,18 @@ public class EditTableModel extends AbstractTableModel{
 				}
 			}
 		}
+	}
+	
+	private void updateStudentUID( Student serverStudent, Student gcStudent ) {
+		for( Student s : editCopy ) {
+			if( s.getFirstName().equals( gcStudent.getFirstName() ) && 
+				s.getLastName().equals( gcStudent.getLastName() ) && 
+				s.getRollNo() == gcStudent.getRollNo() ) {
+				
+				s.setUID( serverStudent.getUID() );
+				gcStudent.setUID( serverStudent.getUID() );
+			}
+		}		
 	}
 	
 	private void updateStudentRollNumber( Student serverStudent, Student gcStudent ) {

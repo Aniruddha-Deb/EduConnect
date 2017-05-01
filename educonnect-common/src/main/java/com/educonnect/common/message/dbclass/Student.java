@@ -46,6 +46,10 @@ public class Student implements Serializable{
 		this.rollNo = rollNo;
 	}
 	
+	public void setUID( int UID ) {
+		this.UID = UID;
+	}
+	
 	@Override
 	public boolean equals( Object obj ) {
 		if( obj == this ) return true;
@@ -62,12 +66,13 @@ public class Student implements Serializable{
 		int rollNoHash    = rollNo    == -1   ? 53 : new Integer( rollNo ).hashCode();
 		int firstNameHash = firstName == null ? 59 : firstName.hashCode();
 		int lastNameHash  = lastName  == null ? 61 : lastName.hashCode();
+		int UIDHash       = UID == -1 ? 67 : new Integer( UID ).hashCode();  
 		
-		return rollNoHash + firstNameHash + lastNameHash;
+		return rollNoHash + firstNameHash + lastNameHash + UIDHash;
 	}
 	
 	@Override
 	public String toString() {
-		return rollNo + " " + firstName + " " + lastName;
+		return "\t" + rollNo + " " + firstName + " " + lastName + " " + UID;
 	}
 }
