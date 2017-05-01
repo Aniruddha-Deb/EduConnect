@@ -25,9 +25,9 @@ public abstract class Response extends Message {
 	}
 	
 	public String getStatusText() {
-		if( this.statusText == null ) {
-			return this.status.name() ;
-		}
+//		if( this.statusText == null ) {
+//			return this.status.name() ;
+//		}
 		return this.statusText ;
 	}
 	

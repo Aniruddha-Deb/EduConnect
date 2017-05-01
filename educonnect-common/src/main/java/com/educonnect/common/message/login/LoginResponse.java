@@ -9,6 +9,7 @@ public class LoginResponse extends Response {
 	private static final long serialVersionUID = 5221620821985769924L;
 	
 	private boolean loginResult = false ;
+	private String loginName = null;
 	
 	public LoginResponse( ResponseStatus status, String requestUID, boolean loginResult ) {
 		super( MessageType.MT_LOGIN_RES, status, requestUID ) ;
@@ -23,8 +24,17 @@ public class LoginResponse extends Response {
 		return this.loginResult ;
 	}
 	
+	public String getLoginName() {
+		return loginName;
+	}
+	
 	public LoginResponse withStatusText( String statusText ) {
 		super.setStatusText( statusText );
+		return this;
+	}
+	
+	public LoginResponse withLoginName( String loginName ) {
+		this.loginName = loginName;
 		return this;
 	}
 }

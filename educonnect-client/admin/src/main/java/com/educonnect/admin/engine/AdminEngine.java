@@ -3,8 +3,6 @@ package com.educonnect.admin.engine;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import javax.swing.SwingUtilities;
-
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
@@ -15,7 +13,6 @@ import com.educonnect.common.message.core.Response;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
-import com.educonnect.common.message.info.InfoResponse;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.common.network.SecureSocketNetworkAdapter;
@@ -46,9 +43,14 @@ public class AdminEngine extends Engine {
 			loginRequestFailed( r.getStatusText() );
 			return;
 		}
-		else {
-			setUserName( r.getStatusText() );
+		else if( r.getStatusText() != null ) {
+			UIUtils.showYesNoPrompt( r.getStatusText(), this );
+			setUserName( r.getLoginName() );
 			loadEditPanel();
+		}
+		else {
+			setUserName( r.getLoginName() );
+			loadEditPanel();			
 		}
 	}
 	
@@ -75,23 +77,7 @@ public class AdminEngine extends Engine {
 			mainFrame.getEditPanel().handleDatabaseSingleClassResponse( (DatabaseSingleClassResponse) r );
 			return true;
 		}
-		else if( r instanceof InfoResponse ) {
-			System.out.println( "Showing yes no prompt" );
-			SwingUtilities.invokeLater( new Runnable() {
-				
-				@Override
-				public void run() {
-					UIUtils.showYesNoPrompt( ((InfoResponse) r).getInfo(), getInstance() );
-				}
-			} );
-			System.out.println( "Showed yes no prompt" );
-			return true;
-		}
 		return false;
-	}
-	
-	private AdminEngine getInstance() {
-		return this;
 	}
 	
 	private void setCurrentInstanceRunning() {

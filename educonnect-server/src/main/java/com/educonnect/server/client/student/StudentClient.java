@@ -14,7 +14,7 @@ public class StudentClient extends Client {
 		super( socket, UID, ClientType.STUDENT );
 		super.clientName = JDBCAdapter.getInstance().getStudentName( UID );
 		send( new LoginResponse( 
-							ResponseStatus.PROCESS_OK, 
+							ResponseStatus.OK, 
 							null,
 							true
 			  ).withStatusText( clientName )

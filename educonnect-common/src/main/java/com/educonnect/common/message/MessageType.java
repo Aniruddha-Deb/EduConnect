@@ -13,6 +13,4 @@ public enum MessageType {
 	
 	MT_DB_ALL_CLASSES_REQ,
 	MT_DB_ALL_CLASSES_RES,
-	
-	MT_INFO_RES
 }

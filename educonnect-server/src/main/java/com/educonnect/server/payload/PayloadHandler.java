@@ -25,7 +25,7 @@ public class PayloadHandler {
 	}
 	
 	private static void sendDBClass( DatabaseSingleClassRequest r, Client c ) {
-		c.send( new DatabaseSingleClassResponse( ResponseStatus.PROCESS_OK, 
+		c.send( new DatabaseSingleClassResponse( ResponseStatus.OK, 
 												 r.getUID(), 
 												 new ClassOfStudents( 
 													r.getClazz(), 
@@ -48,7 +48,7 @@ public class PayloadHandler {
 			c.add( new ClassOfStudents( clazz, section, students ) );
 		}
 		
-		client.send( new DatabaseAllClassesResponse( ResponseStatus.PROCESS_OK, 
+		client.send( new DatabaseAllClassesResponse( ResponseStatus.OK, 
 													 r.getUID(), 
 													 c.toArray( new ClassOfStudents[c.size()] ) ) );
 	}

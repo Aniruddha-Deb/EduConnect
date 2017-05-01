@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.message.ResponseStatus;
-import com.educonnect.common.message.info.InfoResponse;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.server.client.Client;
 import com.educonnect.server.client.ClientHandler;
@@ -16,15 +15,10 @@ public class AdminClient extends Client {
 	public AdminClient( Socket socket, int UID, String requestUID ) {
 		super( socket, UID, ClientType.ADMIN );
 		super.clientName = JDBCAdapter.getInstance().getAdminName( UID );
-		send( new LoginResponse( 
-							ResponseStatus.PROCESS_OK, 
-							requestUID,
-							true
-			  ).withStatusText( clientName )
-		);
 		
 		List<Client> loggedOnAdminClients = ClientHandler.getLoggedOnAdminClients();
 		System.out.println( "got loggedOnAdminClients" );
+		
 		if( !( loggedOnAdminClients.isEmpty() ) ) {
 			
 			StringBuilder b = new StringBuilder( 
@@ -35,7 +29,21 @@ public class AdminClient extends Client {
 			for( Client c : loggedOnAdminClients ) {
 				b.append( c.getClientName() + "\n" ); 
 			}
-			send( new InfoResponse( b.toString() ) );
+			send( new LoginResponse( 
+					ResponseStatus.OK, 
+					requestUID,
+					true
+				).withLoginName( clientName )
+				 .withStatusText( b.toString() )
+			);
+
+		}
+		else {
+			send( new LoginResponse( 
+					ResponseStatus.OK, 
+					requestUID,
+					true
+				).withLoginName( clientName ) );
 		}
 	}
 }

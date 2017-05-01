@@ -49,10 +49,13 @@ public class ClientHandler {
 		int UID = getUID( loginRequest );
 		
 		if( UID == -1 ) {
-			tellClientAuthenticationFailed( loginRequest );
+			tellClientAuthenticationFailed( loginRequest, "Admin not registered with system" );
 		}
 		else {
-			if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {				
+			if( isAdminAlreadyLoggedOn( UID ) ) {
+				tellClientAuthenticationFailed( loginRequest, "Admin is already logged on" );
+			}
+			else if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {				
 				clients.add( new AdminClient( s, UID, r.getUID() ) );
 			}
 			else {
@@ -70,16 +73,16 @@ public class ClientHandler {
 		return UID;
 	}
 	
-	private static void tellClientAuthenticationFailed( LoginRequest r ) {
+	private static void tellClientAuthenticationFailed( LoginRequest r, String cause ) {
 		try {
 			writer.write( 
 					Serializer.serialize( 
 						new LoginResponse( 
-							ResponseStatus.SERVER_ERROR, 
+							ResponseStatus.FATAL_ERROR, 
 							r.getUID(),
 							false
 						)
-						.withStatusText( "Admin not registered with system" )
+						.withStatusText( cause )
 					)
 				);
 			writer.flush();
@@ -109,5 +112,14 @@ public class ClientHandler {
 		}
 		
 		return loggedOnAdminClients;
+	}
+	
+	private static boolean isAdminAlreadyLoggedOn( int adminUID ) {
+		for( Client c : clients ) {
+			if( c.getUID() == adminUID ) {
+				return true;
+			}
+		}		
+		return false;
 	}
 }

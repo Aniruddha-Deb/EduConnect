@@ -9,6 +9,6 @@ public class ShutdownResponse extends Response {
 	private static final long serialVersionUID = 3645132439807642741L;
 
 	public ShutdownResponse( String requestUID ) {
-		super( MessageType.MT_SHUTDOWN_RES, ResponseStatus.PROCESS_OK, requestUID );
+		super( MessageType.MT_SHUTDOWN_RES, ResponseStatus.OK, requestUID );
 	}
 }
