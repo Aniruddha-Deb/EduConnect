@@ -60,4 +60,9 @@ public class Student implements Serializable{
 		
 		return rollNoHash + firstNameHash + lastNameHash;
 	}
+	
+	@Override
+	public String toString() {
+		return rollNo + " " + firstName + " " + lastName;
+	}
 }

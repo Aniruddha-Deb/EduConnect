@@ -9,8 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -131,8 +133,10 @@ public class EditPanel extends JPanel
 				
 				JTable table = ( JTable )e.getSource() ;
 				EditTableModel model = ( EditTableModel )table.getModel() ;
+				CellEditor editor = table.getCellEditor();
 				int selectedRow = table.getSelectedRow();
-				
+
+				stopEditingCurrentCell( editor );
 				if( table.getSelectedRow() == model.getRowCount()-1 ) {
 					model.addRow( selectedRow+1 );
 					table.changeSelection( selectedRow+1, 1, false, false );
@@ -145,6 +149,16 @@ public class EditPanel extends JPanel
 			}
 		});
 		return table;
+	}
+	
+	private void stopEditingCurrentCell( CellEditor e ) {
+		if ( e != null ) {
+		    if (e.getCellEditorValue() != null) {
+		        e.stopCellEditing();
+		    } else {
+		        e.cancelCellEditing();
+		    }
+		}					
 	}
 	
 	// This method is called when the user switches tabs. An async request is
@@ -185,7 +199,15 @@ public class EditPanel extends JPanel
 	
 	@Override
 	public void onSaveButtonClicked() {
-		// TODO
+		for( String s : tables.keySet() ) {
+			System.out.println( "Got table " + s );
+			EditTable t = tables.get( s );
+			EditTableModel m = (EditTableModel)t.getModel();
+			List<Student> dirtyStudents = m.getDirtyStudents();
+			for( Student student : dirtyStudents ) {
+				System.out.println( "\t" + student.toString() );
+			}
+		}
 	}
 
 	@Override

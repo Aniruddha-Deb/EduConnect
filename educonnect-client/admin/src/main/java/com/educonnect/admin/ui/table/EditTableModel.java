@@ -64,6 +64,17 @@ public class EditTableModel extends AbstractTableModel{
 		return goldenCopyPresent;
 	}
 	
+	public List<Student> getDirtyStudents() {
+		List<Student> dirtyStudents = new ArrayList<>();
+		
+		for( Student s : editCopy ) {
+			if( !( goldenCopy.contains( s ) ) ) {
+				dirtyStudents.add( s );
+			}
+		}
+		return dirtyStudents;
+	}
+	
 	public void updateServerCopy( Student[] students ) {
 		this.serverCopy = new ArrayList<Student>( Arrays.asList( students ) );
 		
