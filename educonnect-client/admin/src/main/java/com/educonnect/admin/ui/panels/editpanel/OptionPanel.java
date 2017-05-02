@@ -20,6 +20,7 @@ public class OptionPanel extends JPanel{
 	private JButton exportButton  = null;
 	private JButton refreshButton = null;
 	private JButton saveButton    = null;
+	private JButton addNewStudentButton = null;
 	
 	public OptionPanel() {
 		super();
@@ -32,6 +33,7 @@ public class OptionPanel extends JPanel{
 
 		createAndAddNameButton();
 		createAndAddGlue();
+		createAndAddAddNewStudentButton();
 		createAndAddRefreshButton();
 		createAndAddSaveButton();		
 		createAndAddExportButton();
@@ -44,6 +46,11 @@ public class OptionPanel extends JPanel{
 	
 	private void createAndAddGlue() {
 		super.add( Box.createGlue() );
+	}
+	
+	private void createAndAddAddNewStudentButton() {
+		addNewStudentButton = ButtonFactory.createOptionPanelButton( ButtonType.ADD );
+		super.add( addNewStudentButton );
 	}
 	
 	private void createAndAddExportButton() {
@@ -70,5 +77,6 @@ public class OptionPanel extends JPanel{
 		exportButton.addActionListener( l );
 		refreshButton.addActionListener( l );
 		saveButton.addActionListener( l );
+		addNewStudentButton.addActionListener( l );
 	}	
 }

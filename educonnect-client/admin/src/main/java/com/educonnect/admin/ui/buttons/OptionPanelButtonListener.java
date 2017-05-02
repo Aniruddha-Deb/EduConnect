@@ -25,6 +25,10 @@ public interface OptionPanelButtonListener extends ActionListener {
 			case NAME_BUTTON_CMD:
 				onNameButtonClicked();
 			break;
+			
+			case ADD_NEW_STUDENT_CMD:
+				onAddStudentButtonClicked();
+			break;
 		}
 	}
 	
@@ -36,4 +40,5 @@ public interface OptionPanelButtonListener extends ActionListener {
 	
 	void onNameButtonClicked();
 	
+	void onAddStudentButtonClicked();
 }

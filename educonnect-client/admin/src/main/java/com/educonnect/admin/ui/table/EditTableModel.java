@@ -56,7 +56,7 @@ public class EditTableModel extends AbstractTableModel{
 			}
 		};
 	}
-
+	
 	public boolean unsavedChangesPresent() {
 		if( editCopy.size() != goldenCopy.size() ) {
 			return true;
@@ -221,8 +221,18 @@ public class EditTableModel extends AbstractTableModel{
 	}
 	
 	public void addRow( int rowIndex ) {
-		Student previousStudent = editCopy.get( editCopy.size()-1 );
-		editCopy.add( new Student( -1, previousStudent.getRollNo()+1, null, null ) );
+		Student previousStudent = null;
+		
+		if( editCopy.size() > 0 ) {
+			previousStudent = editCopy.get( editCopy.size()-1 );
+		}
+		
+		if( previousStudent != null ) {
+			editCopy.add( new Student( -1, previousStudent.getRollNo()+1, "", "" ) );
+		}
+		else {
+			editCopy.add( new Student( -1, 1, "", "" ) );			
+		}
 		fireTableDataChanged();
 	}
 	

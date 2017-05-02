@@ -2,6 +2,7 @@ package com.educonnect.admin.ui.buttons;
 
 import javax.swing.JButton;
 
+import com.educonnect.admin.ui.buttons.impl.AddNewStudentButton;
 import com.educonnect.admin.ui.buttons.impl.ExportButton;
 import com.educonnect.admin.ui.buttons.impl.NameButton;
 import com.educonnect.admin.ui.buttons.impl.RefreshButton;
@@ -28,6 +29,9 @@ public class ButtonFactory {
 				
 			case SAVE:
 				buttonToReturn = new SaveButton();
+			break;
+			case ADD:
+				buttonToReturn = new AddNewStudentButton();
 			break;
 		}
 		

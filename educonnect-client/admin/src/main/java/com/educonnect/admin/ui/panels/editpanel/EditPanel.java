@@ -140,8 +140,8 @@ public class EditPanel extends JPanel
 				EditTableModel model = ( EditTableModel )table.getModel() ;
 				CellEditor editor = table.getCellEditor();
 				int selectedRow = table.getSelectedRow();
-
 				stopEditingCurrentCell( editor );
+				
 				if( table.getSelectedRow() == model.getRowCount()-1 ) {
 					model.addRow( selectedRow+1 );
 					table.changeSelection( selectedRow+1, 1, false, false );
@@ -176,16 +176,23 @@ public class EditPanel extends JPanel
 	@Override
 	public void stateChanged( ChangeEvent e ) {
 		
+		EditTable table   = getSelectedEditTable();
+		
+		ClassOfStudents c = table.getClassOfStudents() ;
+		
+		adminEngine.getClientAdapter().sendAsync( 
+				new DatabaseSingleClassRequest( c.getClazz(), 
+						                        c.getSection() ) ) ;
+	}
+	
+	private EditTable getSelectedEditTable() {
 		int selectedIndex = tabbedPane.getSelectedIndex();
 		if( selectedIndex != -1 ) {
-			String titleOfTab = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() ) ;
-			EditTable table   = tables.get( titleOfTab ) ;
-			
-			ClassOfStudents c = table.getClassOfStudents() ;
-			
-			adminEngine.getClientAdapter().sendAsync( 
-					new DatabaseSingleClassRequest( c.getClazz(), 
-							                        c.getSection() ) ) ;
+			String title = tabbedPane.getTitleAt( tabbedPane.getSelectedIndex() );
+			return tables.get( title );
+		}
+		else {
+			return tables.entrySet().iterator().next().getValue();
 		}
 	}
 
@@ -269,5 +276,13 @@ public class EditPanel extends JPanel
 			}
 		} );
 		menu.show( optionPanel, 3, optionPanel.getHeight() );
+	}
+
+	@Override
+	public void onAddStudentButtonClicked() {
+		EditTable table = getSelectedEditTable();
+		EditTableModel model = (EditTableModel)table.getModel();
+		
+		model.addRow( table.getSelectedRow() + 1 );
 	}
 }

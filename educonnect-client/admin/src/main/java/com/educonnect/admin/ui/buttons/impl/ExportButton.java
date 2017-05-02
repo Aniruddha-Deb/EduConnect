@@ -16,5 +16,4 @@ public class ExportButton extends OptionPanelButton {
 		super.setToolTipText( "Export all tables to an excel sheet" );
 		super.setActionCommand( EXPORT_BUTTON_CMD );
 	}
-
 }

@@ -23,11 +23,13 @@ public class UIConstants {
 	public static final String SAVE_TO_DB_ICON_RES      = ICON_RES_ROOT + "save_to_db.png";
 	public static final String EXPORT_TO_EXCEL_ICON_RES = ICON_RES_ROOT + "export_to_excel.png";
 	public static final String REFRESH_ICON_RES         = ICON_RES_ROOT + "refresh.png";
+	public static final String ADD_NEW_STUDENT_RES      = ICON_RES_ROOT + "add_new_student.png";
 	
-	public static final String SAVE_BUTTON_CMD    = "Save"   ;
-	public static final String EXPORT_BUTTON_CMD  = "Export" ;
-	public static final String REFRESH_BUTTON_CMD = "Refresh";
-	public static final String NAME_BUTTON_CMD    = "Name"   ;
+	public static final String SAVE_BUTTON_CMD     = "Save"      ;
+	public static final String EXPORT_BUTTON_CMD   = "Export"    ;
+	public static final String REFRESH_BUTTON_CMD  = "Refresh"   ;
+	public static final String NAME_BUTTON_CMD     = "Name"      ;
+	public static final String ADD_NEW_STUDENT_CMD = "AddStudent"; 
 	
 	private static String osName = null;
 	
