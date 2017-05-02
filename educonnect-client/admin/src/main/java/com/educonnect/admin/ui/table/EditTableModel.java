@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.dbclass.Student;
 import com.educonnect.common.message.dbupdate.Row;
 import com.educonnect.common.message.dbupdate.Row.RowAction;

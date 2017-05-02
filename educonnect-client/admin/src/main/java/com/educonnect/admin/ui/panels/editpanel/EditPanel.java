@@ -240,10 +240,12 @@ public class EditPanel extends JPanel
 	}
 	
 	public boolean unsavedChangesArePresent() {
-		for( String key : tables.keySet() ) {
-			EditTable t = tables.get( key );
-			if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
-				return true;
+		if( tables != null ) {
+			for( String key : tables.keySet() ) {
+				EditTable t = tables.get( key );
+				if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
+					return true;
+				}
 			}
 		}
 		return false;

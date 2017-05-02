@@ -26,8 +26,7 @@ public class AdminEngine extends Engine {
 		
 	public AdminEngine() {
 		super( Constants.TRUSTSTORE_PASSWD, Constants.TRUSTSTORE_LOC );
-		// in development, will uncomment in the final release
-//		setCurrentInstanceRunning();
+		setCurrentInstanceRunning();
 		clientAdapter = new SecureSocketNetworkAdapter( Constants.SERVER_IP_ADDRESS,
 														Constants.SERVER_PORT, 
 														this );
