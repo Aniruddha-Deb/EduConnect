@@ -213,6 +213,9 @@ public class EditPanel extends JPanel
 	@Override
 	public void onSaveButtonClicked() {
 		List<Row> dirtyRows = new ArrayList<>();
+		
+		stopEditingCurrentCell( getSelectedEditTable().getCellEditor() );
+		
 		for( String s : tables.keySet() ) {
 			int clazz = Integer.parseInt( s.split( "-" )[0] );
 			char section =  s.split( "-" )[1].charAt( 0 );
