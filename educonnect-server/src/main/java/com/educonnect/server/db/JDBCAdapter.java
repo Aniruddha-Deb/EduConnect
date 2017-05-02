@@ -104,9 +104,9 @@ public class JDBCAdapter {
 		return studentName;		
 	}
 
-	public void updateRow( Row r ) {
-		int classOfStudent = r.getClassOfStudent();
-		char sectionOfStudent = r.getSectionOfStudent();
+	public void updateRow( Row r, int clazz, char section ) {
+		int classOfStudent = clazz;
+		char sectionOfStudent = section;
 		int rollNo = r.getStudent().getRollNo();
 		int UID = r.getStudent().getUID();
 		String firstName = r.getStudent().getFirstName();
@@ -128,7 +128,7 @@ public class JDBCAdapter {
 				e.printStackTrace();
 			}
 		}
-		else {
+		else if( r.getAction().equals( RowAction.UPDATE ) ){
 			
 			String query = "UPDATE students " + 
 						   "SET class = " + classOfStudent + ", " + 
@@ -145,6 +145,18 @@ public class JDBCAdapter {
 				e.printStackTrace();
 			}
 		}
+		else {
+			String query = "UPDATE students " + 
+					   "SET isEnabled=false " +   
+					   "WHERE UID = " + UID;
+					   
+			try {
+				Statement st = connection.createStatement();
+				st.executeUpdate( query );
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}			
+		}
 	}
 	
 	public String[] getStudentDatabaseHeaders() {
@@ -153,7 +165,7 @@ public class JDBCAdapter {
 	
 	public Student[] getStudentDatabaseData( int clazz, char section ) {
 		String query = "SELECT UID, rollNo, firstName, lastName FROM students WHERE "
-				+ "class=" + clazz + " AND section='" + section + "'";
+				+ "class=" + clazz + " AND section='" + section + "' AND isEnabled=true";
 		
 		List<Student> students = new ArrayList<>();				 	
 		try {

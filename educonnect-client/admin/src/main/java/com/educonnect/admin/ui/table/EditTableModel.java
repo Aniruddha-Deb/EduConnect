@@ -14,6 +14,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.Row;
+import com.educonnect.common.message.dbupdate.Row.RowAction;
 
 public class EditTableModel extends AbstractTableModel{
 	
@@ -21,15 +23,17 @@ public class EditTableModel extends AbstractTableModel{
 	private static final int  NUM_COLS = 3;
 	private static final String[] headers  = { "roll no", "first name", "last name" };
 	
-	private List<Student> goldenCopy = null;
-	private List<Student> editCopy   = null;
-	private List<Student> serverCopy = null;
+	private List<Student> goldenCopy      = null;
+	private List<Student> editCopy        = null;
+	private List<Student> serverCopy      = null;
+	private List<Student> deletedStudents = null;
 	
 	private Comparator<Student> studentComparator = null;
 	
 	public EditTableModel withStudents( Student[] students ) {
 		this.goldenCopy = new ArrayList<Student>( Arrays.asList( students ) );
 		this.editCopy   = new ArrayList<>();
+		this.deletedStudents = new ArrayList<>();
 		
 		for( Student s : goldenCopy ) {
 			editCopy.add( deepCopy( s ) );
@@ -44,7 +48,7 @@ public class EditTableModel extends AbstractTableModel{
 		studentComparator = new Comparator<Student>() {
 			
 			@Override
-			public int compare(Student o1, Student o2) {
+			public int compare( Student o1, Student o2 ) {
 				if( o1.getRollNo() > o2.getRollNo() ) {
 					return 1;
 				}
@@ -72,20 +76,31 @@ public class EditTableModel extends AbstractTableModel{
 		return false;
 	}
 	
-	public List<Student> getDirtyStudents() {
-		List<Student> dirtyStudents = new ArrayList<>();
+	public List<Row> getDirtyRows() {
+		List<Row> dirtyRows = new ArrayList<>();
 		
 		for( Student s : editCopy ) {
 			if( !( goldenCopy.contains( s ) ) ) {
-				dirtyStudents.add( s );
+				if( s.getUID() == -1 ) {
+					dirtyRows.add( new Row( RowAction.CREATE, s ) );
+				}
+				else {
+					dirtyRows.add( new Row( RowAction.UPDATE, s ) );					
+				}
 			}
 		}
+		
+		for( Student s : deletedStudents ) {
+			dirtyRows.add( new Row( RowAction.DELETE, s ) );
+		}
+		
 		this.goldenCopy = new ArrayList<>();
 		
 		for( Student s : editCopy ) {
 			goldenCopy.add( deepCopy( s ) );
 		}
-		return dirtyStudents;
+		
+		return dirtyRows;
 	}
 	
 	public void updateServerCopy( Student[] students ) {
@@ -238,13 +253,9 @@ public class EditTableModel extends AbstractTableModel{
 	}
 	
 	public void deleteRow( int rowIndex ) {
-		if( rowIndex == -1 ) {
-			UIUtils.showError( null, "No row is selected" );
-		}
-		else {
-			editCopy.remove( rowIndex );
-			fireTableDataChanged();
-		}
+		deletedStudents.add( deepCopy( editCopy.get( rowIndex ) ) );
+		editCopy.remove( rowIndex );
+		fireTableDataChanged();
 	}
 	
 	@Override

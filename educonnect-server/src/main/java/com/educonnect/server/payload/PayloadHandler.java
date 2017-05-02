@@ -10,6 +10,7 @@ import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.ClassOfRows;
 import com.educonnect.common.message.dbupdate.Row;
 import com.educonnect.common.message.dbupdate.RowUpdateRequest;
 import com.educonnect.common.message.dbupdate.RowUpdateResponse;
@@ -26,6 +27,8 @@ public class PayloadHandler {
 			sendDBClass( (DatabaseSingleClassRequest)r, c );
 		}
 		else if( r instanceof RowUpdateRequest ) {
+			System.out.println( r );
+			System.out.println( c );
 			updateRows( (RowUpdateRequest)r, c );
 		}
 	}
@@ -60,9 +63,14 @@ public class PayloadHandler {
 	}
 	
 	private static void updateRows( RowUpdateRequest rowUpdateReq, Client c ) {
-		for( Row r : rowUpdateReq.getRows() ) {
-			JDBCAdapter.getInstance().updateRow( r );
+		
+		for( ClassOfRows cRows : rowUpdateReq.getClassOfRows() ) {
+			for( Row r : cRows.getRows() ) {
+				JDBCAdapter.getInstance()
+						   .updateRow( r, cRows.getClazz(), cRows.getSection() );
+			}
 		}
+		
 		c.send( new RowUpdateResponse( ResponseStatus.OK, rowUpdateReq.getUID(),
 										 true ) );
 	}

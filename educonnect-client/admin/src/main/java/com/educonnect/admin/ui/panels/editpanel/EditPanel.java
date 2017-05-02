@@ -28,13 +28,14 @@ import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
 import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
 import com.educonnect.admin.ui.table.EditTableModel;
+import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.dbclass.ClassOfStudents;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesResponse;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassRequest;
 import com.educonnect.common.message.dbclass.DatabaseSingleClassResponse;
 import com.educonnect.common.message.dbclass.Student;
+import com.educonnect.common.message.dbupdate.ClassOfRows;
 import com.educonnect.common.message.dbupdate.Row;
-import com.educonnect.common.message.dbupdate.Row.RowAction;
 import com.educonnect.common.message.dbupdate.RowUpdateRequest;
 import com.educonnect.common.message.dbupdate.RowUpdateResponse;
 
@@ -212,7 +213,7 @@ public class EditPanel extends JPanel
 	
 	@Override
 	public void onSaveButtonClicked() {
-		List<Row> dirtyRows = new ArrayList<>();
+		List<ClassOfRows> classesOfDirtyRows = new ArrayList<>();
 		
 		stopEditingCurrentCell( getSelectedEditTable().getCellEditor() );
 		
@@ -222,21 +223,15 @@ public class EditPanel extends JPanel
 			
 			EditTable t = tables.get( s );
 			EditTableModel m = (EditTableModel)t.getModel();
-			List<Student> dirtyStudents = m.getDirtyStudents();
+			List<Row> dirtyRows = m.getDirtyRows();
 			
-			for( Student student : dirtyStudents ) {
-				if( student.getUID() == -1 ) {
-					dirtyRows.add( new Row( RowAction.CREATE, clazz, section, student ) );
-				}
-				else {
-					dirtyRows.add( new Row( RowAction.UPDATE, clazz, section, student ) );					
-				}
-				System.out.println( student.toString() );
-			}
+			classesOfDirtyRows.add( new ClassOfRows( 
+				dirtyRows.toArray( new Row[dirtyRows.size()] ), clazz, section ) );
 		}
+		
 		RowUpdateResponse res = (RowUpdateResponse)adminEngine.getClientAdapter().send( 
-								new RowUpdateRequest( dirtyRows.toArray( 
-										new Row[dirtyRows.size()] ) ) );
+								new RowUpdateRequest( classesOfDirtyRows.toArray( 
+										new ClassOfRows[classesOfDirtyRows.size()] ) ) );
 		
 		if( res.isSuccessful() ) {
 			onRefreshButtonClicked();
@@ -288,7 +283,19 @@ public class EditPanel extends JPanel
 	public void onDeleteStudentButtonClicked() {
 		EditTable table = getSelectedEditTable();
 		EditTableModel model = (EditTableModel)table.getModel();
+		int rowIndex = table.getSelectedRow();
 		
-		model.deleteRow( table.getSelectedRow() );		
+		if( rowIndex < 0 || rowIndex >= model.getRowCount() ) {
+			UIUtils.showError( null, "Unable to delete row" );
+		}
+		else {
+			model.deleteRow( table.getSelectedRow() );
+			if( rowIndex-1 >= 0 ) {
+				table.changeSelection( rowIndex-1, 1, false, false );
+			}
+			else {
+				table.changeSelection( rowIndex, 1, false, false );			
+			}
+		}
 	}
 }

@@ -7,14 +7,14 @@ public class RowUpdateRequest extends Request {
 
 	private static final long serialVersionUID = 4324681963835497306L;
 
-	private Row[] rows = null;
+	private ClassOfRows[] classOfRows = null;
 	
-	public RowUpdateRequest( Row[] rows ) {
+	public RowUpdateRequest( ClassOfRows[] classOfrows ) {
 		super( MessageType.MT_DB_ROW_UPDATE_REQ );
-		this.rows = rows;
+		this.classOfRows = classOfrows;
 	}
-	
-	public Row[] getRows() {
-		return rows;
+
+	public ClassOfRows[] getClassOfRows() {
+		return classOfRows;
 	}
 }
