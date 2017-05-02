@@ -240,7 +240,8 @@ public class EditPanel extends JPanel
 	}
 	
 	public boolean unsavedChangesArePresent() {
-		if( tables != null ) {
+		if( tables != null && tabbedPane != null ) {
+			stopEditingCurrentCell( getSelectedEditTable().getCellEditor() );
 			for( String key : tables.keySet() ) {
 				EditTable t = tables.get( key );
 				if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
@@ -279,6 +280,10 @@ public class EditPanel extends JPanel
 		EditTableModel model = (EditTableModel)table.getModel();
 		
 		model.addRow( table.getSelectedRow() + 1 );
+		table.setRequestFocusEnabled( true );
+		table.requestFocus();
+		table.requestFocusInWindow();
+		table.changeSelection( table.getRowCount(), 1, false, false );
 	}
 
 	@Override

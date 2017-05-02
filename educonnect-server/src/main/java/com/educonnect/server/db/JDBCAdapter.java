@@ -120,7 +120,7 @@ public class JDBCAdapter {
 						   				 sectionOfStudent + "' ," + 
 						   				 rollNo + " ,'" + 
 						   				 firstName + "' ,'" + 
-						   				 lastName + "' )";		
+						   				 lastName + "' )"; 
 			try {
 				Statement st = connection.createStatement();
 				st.executeUpdate( query );
