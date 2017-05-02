@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import com.educonnect.admin.ui.util.UIUtils;
 import com.educonnect.common.message.dbclass.Student;
 
 public class EditTableModel extends AbstractTableModel{
@@ -234,6 +235,16 @@ public class EditTableModel extends AbstractTableModel{
 			editCopy.add( new Student( -1, 1, "", "" ) );			
 		}
 		fireTableDataChanged();
+	}
+	
+	public void deleteRow( int rowIndex ) {
+		if( rowIndex == -1 ) {
+			UIUtils.showError( null, "No row is selected" );
+		}
+		else {
+			editCopy.remove( rowIndex );
+			fireTableDataChanged();
+		}
 	}
 	
 	@Override

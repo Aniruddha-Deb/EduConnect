@@ -255,11 +255,6 @@ public class EditPanel extends JPanel
 	}
 
 	@Override
-	public void onExportButtonClicked() {
-		// TODO
-	}
-
-	@Override
 	public void onRefreshButtonClicked() {
 		stateChanged( null ) ; 
 	}
@@ -287,5 +282,13 @@ public class EditPanel extends JPanel
 		EditTableModel model = (EditTableModel)table.getModel();
 		
 		model.addRow( table.getSelectedRow() + 1 );
+	}
+
+	@Override
+	public void onDeleteStudentButtonClicked() {
+		EditTable table = getSelectedEditTable();
+		EditTableModel model = (EditTableModel)table.getModel();
+		
+		model.deleteRow( table.getSelectedRow() );		
 	}
 }

@@ -14,9 +14,9 @@ public interface OptionPanelButtonListener extends ActionListener {
 				onSaveButtonClicked();
 			break;
 			
-			case EXPORT_BUTTON_CMD:
-				onExportButtonClicked();
-			break;
+//			case EXPORT_BUTTON_CMD:
+//				onExportButtonClicked();
+//			break;
 			
 			case REFRESH_BUTTON_CMD:
 				onRefreshButtonClicked();
@@ -29,16 +29,22 @@ public interface OptionPanelButtonListener extends ActionListener {
 			case ADD_NEW_STUDENT_CMD:
 				onAddStudentButtonClicked();
 			break;
+			
+			case DELETE_STUDENT_CMD:
+				onDeleteStudentButtonClicked();
+			break;
 		}
 	}
 	
 	void onSaveButtonClicked();
 	
-	void onExportButtonClicked();
+//	void onExportButtonClicked();
 	
 	void onRefreshButtonClicked();
 	
 	void onNameButtonClicked();
 	
 	void onAddStudentButtonClicked();
+	
+	void onDeleteStudentButtonClicked();
 }

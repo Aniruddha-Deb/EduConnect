@@ -1,6 +1,7 @@
 package com.educonnect.admin.ui.panels.editpanel;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,19 +12,18 @@ import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.buttons.ButtonFactory;
 import com.educonnect.admin.ui.buttons.ButtonType;
 import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
+import com.educonnect.admin.ui.buttons.impl.NameButton;
 
 public class OptionPanel extends JPanel{
 
 	private static final long serialVersionUID = -1121562714415322399L;
-	
-	private JButton nameButton    = null;
-	private JButton exportButton  = null;
-	private JButton refreshButton = null;
-	private JButton saveButton    = null;
-	private JButton addNewStudentButton = null;
+
+	private ArrayList<JButton> optionButtons = null;
+	private NameButton nameButton = null;
 	
 	public OptionPanel() {
 		super();
+		optionButtons = new ArrayList<>();
 		setUpUI();
 	}
 	
@@ -33,39 +33,56 @@ public class OptionPanel extends JPanel{
 
 		createAndAddNameButton();
 		createAndAddGlue();
-		createAndAddAddNewStudentButton();
-		createAndAddRefreshButton();
-		createAndAddSaveButton();		
-		createAndAddExportButton();
+		createOptionButtons();
+		
+		addOptionButtonsToPanel();
+	}
+	
+	private void addOptionButtonsToPanel() {
+		for( JButton b : optionButtons ) {
+			super.add( b );
+		}
+	}
+	
+	private void createOptionButtons() {
+		createDeleteStudentButton();
+		createAddNewStudentButton();
+		createRefreshButton();
+		createSaveButton();	
 	}
 	
 	private void createAndAddNameButton() {
-		nameButton = ButtonFactory.createOptionPanelButton( ButtonType.NAME );
-		super.add( nameButton );		
+		nameButton = (NameButton)ButtonFactory.createOptionPanelButton( ButtonType.NAME );
+		super.add( nameButton );
 	}
 	
 	private void createAndAddGlue() {
 		super.add( Box.createGlue() );
 	}
 	
-	private void createAndAddAddNewStudentButton() {
-		addNewStudentButton = ButtonFactory.createOptionPanelButton( ButtonType.ADD );
-		super.add( addNewStudentButton );
+	private void createDeleteStudentButton() {
+		JButton deleteStudentButton = ButtonFactory.createOptionPanelButton( ButtonType.DELETE );
+		optionButtons.add( deleteStudentButton );
 	}
 	
-	private void createAndAddExportButton() {
-		exportButton = ButtonFactory.createOptionPanelButton( ButtonType.EXPORT );
-		super.add( exportButton );		
+	private void createAddNewStudentButton() {
+		JButton addNewStudentButton = ButtonFactory.createOptionPanelButton( ButtonType.ADD );
+		optionButtons.add( addNewStudentButton );
 	}
 	
-	private void createAndAddRefreshButton() {
-		refreshButton = ButtonFactory.createOptionPanelButton( ButtonType.REFRESH );
-		super.add( refreshButton );
+//	private void createAndAddExportButton() {
+//		JButton exportButton = ButtonFactory.createOptionPanelButton( ButtonType.EXPORT );
+//		optionButtons.add( exportButton );		
+//	}
+	
+	private void createRefreshButton() {
+		JButton refreshButton = ButtonFactory.createOptionPanelButton( ButtonType.REFRESH );
+		optionButtons.add( refreshButton );
 	}
 
-	private void createAndAddSaveButton() {
-		saveButton = ButtonFactory.createOptionPanelButton( ButtonType.SAVE );
-		super.add( saveButton );
+	private void createSaveButton() {
+		JButton saveButton = ButtonFactory.createOptionPanelButton( ButtonType.SAVE );
+		optionButtons.add( saveButton );
 	}
 	
 	public void loadNameOntoNameButton() {
@@ -74,9 +91,9 @@ public class OptionPanel extends JPanel{
 	
 	public void addOptionPaneButtonListener( OptionPanelButtonListener l ) {
 		nameButton.addActionListener( l );
-		exportButton.addActionListener( l );
-		refreshButton.addActionListener( l );
-		saveButton.addActionListener( l );
-		addNewStudentButton.addActionListener( l );
+		
+		for( JButton b : optionButtons ) {
+			b.addActionListener( l );
+		}
 	}	
 }

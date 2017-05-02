@@ -3,6 +3,7 @@ package com.educonnect.admin.ui.buttons;
 import javax.swing.JButton;
 
 import com.educonnect.admin.ui.buttons.impl.AddNewStudentButton;
+import com.educonnect.admin.ui.buttons.impl.DeleteStudentButton;
 import com.educonnect.admin.ui.buttons.impl.ExportButton;
 import com.educonnect.admin.ui.buttons.impl.NameButton;
 import com.educonnect.admin.ui.buttons.impl.RefreshButton;
@@ -12,29 +13,26 @@ public class ButtonFactory {
 
 	public static JButton createOptionPanelButton( ButtonType bType ) {
 		
-		JButton buttonToReturn = null;
-		
 		switch( bType ) {
 			case EXPORT:
-				buttonToReturn = new ExportButton();
-			break;
+				return new ExportButton();
 				
 			case NAME:
-				buttonToReturn = new NameButton();
-			break;
+				return new NameButton();
 			
 			case REFRESH:
-				buttonToReturn = new RefreshButton();
-			break;
+				return new RefreshButton();
 				
 			case SAVE:
-				buttonToReturn = new SaveButton();
-			break;
+				return new SaveButton();
+			
 			case ADD:
-				buttonToReturn = new AddNewStudentButton();
-			break;
+				return new AddNewStudentButton();
+			
+			case DELETE:
+				return new DeleteStudentButton();
 		}
 		
-		return buttonToReturn;
+		return null;
 	}
 }
