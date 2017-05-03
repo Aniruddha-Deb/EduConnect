@@ -1,6 +1,6 @@
 package com.educonnect.admin.ui.util;
 
-import static com.educonnect.admin.Constants.DIR_PATH;
+import static com.educonnect.admin.Constants.RES_DIR_PATH;
 
 import java.awt.Component;
 import java.awt.Image;
@@ -23,7 +23,7 @@ import com.educonnect.admin.ui.panels.editpanel.EditPanel;
 public class UIUtils {
 
 	public static void serialize( Component comp, String name ) {
-		File file = new File( DIR_PATH + "/" + name );
+		File file = new File( RES_DIR_PATH + File.separator + name );
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( file ) );
 			oos.writeObject( comp );
@@ -35,7 +35,7 @@ public class UIUtils {
 	}
 	
 	public static boolean isSerialized( String name ) {
-		File file = new File( DIR_PATH );
+		File file = new File( RES_DIR_PATH );
 		
 		for( String s : file.list() ) {
 			if( s.equals( name ) )  {
@@ -46,7 +46,7 @@ public class UIUtils {
 	}
 
 	public static Component deserialize( String name ) {
-		File file = new File( DIR_PATH + "/" + name );
+		File file = new File( RES_DIR_PATH + File.separator + name );
 		Component comp = null;
 		try {
 			ObjectInputStream ois = new ObjectInputStream( new FileInputStream( file ) );

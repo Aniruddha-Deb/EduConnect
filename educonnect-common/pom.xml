@@ -3,7 +3,7 @@
   <groupId>educonnect-common</groupId>
   <artifactId>educonnect-common</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>educonnect-common</name>
   <description>common logic for the EduConnect client-server application</description>
   

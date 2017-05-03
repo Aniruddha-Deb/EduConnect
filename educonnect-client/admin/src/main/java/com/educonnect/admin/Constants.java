@@ -6,13 +6,9 @@ import com.educonnect.admin.ui.util.UIUtils;
 
 public class Constants {
 
-	public static final String DIR_PATH  = System.getProperty( "user.home" ) + 
-											File.separator + 
-											".educonnect" + 
-											File.separator + 
-											"admin";
+	public static final String RES_DIR_PATH  = new File( Constants.class.getProtectionDomain().getCodeSource().getLocation().getPath() ).getParent() + File.separator + "res";
 	
-	public static final String TRUSTSTORE_LOC = DIR_PATH + File.separator + 
+	public static final String TRUSTSTORE_LOC = RES_DIR_PATH + File.separator +
 												"client.truststore";
 	public static final String TRUSTSTORE_PASSWD   = "public";
 	
