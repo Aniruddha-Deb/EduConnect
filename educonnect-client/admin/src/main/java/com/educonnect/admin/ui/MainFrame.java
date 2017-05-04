@@ -110,7 +110,6 @@ public class MainFrame extends JFrame implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		System.out.println( "Close button pressed" );
 		if( editPanel.unsavedChangesArePresent() ) {
 			int response = JOptionPane.showConfirmDialog( this, 
 					"Unsaved changes present. \n" + 

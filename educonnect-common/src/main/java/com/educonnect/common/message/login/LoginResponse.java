@@ -1,7 +1,6 @@
 package com.educonnect.common.message.login;
 
 import com.educonnect.common.message.MessageType;
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Response;
 
 public class LoginResponse extends Response {
@@ -11,8 +10,8 @@ public class LoginResponse extends Response {
 	private boolean loginResult = false ;
 	private String loginName = null;
 	
-	public LoginResponse( ResponseStatus status, String requestUID, boolean loginResult ) {
-		super( MessageType.MT_LOGIN_RES, status, requestUID ) ;
+	public LoginResponse( String requestUID, boolean loginResult ) {
+		super( MessageType.MT_LOGIN_RES, requestUID ) ;
 		this.loginResult = loginResult;
 	}
 	

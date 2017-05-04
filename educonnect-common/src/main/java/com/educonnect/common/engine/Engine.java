@@ -43,9 +43,9 @@ public abstract class Engine {
 	}
 	
 	/**
-	 * This method is usually called by the Adapter when it receives a payload 
-	 * from the socket. It hands over custody of the payload to the engine, which 
-	 * can do whatever it wants with the payload. This has to be overriden by 
+	 * This method is usually called by the Adapter when it receives a response 
+	 * from the socket. It hands over custody of the response to the engine, which 
+	 * can do whatever it wants with the response. This has to be overriden by 
 	 * the subclasses of Engine.
 	 * 
 	 * @param p The payload received to be handled by the engine.
@@ -59,6 +59,12 @@ public abstract class Engine {
 	 */
 	public abstract void start();
 	
+	/**
+	 * This method logs in a user when he supplies his email ID and password.
+	 * 
+	 * @param emailId
+	 * @param password
+	 */
 	public abstract void login( String emailId, char[] password );
 	
 	/**
@@ -70,6 +76,9 @@ public abstract class Engine {
 	 */
 	public abstract void shutdown();
 	
+	/**
+	 * This method logs out a user 
+	 */
 	public abstract void logout();
 	
 }

@@ -7,6 +7,7 @@ import java.util.Hashtable;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.swing.JOptionPane;
 
 import com.educonnect.common.engine.Engine;
 import com.educonnect.common.message.core.Request;
@@ -57,7 +58,9 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		try {
 			socket = ( SSLSocket )factory.createSocket( ipAddress, port );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog( null, "Unable to connect to server.\n" + 
+												 "Either your internet is down or \n" + 
+												 "the server is unreachable." );
 		}
 		
 		return socket;
@@ -65,15 +68,17 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	
 	public void connect() {
 		this.sslSocket = setUpSSLSocket( ipAddress, port );
-		try {
-			writer = new BufferedWriter( new OutputStreamWriter( sslSocket.getOutputStream() ) );
-		} catch ( IOException e ) {
-			e.printStackTrace();
+		if( sslSocket != null ) {
+			try {
+				writer = new BufferedWriter( new OutputStreamWriter( sslSocket.getOutputStream() ) );
+			} catch ( IOException e ) {
+				e.printStackTrace();
+			}
+			receiver = new SecureSocketReceiver( sslSocket, this );
+			
+			receiverThread = new Thread( receiver, "Receiver" );
+			receiverThread.start();
 		}
-		receiver = new SecureSocketReceiver( sslSocket, this );
-		
-		receiverThread = new Thread( receiver, "Receiver" );
-		receiverThread.start();
 	}
 	
 	public void putResponse( Response r ) {

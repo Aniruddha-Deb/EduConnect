@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,6 +21,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableCellEditor;
 
 import com.educonnect.admin.engine.AdminEngine;
 import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
@@ -139,9 +139,8 @@ public class EditPanel extends JPanel
 				
 				JTable table = ( JTable )e.getSource() ;
 				EditTableModel model = ( EditTableModel )table.getModel() ;
-				CellEditor editor = table.getCellEditor();
 				int selectedRow = table.getSelectedRow();
-				stopEditingCurrentCell( editor );
+				stopEditingCurrentCell();
 				
 				if( table.getSelectedRow() == model.getRowCount()-1 ) {
 					model.addRow( selectedRow+1 );
@@ -157,7 +156,8 @@ public class EditPanel extends JPanel
 		return table;
 	}
 	
-	private void stopEditingCurrentCell( CellEditor e ) {
+	private void stopEditingCurrentCell() {
+		TableCellEditor e = getSelectedEditTable().getCellEditor(); 
 		if ( e != null ) {
 		    if( e.getCellEditorValue() != null ) {
 		        e.stopCellEditing();
@@ -176,7 +176,7 @@ public class EditPanel extends JPanel
 	// handleDatabaseSingleClassResponse method
 	@Override
 	public void stateChanged( ChangeEvent e ) {
-		
+		stopEditingCurrentCell();
 		EditTable table   = getSelectedEditTable();
 		
 		ClassOfStudents c = table.getClassOfStudents() ;
@@ -215,7 +215,7 @@ public class EditPanel extends JPanel
 	public void onSaveButtonClicked() {
 		List<ClassOfRows> classesOfDirtyRows = new ArrayList<>();
 		
-		stopEditingCurrentCell( getSelectedEditTable().getCellEditor() );
+		stopEditingCurrentCell();
 		
 		for( String s : tables.keySet() ) {
 			int clazz = Integer.parseInt( s.split( "-" )[0] );
@@ -241,7 +241,7 @@ public class EditPanel extends JPanel
 	
 	public boolean unsavedChangesArePresent() {
 		if( tables != null && tabbedPane != null ) {
-			stopEditingCurrentCell( getSelectedEditTable().getCellEditor() );
+			stopEditingCurrentCell();
 			for( String key : tables.keySet() ) {
 				EditTable t = tables.get( key );
 				if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
@@ -259,6 +259,7 @@ public class EditPanel extends JPanel
 
 	@Override
 	public void onNameButtonClicked() {
+		stopEditingCurrentCell();
 		NameButtonPopupMenu menu = new NameButtonPopupMenu();
 		menu.addActionListener( new ActionListener() {
 			
@@ -276,6 +277,7 @@ public class EditPanel extends JPanel
 
 	@Override
 	public void onAddStudentButtonClicked() {
+		stopEditingCurrentCell();
 		EditTable table = getSelectedEditTable();
 		EditTableModel model = (EditTableModel)table.getModel();
 		
@@ -288,6 +290,7 @@ public class EditPanel extends JPanel
 
 	@Override
 	public void onDeleteStudentButtonClicked() {
+		stopEditingCurrentCell();
 		EditTable table = getSelectedEditTable();
 		EditTableModel model = (EditTableModel)table.getModel();
 		int rowIndex = table.getSelectedRow();

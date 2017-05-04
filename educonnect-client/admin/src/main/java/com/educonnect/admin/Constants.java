@@ -20,7 +20,7 @@ public class Constants {
 	static {
 		File f = new File( TRUSTSTORE_LOC );
 		if( !f.exists() ) {
-			UIUtils.showError( null, "TrustStore is not located in intended location." );
+			UIUtils.showError( null, "FATAL: TrustStore is not located in intended location." );
 			System.exit( -1 );
 		}
 	}

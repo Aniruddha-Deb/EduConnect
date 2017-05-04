@@ -4,7 +4,6 @@ import java.net.Socket;
 import java.util.List;
 
 import com.educonnect.common.client.ClientType;
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.login.LoginResponse;
 import com.educonnect.server.client.Client;
 import com.educonnect.server.client.ClientHandler;
@@ -30,7 +29,6 @@ public class AdminClient extends Client {
 				b.append( c.getClientName() + "\n" ); 
 			}
 			send( new LoginResponse( 
-					ResponseStatus.OK, 
 					requestUID,
 					true
 				).withLoginName( clientName )
@@ -40,7 +38,6 @@ public class AdminClient extends Client {
 		}
 		else {
 			send( new LoginResponse( 
-					ResponseStatus.OK, 
 					requestUID,
 					true
 				).withLoginName( clientName ) );

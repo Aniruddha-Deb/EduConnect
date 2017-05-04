@@ -1,7 +1,6 @@
 package com.educonnect.common.message.dbclass;
 
 import com.educonnect.common.message.MessageType;
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Response;
 
 public class DatabaseAllClassesResponse extends Response {
@@ -10,10 +9,9 @@ public class DatabaseAllClassesResponse extends Response {
 	
 	private ClassOfStudents[] classes = null;
 
-	public DatabaseAllClassesResponse( ResponseStatus status, 
-									   String requestUID, 
+	public DatabaseAllClassesResponse( String requestUID, 
 									   ClassOfStudents[] classes ) {
-		super( MessageType.MT_DB_ALL_CLASSES_RES, status, requestUID );
+		super( MessageType.MT_DB_ALL_CLASSES_RES, requestUID );
 		this.classes = classes;
 	}
 	

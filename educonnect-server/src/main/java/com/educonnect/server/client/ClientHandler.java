@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.educonnect.common.client.ClientType;
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.login.LoginRequest;
 import com.educonnect.common.message.login.LoginResponse;
@@ -78,7 +77,6 @@ public class ClientHandler {
 			writer.write( 
 					Serializer.serialize( 
 						new LoginResponse( 
-							ResponseStatus.FATAL_ERROR, 
 							r.getUID(),
 							false
 						)

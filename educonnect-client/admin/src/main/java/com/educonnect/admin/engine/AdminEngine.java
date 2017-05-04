@@ -1,7 +1,7 @@
 package com.educonnect.admin.engine;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import java.awt.Cursor;
+import java.util.Arrays;
 
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
@@ -22,13 +22,10 @@ public class AdminEngine extends Engine {
 	private MainFrame mainFrame = null;
 	private SecureSocketNetworkAdapter clientAdapter = null;
 	
-	private static ServerSocket singleInstanceSocket = null;
-		
-	public AdminEngine() {
+	public AdminEngine( String serverIpAddress, int serverPort ) {
 		super( Constants.TRUSTSTORE_PASSWD, Constants.TRUSTSTORE_LOC );
-		setCurrentInstanceRunning();
-		clientAdapter = new SecureSocketNetworkAdapter( Constants.SERVER_IP_ADDRESS,
-														Constants.SERVER_PORT, 
+		clientAdapter = new SecureSocketNetworkAdapter( serverIpAddress,
+														serverPort, 
 														this );
 		mainFrame = new MainFrame( this );
 	}
@@ -36,19 +33,21 @@ public class AdminEngine extends Engine {
 	@Override
 	public void login( String emailId, char[] password ) {
 		clientAdapter.connect();
-		LoginResponse r = (LoginResponse)clientAdapter.send( 
-					new LoginRequest( emailId, password, ClientType.ADMIN ) );
-		
-		if( !r.getLoginResult() ) {
-			loginRequestFailed( r.getStatusText() );
-			return;
-		}
-		else if( r.getStatusText() != null ) {
-			UIUtils.showYesNoPrompt( r.getStatusText(), this );
-			setUserName( r.getLoginName() );
-			loadEditPanel();
-		}
-		else {
+		if( clientAdapter.isOpen() ) {
+			
+			mainFrame.setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+			LoginResponse r = (LoginResponse)clientAdapter.send( 
+						new LoginRequest( emailId, password, ClientType.ADMIN ) );
+			
+			Arrays.fill( password, '0' );
+			
+			if( r.getLoginResult() != true ) {
+				loginRequestFailed( r.getStatusText() );
+				return;
+			}
+			else if( r.getStatusText() != null ) {
+				UIUtils.showYesNoPrompt( r.getStatusText(), this );
+			}
 			setUserName( r.getLoginName() );
 			loadEditPanel();			
 		}
@@ -56,6 +55,7 @@ public class AdminEngine extends Engine {
 	
 	private void loginRequestFailed( String cause ) {
 		UIUtils.showError( mainFrame, "Login request fail!\n" + cause );
+		mainFrame.setCursor( Cursor.getDefaultCursor() );
 		clientAdapter.shutdown();
 	}
 	
@@ -72,33 +72,13 @@ public class AdminEngine extends Engine {
 				clientAdapter.send( new DatabaseAllClassesRequest() );
 		mainFrame.getEditPanel().load( dbResponse );
 		mainFrame.showPanel( UIConstants.EDIT_PANEL );	
+		mainFrame.setCursor( Cursor.getDefaultCursor() );
 	}
 	
 	@Override
 	public void handleAsyncResponse( Response r ) {
 		if( r instanceof DatabaseSingleClassResponse ) {
 			mainFrame.getEditPanel().handleDatabaseSingleClassResponse( (DatabaseSingleClassResponse) r );
-		}
-	}
-	
-	private void setCurrentInstanceRunning() {
-	    try {
-	        singleInstanceSocket = new ServerSocket( 11132 );
-	      }
-	      catch ( IOException ex ) {
-	    	  UIUtils.showError( mainFrame, 
-	    		"Another instance of this application is already running" );
-	        System.exit( -1 );
-	      }
-	}
-	
-	private void setInstanceStopped() {
-		if( singleInstanceSocket != null ) {
-			try {
-				singleInstanceSocket.close();
-			} catch( Exception e ) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
@@ -113,7 +93,6 @@ public class AdminEngine extends Engine {
 
 	@Override
 	public void shutdown() {
-		setInstanceStopped();
 		disconnectAdapter();
 		mainFrame.setVisible( false );
 		mainFrame.dispose();
@@ -122,11 +101,7 @@ public class AdminEngine extends Engine {
 	
 	private void disconnectAdapter() {
 		if( clientAdapter != null && clientAdapter.isOpen() ) {
-			System.out.println( "Shutting down adapter" );
 			clientAdapter.shutdown();
-		}
-		else {
-			System.out.println( "Adapter is null, no need to shutdown" );
 		}
 	}
 	

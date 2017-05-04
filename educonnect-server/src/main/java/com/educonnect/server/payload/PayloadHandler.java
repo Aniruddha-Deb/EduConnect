@@ -2,7 +2,6 @@ package com.educonnect.server.payload;
 
 import java.util.ArrayList;
 
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.dbclass.ClassOfStudents;
 import com.educonnect.common.message.dbclass.DatabaseAllClassesRequest;
@@ -34,8 +33,7 @@ public class PayloadHandler {
 	}
 	
 	private static void sendDBClass( DatabaseSingleClassRequest r, Client c ) {
-		c.send( new DatabaseSingleClassResponse( ResponseStatus.OK, 
-												 r.getUID(), 
+		c.send( new DatabaseSingleClassResponse( r.getUID(), 
 												 new ClassOfStudents( 
 													r.getClazz(), 
 													r.getSection(), 
@@ -57,8 +55,7 @@ public class PayloadHandler {
 			c.add( new ClassOfStudents( clazz, section, students ) );
 		}
 		
-		client.send( new DatabaseAllClassesResponse( ResponseStatus.OK, 
-													 r.getUID(), 
+		client.send( new DatabaseAllClassesResponse( r.getUID(), 
 													 c.toArray( new ClassOfStudents[c.size()] ) ) );
 	}
 	
@@ -71,7 +68,6 @@ public class PayloadHandler {
 			}
 		}
 		
-		c.send( new RowUpdateResponse( ResponseStatus.OK, rowUpdateReq.getUID(),
-										 true ) );
+		c.send( new RowUpdateResponse( rowUpdateReq.getUID(), true ) );
 	}
 }

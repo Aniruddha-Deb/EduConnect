@@ -1,7 +1,6 @@
 package com.educonnect.common.message.dbupdate;
 
 import com.educonnect.common.message.MessageType;
-import com.educonnect.common.message.ResponseStatus;
 import com.educonnect.common.message.core.Response;
 
 public class RowUpdateResponse extends Response{
@@ -10,9 +9,8 @@ public class RowUpdateResponse extends Response{
 
 	private boolean successful = false;
 	
-	public RowUpdateResponse( ResponseStatus status, String requestUID, 
-							  boolean wasSuccessful ) {
-		super( MessageType.MT_DB_ROW_UPDATE_RES, status, requestUID );
+	public RowUpdateResponse( String requestUID, boolean wasSuccessful ) {
+		super( MessageType.MT_DB_ROW_UPDATE_RES, requestUID );
 		this.successful = wasSuccessful;
 	}
 	
