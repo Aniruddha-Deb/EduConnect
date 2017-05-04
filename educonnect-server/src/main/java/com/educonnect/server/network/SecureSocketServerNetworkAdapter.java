@@ -31,7 +31,6 @@ public class SecureSocketServerNetworkAdapter implements ServerNetworkAdapter {
 		try {
 			while( true ) {
 				SSLSocket sslSocket = (SSLSocket)serverSocket.accept();
-				System.out.println( "Received client" );
 				ClientHandler.handle( sslSocket );
 			}
 		} catch( IOException ex ) {

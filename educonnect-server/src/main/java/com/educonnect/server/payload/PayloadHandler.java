@@ -1,6 +1,7 @@
 package com.educonnect.server.payload;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.dbclass.ClassOfStudents;
@@ -42,15 +43,17 @@ public class PayloadHandler {
 	}
 
 	private static void sendAllDBClasses( Request r, Client client ) {
-		String allDBs = JDBCAdapter.getInstance().getEditableClasses();
-		String[] parts = allDBs.split( " " );
+		List<String> editableClasses = JDBCAdapter.getInstance().getEditableClasses();
 
 		ArrayList<ClassOfStudents> c = new ArrayList<>();
 		
-		for( String p : parts ) {
-			int clazz = Integer.parseInt( p.split("-")[0] );
-			char section = p.split( "-" )[1].charAt(0);
-			Student[] students = JDBCAdapter.getInstance().getStudentDatabaseData( clazz, section );
+		for( String s : editableClasses ) {
+			String[] parts = s.split( "-" );
+			int clazz = Integer.parseInt( parts[0] );
+			char section = parts[1].charAt(0);
+			
+			Student[] students = 
+				JDBCAdapter.getInstance().getStudentDatabaseData( clazz, section );
 			
 			c.add( new ClassOfStudents( clazz, section, students ) );
 		}

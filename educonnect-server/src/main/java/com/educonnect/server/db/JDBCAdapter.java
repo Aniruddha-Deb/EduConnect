@@ -1,22 +1,21 @@
 package com.educonnect.server.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.message.dbclass.Student;
 import com.educonnect.common.message.dbupdate.Row;
-import com.educonnect.common.message.dbupdate.Row.RowAction;
 
 public class JDBCAdapter {
 
 	private static JDBCAdapter instance = null;
-	private Connection connection = null;
+	private JDBCConnectionPool connPool = null;
 	
 	public static JDBCAdapter getInstance() {
 		if( instance == null ) {
@@ -27,151 +26,206 @@ public class JDBCAdapter {
 	
 	private JDBCAdapter() {
 		try {
-			Class.forName( "com.mysql.cj.jdbc.Driver" ).newInstance();
-			String url = "jdbc:mysql://localhost:3306/ec_tbs_camp?useSSL=false";
-			String username = "root";
-			String password = "bokor123";
-			connection = DriverManager.getConnection( url, username, password );
+			connPool = new JDBCConnectionPool( "com.mysql.cj.jdbc.Driver" ,
+									"jdbc:mysql://localhost:3306/ec_tbs_camp?useSSL=false",
+									"root",
+									"bokor123" );
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		catch (ClassNotFoundException ex) { ex.printStackTrace(); }
-	    catch (IllegalAccessException ex) { ex.printStackTrace(); }
-	    catch (InstantiationException ex) { ex.printStackTrace(); }
-	    catch (SQLException ex)           { ex.printStackTrace(); }
 	}
 	
 	public int getClient( String emailId, char[] password, ClientType clientType ) {
-		if( clientType.equals( ClientType.ADMIN ) ) {
-			return getAdminClient( emailId, password );
-		}
-		else if( clientType.equals( ClientType.STUDENT ) ){
-			return getStudentClient( emailId, password );
-		}
-		return -1;
-	}
-
-	private int getAdminClient( String emailId, char[] password ) {
-		int adminClientUID = -1;
-		String query = "SELECT UID FROM admins WHERE emailId='" + emailId + 
-					   "' AND passwd=AES_ENCRYPT( '" + new String( password ) 
-					   + "', '" + new String( password ) + "')";
-					 	
+		int clientUID = -1;
+		
+		String query = getClientRetrievalQuery( clientType );
+		
+		Connection c = null;
 		try {
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery( query );
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( query );
+			st.setString( 1, emailId );
+			st.setString( 2, new String( password ) );
+			st.setString( 3, new String( password ) );
+			Arrays.fill( password, '0' );			
+			ResultSet rs = st.executeQuery();
 			rs.next();
-			try {
-				adminClientUID = rs.getInt( "UID" );
-			} catch( SQLException ex ) {
-				adminClientUID = -1;
-			}
 			
-		} catch( SQLException e ) {
+			try {
+				clientUID = rs.getInt( "UID" );
+			} catch( SQLException ex ) {
+				clientUID = -1;
+			}
+		} catch( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
 		}
-		return adminClientUID;
+		return clientUID;
 	}
 	
+	private String getClientRetrievalQuery( ClientType clientType ) {
+		switch( clientType ) {
+		case ADMIN:
+			return "SELECT UID FROM admins "
+			 		   + "WHERE emailId = ? "
+			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
+
+		case STUDENT:
+			return "SELECT UID FROM students "
+			 		   + "WHERE emailId = ? "
+			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
+		}
+		return null;
+	}
+
 	public String getAdminName( int UID ) {
 		String adminName = null;
+		final String query = "SELECT name FROM admins WHERE UID = ?";
 		
-		String query = "SELECT name FROM admins WHERE UID=" + UID;					 	
+		Connection c = null;
 		try {
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery( query );
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( query );
+			st.setInt( 1, UID );
+			ResultSet rs = st.executeQuery();
 			rs.next();
 			adminName = rs.getString( "name" );
-			
-		} catch( SQLException e ) {
+		} catch( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
 		}
 		return adminName;		
 	}
 	
 	public String getStudentName( int UID ) {
 		String studentName = null;
+		final String query = "SELECT firstName, lastName FROM students WHERE UID = ?";
 		
-		String query = "SELECT firstName, lastName FROM students WHERE UID=" + UID;					 	
+		Connection c = null;
 		try {
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery( query );
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( query );
+			st.setInt( 1, UID );
+			ResultSet rs = st.executeQuery();
 			rs.next();
 			studentName = rs.getString( "firstName" ) + " " + 
 						  rs.getString( "lastName" );
 			
-		} catch( SQLException e ) {
+		} catch( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
 		}
 		return studentName;		
 	}
 
 	public void updateRow( Row r, int clazz, char section ) {
-		int classOfStudent = clazz;
-		char sectionOfStudent = section;
-		int rollNo = r.getStudent().getRollNo();
-		int UID = r.getStudent().getUID();
-		String firstName = r.getStudent().getFirstName();
-		String lastName = r.getStudent().getLastName();
-		
-		if( r.getAction().equals( RowAction.CREATE ) ) {
+
+		switch( r.getAction() ) {
+			case CREATE:
+				createStudent( clazz, section, r.getStudent() );
+			break;
 			
-			String query = "INSERT INTO students " + 
-						   "(class, section, rollNo, firstName, lastName) " + 
-						   "VALUES ( " + classOfStudent + " ,'" + 
-						   				 sectionOfStudent + "' ," + 
-						   				 rollNo + " ,'" + 
-						   				 firstName + "' ,'" + 
-						   				 lastName + "' )"; 
-			try {
-				Statement st = connection.createStatement();
-				st.executeUpdate( query );
-			} catch( SQLException e ) {
-				e.printStackTrace();
-			}
-		}
-		else if( r.getAction().equals( RowAction.UPDATE ) ){
+			case DELETE:
+				deleteStudent( r.getStudent() );				
+			break;
 			
-			String query = "UPDATE students " + 
-						   "SET class = " + classOfStudent + ", " + 
-						   "section = '" + sectionOfStudent + "', " + 
-						   "rollNo = " + rollNo + ", " + 
-						   "firstName = '" + firstName + "', " + 
-						   "lastName = '" + lastName + "' " +  
-						   "WHERE UID = " + UID;
-						   
-			try {
-				Statement st = connection.createStatement();
-				st.executeUpdate( query );
-			} catch( SQLException e ) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			String query = "UPDATE students " + 
-					   "SET isEnabled=false " +   
-					   "WHERE UID = " + UID;
-					   
-			try {
-				Statement st = connection.createStatement();
-				st.executeUpdate( query );
-			} catch( SQLException e ) {
-				e.printStackTrace();
-			}			
+			case UPDATE:
+				updateStudent( clazz, section, r.getStudent() );
+			break;
 		}
 	}
 	
+	private void createStudent( int clazz, char section, Student s ) {
+		final String update = "INSERT INTO students " + 
+					 "(class, section, rollNo, firstName, lastName) " + 
+					 "VALUES ( ?, ?, ?, ?, ? ) " ;
+		
+		Connection c = null;
+		try {
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( update );
+			st.setInt( 1, clazz );
+			st.setString( 1, new String( new char[]{ section } ) );
+			st.setInt( 3, s.getRollNo() );
+			st.setString( 4, s.getFirstName() );
+			st.setString( 5, s.getLastName() );
+			st.executeUpdate();
+			
+		} catch( Exception e ) {
+			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
+		}
+	}
+	
+	private void updateStudent( int clazz, char section, Student s ) {
+		final String update = "UPDATE students " + 
+					    "SET class = ?," + 
+					    "section = ?," + 
+					    "rollNo = ?," + 
+					    "firstName = ?," + 
+					    "lastName = ?," +  
+					    "WHERE UID = ?";
+		
+		Connection c = null;
+		try {
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( update );
+			st.setInt( 1, clazz );
+			st.setString( 1, new String( new char[]{ section } ) );
+			st.setInt( 3, s.getRollNo() );
+			st.setString( 4, s.getFirstName() );
+			st.setString( 5, s.getLastName() );
+			st.setInt( 6, s.getUID() );
+			st.executeUpdate();
+			
+		} catch( Exception e ) {
+			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
+		}
+	}
+	
+	private void deleteStudent( Student s ) {
+		final String update = "UPDATE students " + 
+						"SET isEnabled = false " +   
+						"WHERE UID = ?";
+		
+		Connection c = null;
+		try {
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( update );
+			st.setInt( 1, s.getUID() );
+			st.executeUpdate();
+			
+		} catch( Exception e ) {
+			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
+		}
+	}
+
 	public String[] getStudentDatabaseHeaders() {
 		return new String[]{ "rollNo", "firstName", "lastName" }; 
 	}
 	
 	public Student[] getStudentDatabaseData( int clazz, char section ) {
-		String query = "SELECT UID, rollNo, firstName, lastName FROM students WHERE "
-				+ "class=" + clazz + " AND section='" + section + "' AND isEnabled=true";
+		final String query = 	
+				"SELECT UID, rollNo, firstName, lastName FROM students " +
+				"WHERE class = ? AND section = ? AND isEnabled = true";
 		
 		List<Student> students = new ArrayList<>();				 	
+		Connection c = null;
 		try {
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery( query );
-			
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( query );
+			st.setInt( 1, clazz );
+			String str = new Character( section ).toString();
+			st.setString( 2, str );
+			ResultSet rs = st.executeQuery();
 			while( rs.next() ) {
 				int    UID       = rs.getInt( "UID" );
 				int    rollNo    = rs.getInt( "rollNo" );
@@ -180,35 +234,37 @@ public class JDBCAdapter {
 				Student s = new Student( UID, rollNo, firstName, lastName );
 				students.add( s );
 			}
-		} catch( SQLException e ) {
+		} catch( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
 		}
+		
 		return students.toArray( new Student[students.size()] );
 	}
-	
-	private int getStudentClient( String emailId, char[] password ) {
-		// TODO do this when students actually start using the server
-		return 0;
-	}
 
-	public String getEditableClasses() {
-		String query = "SELECT DISTINCT class, section FROM classes";
-		StringBuilder b = new StringBuilder();
-				 	
+	public List<String> getEditableClasses() {
+		final String query = "SELECT DISTINCT class, section FROM classes";
+		List<String> editableClasses = new ArrayList<>(); 
+		
+		Connection c = null;
 		try {
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery( query );
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( query );
+			ResultSet rs = st.executeQuery();
 
 			while( rs.next() ) {
 				int  clazz   = rs.getInt( "class" );
 				char section = rs.getString( "section" ).charAt(0);
-				b.append( clazz + "-" + section + " " );
+				editableClasses.add( clazz + "-" + section );
 			}
 			
-		} catch( SQLException e ) {
+		} catch( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			connPool.returnConnection( c );
 		}
-		return b.toString();
+		return editableClasses;
 	}
 	
 }

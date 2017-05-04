@@ -67,7 +67,6 @@ public abstract class Client {
 	}
 	
 	public void shutdown( String UID ) {
-		System.out.println( "Shutting down client" );
 		ClientHandler.remove( this );
 		try {
 			writer.write( Serializer.serialize( new ShutdownResponse( UID ) ) );
