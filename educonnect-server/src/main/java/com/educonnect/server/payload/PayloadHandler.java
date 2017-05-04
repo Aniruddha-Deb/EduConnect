@@ -27,8 +27,6 @@ public class PayloadHandler {
 			sendDBClass( (DatabaseSingleClassRequest)r, c );
 		}
 		else if( r instanceof RowUpdateRequest ) {
-			System.out.println( r );
-			System.out.println( c );
 			updateRows( (RowUpdateRequest)r, c );
 		}
 	}
@@ -71,6 +69,7 @@ public class PayloadHandler {
 			}
 		}
 		
+		JDBCAdapter.getInstance().createEntryInUpdateLog( c.getClientName() );
 		c.send( new RowUpdateResponse( rowUpdateReq.getUID(), true ) );
 	}
 }

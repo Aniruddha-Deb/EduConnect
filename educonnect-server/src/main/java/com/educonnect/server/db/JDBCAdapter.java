@@ -148,7 +148,7 @@ public class JDBCAdapter {
 			c = connPool.getConnection();
 			PreparedStatement st = c.prepareStatement( update );
 			st.setInt( 1, clazz );
-			st.setString( 1, new String( new char[]{ section } ) );
+			st.setString( 2, new String( new char[]{ section } ) );
 			st.setInt( 3, s.getRollNo() );
 			st.setString( 4, s.getFirstName() );
 			st.setString( 5, s.getLastName() );
@@ -175,7 +175,7 @@ public class JDBCAdapter {
 			c = connPool.getConnection();
 			PreparedStatement st = c.prepareStatement( update );
 			st.setInt( 1, clazz );
-			st.setString( 1, new String( new char[]{ section } ) );
+			st.setString( 2, new String( new char[]{ section } ) );
 			st.setInt( 3, s.getRollNo() );
 			st.setString( 4, s.getFirstName() );
 			st.setString( 5, s.getLastName() );
@@ -205,6 +205,21 @@ public class JDBCAdapter {
 			e.printStackTrace();
 		} finally {
 			connPool.returnConnection( c );
+		}
+	}
+	
+	public void createEntryInUpdateLog( String adminName ) {
+		final String update = "INSERT INTO adminUpdateLog ( name )" + 
+			 				  "VALUES ( ? )";
+		Connection c = null;
+		try {
+			c = connPool.getConnection();
+			PreparedStatement st = c.prepareStatement( update );
+			st.setString( 1, adminName );
+			st.executeUpdate();
+			
+		} catch( Exception ex ) {
+			ex.printStackTrace();
 		}
 	}
 
