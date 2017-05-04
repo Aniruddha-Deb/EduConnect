@@ -90,7 +90,7 @@ public class JDBCAdapter {
 	public String getStudentName( int UID ) {
 		String studentName = null;
 		
-		String query = "SELECT name FROM students WHERE UID=" + UID;					 	
+		String query = "SELECT firstName, lastName FROM students WHERE UID=" + UID;					 	
 		try {
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery( query );

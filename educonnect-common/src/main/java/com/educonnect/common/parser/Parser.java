@@ -42,9 +42,7 @@ public class Parser {
 	public static Message parse( String header, String payload ) {
 		if( header == null ) return null;
 		
-		System.out.println( "Parsing header " + header );
 	    MessageType msgType = GSON.fromJson( header, MessageType.class );
-		System.out.println( "Parsing payload " + payload );
 		Message m = parseMessage( msgType, payload ); 
 		
 		return m;

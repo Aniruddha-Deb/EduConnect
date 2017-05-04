@@ -17,14 +17,6 @@ import com.educonnect.common.network.receiver.SecureSocketReceiver;
 import com.educonnect.common.network.response.ResponseContainer;
 import com.educonnect.common.serializer.Serializer;
 
-/**
- * A SecureSocketNetworkAdapter is an implementation of NetworkAdapter which 
- * uses TLS or SSL secured sockets for communication. It contains both a sender 
- * and a receiver and encapsulates all the connection IO from the program.
- * 
- * @author Sensei
- *
- */
 public class SecureSocketNetworkAdapter implements NetworkAdapter {
 
 	private Hashtable<String, ResponseContainer> responses = null;
@@ -46,7 +38,6 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		this.port = port;
 		
 		responses = new Hashtable<>();
-		
 	}
 	
 	private SSLSocket setUpSSLSocket( String ipAddress, int port ) {
@@ -84,13 +75,8 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 	public void putResponse( Response r ) {
 		engine.handleAsyncResponse( r );
 		ResponseContainer resContatiner = responses.get( r.getCorrelationId() );
-		System.out.println( "Got a corellation ID" );
 		if( resContatiner != null ) {
-			System.out.println( "resContainer is not null" );
 			resContatiner.setResponse( r );
-		}
-		else {
-			System.out.println( "resContainer is null" );
 		}
 	}
 	
@@ -115,7 +101,6 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 					e.printStackTrace();
 				}
 			}
-			System.out.println( "Closed receiverThread" );
 			writer.close();
 			sslSocket.close();
 		} catch( Exception e ) {
@@ -142,9 +127,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 			writer.flush();
 			ResponseContainer r = new ResponseContainer();
 			responses.put( request.getUID(), r );
-			System.out.println( "Waiting for response" );
 			response = r.waitForResponse();
-			System.out.println( "Got response" );
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}	

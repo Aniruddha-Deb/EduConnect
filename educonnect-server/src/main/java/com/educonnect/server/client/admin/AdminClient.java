@@ -16,31 +16,37 @@ public class AdminClient extends Client {
 		super.clientName = JDBCAdapter.getInstance().getAdminName( UID );
 		
 		List<Client> loggedOnAdminClients = ClientHandler.getLoggedOnAdminClients();
-		System.out.println( "got loggedOnAdminClients" );
 		
 		if( !( loggedOnAdminClients.isEmpty() ) ) {
-			
-			StringBuilder b = new StringBuilder( 
+			alertClientThatOtherAdminsAreLoggedOn( loggedOnAdminClients, requestUID );
+		}
+		else {
+			logOnAdminClient( requestUID );
+		}
+	}
+	
+	private void alertClientThatOtherAdminsAreLoggedOn( 
+			List<Client> loggedOnAdminClients, String requestUID ) {
+		StringBuilder b = new StringBuilder( 
 			"Some admins are already logged on to the system. This may result \n"
 			+ "in conflicts while editing data. Do you want to continue?\n"
 			+ "Logged in admins:\n" );
-			
-			for( Client c : loggedOnAdminClients ) {
-				b.append( c.getClientName() + "\n" ); 
-			}
-			send( new LoginResponse( 
-					requestUID,
-					true
-				).withLoginName( clientName )
-				 .withStatusText( b.toString() )
-			);
-
+		
+		for( Client c : loggedOnAdminClients ) {
+			b.append( c.getClientName() + "\n" ); 
 		}
-		else {
-			send( new LoginResponse( 
-					requestUID,
-					true
-				).withLoginName( clientName ) );
-		}
+		send( new LoginResponse( 
+				requestUID,
+				true
+			).withLoginName( clientName )
+			 .withStatusText( b.toString() )
+		);
+	}
+	
+	private void logOnAdminClient( String requestUID ) {
+		send( new LoginResponse( 
+				requestUID,
+				true
+			).withLoginName( clientName ) );
 	}
 }

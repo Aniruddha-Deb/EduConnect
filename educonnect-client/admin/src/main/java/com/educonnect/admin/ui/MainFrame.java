@@ -30,7 +30,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	private AdminEngine instance = null;
 	
 	public MainFrame( AdminEngine instance ) {
-		super( "EduConnect admin" );				
+		super( "EduConnect Admin" );				
 		this.instance = instance;		
 	}
 	
@@ -85,7 +85,6 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 	
 	public void showPanel( String panelName ) {
-		System.out.println( "Showing panel " + panelName );
 		c.show( mainPanel, panelName );
 	}
 	

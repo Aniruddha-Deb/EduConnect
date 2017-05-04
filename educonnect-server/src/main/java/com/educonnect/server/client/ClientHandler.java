@@ -29,7 +29,6 @@ public class ClientHandler {
 	
 	public static void handle( Socket s ) throws IOException {
 		
-		System.out.println( "Client connected!" );
 		reader = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
 		writer = new BufferedWriter( new OutputStreamWriter( s.getOutputStream() ) );
 		

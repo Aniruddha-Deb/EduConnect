@@ -20,7 +20,8 @@ public class ClientSocketReader implements Runnable{
 		this.socket = s;
 		
 		try {
-			this.reader = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
+			this.reader = new BufferedReader( 
+					new InputStreamReader( socket.getInputStream() ) );
 		} catch( IOException e ) {
 			e.printStackTrace();
 		}

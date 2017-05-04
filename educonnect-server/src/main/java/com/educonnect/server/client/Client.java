@@ -62,15 +62,6 @@ public abstract class Client {
 		}
 	}
 	
-	public void send( String s ) {
-		try {
-			writer.write( s + "\n" );
-			writer.flush();
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
-	}
-
 	public void receive( Request r ) {
 		PayloadHandler.handleResponse( r, this );
 	}
