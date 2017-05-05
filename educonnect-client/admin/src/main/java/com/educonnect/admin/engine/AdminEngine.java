@@ -32,10 +32,10 @@ public class AdminEngine extends Engine {
 	
 	@Override
 	public void login( String emailId, char[] password ) {
+		mainFrame.setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
 		clientAdapter.connect();
 		if( clientAdapter.isOpen() ) {
 			
-			mainFrame.setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
 			LoginResponse r = (LoginResponse)clientAdapter.send( 
 						new LoginRequest( emailId, password, ClientType.ADMIN ) );
 			

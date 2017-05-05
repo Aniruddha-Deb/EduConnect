@@ -1,7 +1,6 @@
 package com.educonnect.common.network;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 
@@ -48,7 +47,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		SSLSocket socket = null;
 		try {
 			socket = ( SSLSocket )factory.createSocket( ipAddress, port );
-		} catch ( IOException e ) {
+		} catch ( Exception e ) {
 			JOptionPane.showMessageDialog( null, "Unable to connect to server.\n" + 
 												 "Either your internet is down or \n" + 
 												 "the server is unreachable." );
@@ -62,7 +61,7 @@ public class SecureSocketNetworkAdapter implements NetworkAdapter {
 		if( sslSocket != null ) {
 			try {
 				writer = new BufferedWriter( new OutputStreamWriter( sslSocket.getOutputStream() ) );
-			} catch ( IOException e ) {
+			} catch ( Exception e ) {
 				e.printStackTrace();
 			}
 			receiver = new SecureSocketReceiver( sslSocket, this );

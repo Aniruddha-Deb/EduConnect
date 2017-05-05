@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.message.core.Request;
 import com.educonnect.common.message.login.LoginRequest;
@@ -21,6 +23,8 @@ import com.educonnect.server.client.student.StudentClient;
 import com.educonnect.server.db.JDBCAdapter;
 
 public class ClientHandler {
+
+	private static final Logger log = Logger.getLogger( ClientHandler.class );
 	
 	private static List<Client> clients = new ArrayList<Client>();
 	
@@ -35,10 +39,17 @@ public class ClientHandler {
 		Request r = (Request)NetworkUtils.readMessage( reader );
 		
 		if( r instanceof LoginRequest ) {
-			logInUser( (LoginRequest)r, s );
+			LoginRequest lr = (LoginRequest)r;
+			if( lr.getClientType().equals( ClientType.ADMIN ) ) {
+				log.debug( "An Admin sent a loginRequest with emailId " + lr.getUserId() );
+			}
+			else {
+				log.debug( "A Student sent a loginRequest with emailId " + lr.getUserId() );				
+			}
+			logInUser( lr, s );
 		}
 		else {
-			// Ignore the request
+			log.debug( "The request sent was not a login request. Ignoring." );
 		}
 	}
 	
@@ -47,16 +58,20 @@ public class ClientHandler {
 		int UID = getUID( loginRequest );
 		
 		if( UID == -1 ) {
+			log.debug( "Client is not registered with system. Sending fail response." );
 			tellClientAuthenticationFailed( loginRequest, "Admin not registered with system" );
 		}
 		else {
 			if( isAdminAlreadyLoggedOn( UID ) ) {
+				log.debug( "Client is an admin who is already logged on. Sending fail response." );
 				tellClientAuthenticationFailed( loginRequest, "Admin is already logged on" );
 			}
-			else if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {				
+			else if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {
+				log.debug( "Logging in admin " + JDBCAdapter.getInstance().getAdminName( UID ) );
 				clients.add( new AdminClient( s, UID, r.getUID() ) );
 			}
 			else {
+				log.debug( "Logging in student " + JDBCAdapter.getInstance().getStudentName( UID ) );
 				clients.add( new StudentClient( s, UID ) );				
 			}
 		}
@@ -93,6 +108,7 @@ public class ClientHandler {
 	public static void remove( Client client ) {
 		for( Client c : clients ) {
 			if( c.equals( client ) ) {
+				log.debug( "Client " + c.getClientName() + " is logging off." );
 				clients.remove( c );
 				break;
 			}
@@ -107,7 +123,6 @@ public class ClientHandler {
 				loggedOnAdminClients.add( c );
 			}
 		}
-		
 		return loggedOnAdminClients;
 	}
 	

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.message.core.Message;
 import com.educonnect.common.message.core.Request;
@@ -13,6 +15,8 @@ import com.educonnect.common.serializer.Serializer;
 import com.educonnect.server.payload.PayloadHandler;
 
 public abstract class Client {
+	
+	private static final Logger log = Logger.getLogger( Client.class );
 	
 	private ClientSocketReader reader = null;
 	private BufferedWriter writer = null; 
@@ -53,7 +57,7 @@ public abstract class Client {
 	
 	public void send( Message m ) {
 		String stringToSend = Serializer.serialize( m );
-		
+		log.debug( "Sending message to client " + clientName );
 		try {
 			writer.write( stringToSend );
 			writer.flush();
@@ -63,6 +67,7 @@ public abstract class Client {
 	}
 	
 	public void receive( Request r ) {
+		log.debug( "Received request from client " + clientName );
 		PayloadHandler.handleResponse( r, this );
 	}
 	

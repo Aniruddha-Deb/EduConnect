@@ -6,41 +6,50 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+import org.apache.log4j.Logger;
+
 import com.educonnect.server.client.ClientHandler;
 
 public class SecureSocketServerNetworkAdapter implements ServerNetworkAdapter {
 	
-	SSLServerSocket serverSocket = null;
+	private static final Logger log = Logger.getLogger( 
+								SecureSocketServerNetworkAdapter.class );
+	
+	private SSLServerSocket serverSocket = null;
 	
 	public SecureSocketServerNetworkAdapter( String keyStoreLocation, 
 											 String password, 
 											 int port ) {
 		System.setProperty( "javax.net.ssl.keyStore", keyStoreLocation );
 		System.setProperty( "javax.net.ssl.keyStorePassword", password );
-
+		log.debug( "Loaded keystore into property javax.net.ssl.keyStore" );
 		SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
 		try {
 			serverSocket = (SSLServerSocket)factory.createServerSocket( port );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( "Unable to create serverSocket", e );
 		}
+		log.debug( "Created serverSocket" );
 	}
 
 	@Override
 	public void receiveClients() {
 		try {
+			log.debug( "Waiting for clients to connect." );
 			while( true ) {
 				SSLSocket sslSocket = (SSLSocket)serverSocket.accept();
+				log.debug( "Accepted a client" );
 				ClientHandler.handle( sslSocket );
 			}
 		} catch( IOException ex ) {
-			ex.printStackTrace();
+			log.error( "Unable to receive client", ex );
 		}
 	}
 
 	@Override
 	public void shutdown() {
 		try {
+			log.debug( "Shutting down serverSocket" );
 			if( serverSocket.isBound() ) {
 				serverSocket.accept();
 				serverSocket.close();
@@ -49,7 +58,7 @@ public class SecureSocketServerNetworkAdapter implements ServerNetworkAdapter {
 				serverSocket.close();
 			}
 		} catch( IOException ex ) {
-			ex.printStackTrace();
+			log.error( "Error while closing serverSocket", ex );
 		}
 	}
 }
