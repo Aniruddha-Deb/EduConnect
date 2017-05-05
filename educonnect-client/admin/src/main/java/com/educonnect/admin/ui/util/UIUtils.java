@@ -3,6 +3,7 @@ package com.educonnect.admin.ui.util;
 import static com.educonnect.admin.Constants.RES_DIR_PATH;
 
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,11 +14,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-import com.educonnect.admin.engine.AdminEngine;
+import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.admin.ui.panels.editpanel.EditPanel;
 
 public class UIUtils {
@@ -70,22 +71,12 @@ public class UIUtils {
 	}
 	
 	public static void showError( JFrame relativeFrame, String errorMessage ) {
-		JOptionPane.showMessageDialog( relativeFrame, errorMessage );
-	}
-	
-	public static void showYesNoPrompt( String errorMessage, AdminEngine e ) {
-		SwingUtilities.invokeLater( new Runnable() {
-			
-			@Override
-			public void run() {
-				int response = JOptionPane.showConfirmDialog( e.getMainFrame(), errorMessage );
-				if( response == JOptionPane.NO_OPTION ) {
-					e.shutdown();
-				}
-				else {
-					// Let the user continue
-				}
-			}
-		});
-	}
+		try {
+			JOptionPane.showMessageDialog( relativeFrame, errorMessage, 
+									"Error", JOptionPane.ERROR_MESSAGE, 
+									new ImageIcon( ImageIO.read( UIUtils.class.getResource( UIConstants.ERROR_ICON_RES ) ) ) );
+		} catch ( HeadlessException | IOException e ) {
+			e.printStackTrace();
+		}
+	}	
 }

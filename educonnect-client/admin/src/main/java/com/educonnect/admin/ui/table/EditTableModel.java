@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -72,7 +73,24 @@ public class EditTableModel extends AbstractTableModel{
 			}
 		}
 		
+		if( deletedStudents.size() != 0 ) {
+			return true;
+		}
+		
 		return false;
+	}
+	
+	public void discardUnsavedChanges() {
+		deletedStudents = new ArrayList<>();
+		// We use an iterator to avoid Concurrent Modification Exceptions
+		Iterator<Student> iterator = editCopy.iterator();
+
+		while ( iterator.hasNext() ) {
+			Student s = iterator.next();
+			if( ! (goldenCopy.contains( s )) ) {
+				iterator.remove();
+			}
+		}	
 	}
 	
 	public List<Row> getDirtyRows() {

@@ -12,9 +12,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -24,6 +26,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellEditor;
 
 import com.educonnect.admin.engine.AdminEngine;
+import com.educonnect.admin.ui.UIConstants;
 import com.educonnect.admin.ui.buttons.OptionPanelButtonListener;
 import com.educonnect.admin.ui.menu.NameButtonPopupMenu;
 import com.educonnect.admin.ui.table.EditTable;
@@ -202,13 +205,15 @@ public class EditPanel extends JPanel
 		Student[] students = d.getClassOfStudents().getStudents();
 
 		int            selIndex   = tabbedPane.getSelectedIndex() ;
-		String         titleOfTab = tabbedPane.getTitleAt( selIndex ) ;
-		EditTable      table      = tables.get( titleOfTab ) ;
-		EditTableModel etm        = (EditTableModel)table.getModel();
+		if( selIndex != -1 ) {
+			String         titleOfTab = tabbedPane.getTitleAt( selIndex ) ;
+			EditTable      table      = tables.get( titleOfTab ) ;
+			EditTableModel etm        = (EditTableModel)table.getModel();
 		
-		etm.updateServerCopy( students );
+			etm.updateServerCopy( students );
 		
-		showStatusMessage( "Showing table " + titleOfTab );
+			showStatusMessage( "Showing table " + titleOfTab );
+		}
 	}
 	
 	@Override
@@ -245,6 +250,7 @@ public class EditPanel extends JPanel
 			for( String key : tables.keySet() ) {
 				EditTable t = tables.get( key );
 				if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
+					System.out.println( "Unsaved changes are present in table " + key );
 					return true;
 				}
 			}
@@ -268,11 +274,56 @@ public class EditPanel extends JPanel
 				
 				switch( e.getActionCommand() ) {
 					case NameButtonPopupMenu.LOGOUT_COMMAND:
-						adminEngine.logout();
+						logOutUser();
+					break;
 				}
 			}
 		} );
 		menu.show( optionPanel, 3, optionPanel.getHeight() );
+	}
+	
+	private void logOutUser() {
+		if( unsavedChangesArePresent() ) {
+			int response = -1;
+			try {
+				response = JOptionPane.showConfirmDialog( this, 
+						"Unsaved changes present. \n" + 
+						"Would you like to save and exit?", 
+						"Unsaved alert", 
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE,
+						new ImageIcon( ImageIO.read( getClass().getResource( UIConstants.ALERT_ICON_RES ) ) ) );
+			} catch ( Exception e1 ) {
+				e1.printStackTrace();
+			}
+			
+			if( response == JOptionPane.YES_OPTION ) {
+				onSaveButtonClicked();
+				adminEngine.logout();
+			}
+			else if( response == JOptionPane.CANCEL_OPTION || response == JOptionPane.CLOSED_OPTION ) {				
+				// do nothing
+			}
+			else {
+				discardAllUnsavedChanges();
+				adminEngine.logout();
+			}
+		}
+		else {
+			adminEngine.logout();
+		}
+	}
+	
+	private void discardAllUnsavedChanges() {
+		if( tables != null && tabbedPane != null ) {
+			stopEditingCurrentCell();
+			for( String key : tables.keySet() ) {
+				EditTable t = tables.get( key );
+				if( ((EditTableModel)t.getModel()).unsavedChangesPresent() ) {
+					((EditTableModel)t.getModel()).discardUnsavedChanges();
+				}
+			}
+		}
 	}
 
 	@Override
