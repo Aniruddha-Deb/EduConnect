@@ -159,14 +159,33 @@ public class JDBCAdapter {
 			st.setInt( 1, clazz );
 			st.setString( 2, new String( new char[]{ section } ) );
 			st.setInt( 3, s.getRollNo() );
-			st.setString( 4, s.getFirstName() );
-			st.setString( 5, s.getLastName() );
+			insertNames( st, s );
 			st.executeUpdate();
 			
 		} catch( Exception e ) {
 			log.error( "Unable to create new student in the database", e );
 		} finally {
 			connPool.returnConnection( c );
+		}
+	}
+	
+	private void insertNames( PreparedStatement st, Student s ) throws SQLException{
+		String[] name = NameGenerator.generateCompleteName();
+		if( s.getFirstName().equals( "" ) && s.getLastName().equals( "" ) ) {
+			st.setString( 4, name[0] );
+			st.setString( 5, name[1] );
+		}
+		else if( s.getFirstName().equals( "" ) ) {
+			st.setString( 4, name[0] );
+			st.setString( 5, s.getLastName() );			
+		}
+		else if( s.getLastName().equals( "" ) ) {
+			st.setString( 4, s.getFirstName() );
+			st.setString( 5, name[1] );			
+		}
+		else {
+			st.setString( 4, s.getFirstName() );
+			st.setString( 5, s.getLastName() );						
 		}
 	}
 	
