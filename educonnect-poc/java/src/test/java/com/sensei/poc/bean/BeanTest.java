@@ -22,32 +22,32 @@ public class BeanTest {
 	public static void main( String[] args ) {
 		
 		LoginBean loginBean = new LoginBean( 9, 'D', 11 );
-		log.debug( "Login Bean made" );
-		log.debug( loginBean.toString() );
+		log.info( "Login Bean made" );
+		log.info( loginBean.toString() );
 		
 		TextBean textBean = new TextBean( "Aniruddha Deb", "Hiiii!" );
-		log.debug( "Text bean made" );
-		log.debug( textBean.toString() );
+		log.info( "Text bean made" );
+		log.info( textBean.toString() );
 		
 		FileBean fileBean = new FileBean( "/Users/Sensei/temp/20170407_180903.jpg" );
-		log.debug( "File bean made" );
-		log.debug( fileBean.toString() );
+		log.info( "File bean made" );
+		log.info( fileBean.toString() );
 		
 		FileJSON parsedFileBean = (FileJSON)Parser.parse( fileBean.toString() );
-		log.debug( "Parsed file bean" );
+		log.info( "Parsed file bean" );
 		writeFile( parsedFileBean );
-		log.debug( "Wrote file to " + FILE_LOC );
+		log.info( "Wrote file to " + FILE_LOC );
 		
 		TextJSON parsedTextBean = (TextJSON)Parser.parse( textBean.toString() );
-		log.debug( "Parsed text bean" );
-		log.debug( "Sender: " + parsedTextBean.getSender() );
-		log.debug( "Text: " + parsedTextBean.getText() );
+		log.info( "Parsed text bean" );
+		log.info( "Sender: " + parsedTextBean.getSender() );
+		log.info( "Text: " + parsedTextBean.getText() );
 		
 		LoginJSON parsedLoginBean = (LoginJSON)Parser.parse( loginBean.toString() );
-		log.debug( "Parsed login bean" );
-		log.debug( "Grade    : " + parsedLoginBean.getGrade() );
-		log.debug( "Roll no. : " + parsedLoginBean.getRollNo() );
-		log.debug( "Section  : " + parsedLoginBean.getSection() );
+		log.info( "Parsed login bean" );
+		log.info( "Grade    : " + parsedLoginBean.getGrade() );
+		log.info( "Roll no. : " + parsedLoginBean.getRollNo() );
+		log.info( "Section  : " + parsedLoginBean.getSection() );
 	}
 
 	private static void writeFile( FileJSON parsedFileBean ) {

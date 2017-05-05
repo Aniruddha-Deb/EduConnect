@@ -22,23 +22,23 @@ public class SecureSocketServerNetworkAdapter implements ServerNetworkAdapter {
 											 int port ) {
 		System.setProperty( "javax.net.ssl.keyStore", keyStoreLocation );
 		System.setProperty( "javax.net.ssl.keyStorePassword", password );
-		log.debug( "Loaded keystore into property javax.net.ssl.keyStore" );
+		log.info( "Loaded keystore into property javax.net.ssl.keyStore" );
 		SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
 		try {
 			serverSocket = (SSLServerSocket)factory.createServerSocket( port );
 		} catch ( IOException e ) {
 			log.error( "Unable to create serverSocket", e );
 		}
-		log.debug( "Created serverSocket" );
+		log.info( "Created serverSocket" );
 	}
 
 	@Override
 	public void receiveClients() {
 		try {
-			log.debug( "Waiting for clients to connect." );
+			log.info( "Waiting for clients to connect." );
 			while( true ) {
 				SSLSocket sslSocket = (SSLSocket)serverSocket.accept();
-				log.debug( "Accepted a client" );
+				log.info( "Accepted a client" );
 				ClientHandler.handle( sslSocket );
 			}
 		} catch( IOException ex ) {
@@ -49,7 +49,7 @@ public class SecureSocketServerNetworkAdapter implements ServerNetworkAdapter {
 	@Override
 	public void shutdown() {
 		try {
-			log.debug( "Shutting down serverSocket" );
+			log.info( "Shutting down serverSocket" );
 			if( serverSocket.isBound() ) {
 				serverSocket.accept();
 				serverSocket.close();

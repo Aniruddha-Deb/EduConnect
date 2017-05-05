@@ -71,13 +71,13 @@ public class JDBCAdapter {
 	private String getClientRetrievalQuery( ClientType clientType ) {
 		switch( clientType ) {
 		case ADMIN:
-			log.debug( "Retrieving an AdminClient from the database" );
+			log.info( "Retrieving an AdminClient from the database" );
 			return "SELECT UID FROM admins "
 			 		   + "WHERE emailId = ? "
 			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
 
 		case STUDENT:
-			log.debug( "Retrieving a StudentClient from the database" );
+			log.info( "Retrieving a StudentClient from the database" );
 			return "SELECT UID FROM students "
 			 		   + "WHERE emailId = ? "
 			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
@@ -131,17 +131,17 @@ public class JDBCAdapter {
 
 		switch( r.getAction() ) {
 			case CREATE:
-				log.debug( "Creating a student with First Name " + r.getStudent().getFirstName() );
+				log.info( "Creating a student with First Name " + r.getStudent().getFirstName() );
 				createStudent( clazz, section, r.getStudent() );
 			break;
 			
 			case DELETE:
-				log.debug( "Deleting student no." + r.getStudent().getUID() );
+				log.info( "Deleting student no." + r.getStudent().getUID() );
 				deleteStudent( r.getStudent() );				
 			break;
 			
 			case UPDATE:
-				log.debug( "Updating student no." + r.getStudent().getUID() );
+				log.info( "Updating student no." + r.getStudent().getUID() );
 				updateStudent( clazz, section, r.getStudent() );
 			break;
 		}
@@ -303,7 +303,7 @@ public class JDBCAdapter {
 			}
 			
 		} catch( Exception e ) {
-			log.debug( "Unable to retrieve editable classes", e );
+			log.info( "Unable to retrieve editable classes", e );
 		} finally {
 			connPool.returnConnection( c );
 		}

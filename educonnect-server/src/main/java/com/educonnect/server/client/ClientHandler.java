@@ -41,15 +41,15 @@ public class ClientHandler {
 		if( r instanceof LoginRequest ) {
 			LoginRequest lr = (LoginRequest)r;
 			if( lr.getClientType().equals( ClientType.ADMIN ) ) {
-				log.debug( "An Admin sent a loginRequest with emailId " + lr.getUserId() );
+				log.info( "An Admin sent a loginRequest with emailId " + lr.getUserId() );
 			}
 			else {
-				log.debug( "A Student sent a loginRequest with emailId " + lr.getUserId() );				
+				log.info( "A Student sent a loginRequest with emailId " + lr.getUserId() );				
 			}
 			logInUser( lr, s );
 		}
 		else {
-			log.debug( "The request sent was not a login request. Ignoring." );
+			log.info( "The request sent was not a login request. Ignoring." );
 		}
 	}
 	
@@ -58,20 +58,20 @@ public class ClientHandler {
 		int UID = getUID( loginRequest );
 		
 		if( UID == -1 ) {
-			log.debug( "Client is not registered with system. Sending fail response." );
+			log.info( "Client is not registered with system. Sending fail response." );
 			tellClientAuthenticationFailed( loginRequest, "Admin not registered with system" );
 		}
 		else {
 			if( isAdminAlreadyLoggedOn( UID ) ) {
-				log.debug( "Client is an admin who is already logged on. Sending fail response." );
+				log.info( "Client is an admin who is already logged on. Sending fail response." );
 				tellClientAuthenticationFailed( loginRequest, "Admin is already logged on" );
 			}
 			else if( loginRequest.getClientType().equals( ClientType.ADMIN ) ) {
-				log.debug( "Logging in admin " + JDBCAdapter.getInstance().getAdminName( UID ) );
+				log.info( "Logging in admin " + JDBCAdapter.getInstance().getAdminName( UID ) );
 				clients.add( new AdminClient( s, UID, r.getUID() ) );
 			}
 			else {
-				log.debug( "Logging in student " + JDBCAdapter.getInstance().getStudentName( UID ) );
+				log.info( "Logging in student " + JDBCAdapter.getInstance().getStudentName( UID ) );
 				clients.add( new StudentClient( s, UID ) );				
 			}
 		}
@@ -108,7 +108,7 @@ public class ClientHandler {
 	public static void remove( Client client ) {
 		for( Client c : clients ) {
 			if( c.equals( client ) ) {
-				log.debug( "Client " + c.getClientName() + " is logging off." );
+				log.info( "Client " + c.getClientName() + " is logging off." );
 				clients.remove( c );
 				break;
 			}

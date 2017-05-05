@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.educonnect.admin.ui.UIConstants;
@@ -21,11 +22,6 @@ public class EditTable extends JTable{
 	
 	private ClassOfStudents classOfStudents = null ;
 
-	public EditTable() {
-		super( new EditTableModel() );
-		setUpTableAttributes();
-	}
-	
 	public EditTable( ClassOfStudents c ) {
 		super( new EditTableModel().withStudents( c.getStudents() ) ) ;
 		this.classOfStudents = c ;
@@ -45,6 +41,7 @@ public class EditTable extends JTable{
 		super.getTableHeader().setBorder( new MatteBorder( 0,0,1,0, Color.BLACK ) );
 		super.getTableHeader().setFont( UIConstants.FONT.deriveFont( 13f ) );
 		super.setRowHeight( 20 );
+		setJTableColumnsWidth( this, 400, 6, 47, 47 );
 	}
 	
 	private void setUpTableCellEditor() {
@@ -70,5 +67,19 @@ public class EditTable extends JTable{
 	@Override
 	public TableModel getModel() {
 		return (EditTableModel)super.getModel();
+	}
+	
+	public static void setJTableColumnsWidth( JTable table, int tablePreferredWidth,
+	        double... percentages ) {
+	    double total = 0;
+	    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+	        total += percentages[i];
+	    }
+	 
+	    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+	        TableColumn column = table.getColumnModel().getColumn(i);
+	        column.setPreferredWidth((int)
+	                (tablePreferredWidth * (percentages[i] / total)));
+	    }
 	}
 }

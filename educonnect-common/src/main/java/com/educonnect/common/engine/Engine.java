@@ -65,7 +65,7 @@ public abstract class Engine {
 	 * @param emailId
 	 * @param password
 	 */
-	public abstract void login( String emailId, char[] password );
+	public abstract void login( String emailId, char[] password ) throws Exception;
 	
 	/**
 	 * This method (on the client side) is called by the UI MainFrame when the 

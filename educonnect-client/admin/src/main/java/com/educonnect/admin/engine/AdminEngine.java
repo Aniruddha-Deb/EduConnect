@@ -3,6 +3,10 @@ package com.educonnect.admin.engine;
 import java.awt.Cursor;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 import com.educonnect.admin.Constants;
 import com.educonnect.admin.ui.MainFrame;
 import com.educonnect.admin.ui.UIConstants;
@@ -31,7 +35,8 @@ public class AdminEngine extends Engine {
 	}
 	
 	@Override
-	public void login( String emailId, char[] password ) {
+	public void login( String emailId, char[] password ) throws Exception {
+		mainFrame.setCursor( Cursor.getDefaultCursor() );
 		mainFrame.setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
 		clientAdapter.connect();
 		if( clientAdapter.isOpen() ) {
@@ -46,17 +51,39 @@ public class AdminEngine extends Engine {
 				return;
 			}
 			else if( r.getStatusText() != null ) {
-				UIUtils.showYesNoPrompt( r.getStatusText(), this );
+				showOtherUsersAreLoggedOnWarning( r );
 			}
-			setUserName( r.getLoginName() );
-			loadEditPanel();			
+			else {
+				setUserName( r.getLoginName() );
+				loadEditPanel();
+			}
 		}
+		mainFrame.setCursor( Cursor.getDefaultCursor() );
 	}
 	
 	private void loginRequestFailed( String cause ) {
 		UIUtils.showError( mainFrame, "Login request fail!\n" + cause );
 		mainFrame.setCursor( Cursor.getDefaultCursor() );
 		clientAdapter.shutdown();
+	}
+	
+	private void showOtherUsersAreLoggedOnWarning( LoginResponse r ) throws Exception{
+		int response = JOptionPane.showConfirmDialog( mainFrame,
+				r.getStatusText(),
+				"Other users are logged on",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				new ImageIcon( ImageIO.read( getClass().getResource( UIConstants.ALERT_ICON_RES ) ) ) );
+		if( response == JOptionPane.NO_OPTION ) {
+			shutdown();
+		}
+		else if( response == JOptionPane.CLOSED_OPTION || response == JOptionPane.CANCEL_OPTION ) {
+			logout();
+		}
+		else {
+			setUserName( r.getLoginName() );
+			loadEditPanel();
+		}
 	}
 	
 	public MainFrame getMainFrame() {

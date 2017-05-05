@@ -158,9 +158,13 @@ public class LoginPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed( ActionEvent e ) {
 		UIUtils.serialize( emailIdField, "emailIdField" );
-		instance.login( emailIdField.getText(), 
-								   passwordField.getPassword()  
-							 	 );
+		try {
+			instance.login( emailIdField.getText(), 
+									   passwordField.getPassword()  
+								 	 );
+		} catch ( Exception e1 ) {
+			e1.printStackTrace();
+		}
 		passwordField.setText( null );
 	}
 }

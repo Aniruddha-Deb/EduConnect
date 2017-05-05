@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -43,7 +45,7 @@ public class MainFrame extends JFrame implements WindowListener{
 	}
 	
 	private void setUpFrame() {
-		super.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		super.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
 		super.setSize( 500, 400 );
 		super.addWindowListener( this );
 		super.setLocationRelativeTo( null );
@@ -110,19 +112,28 @@ public class MainFrame extends JFrame implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent e) {
 		if( editPanel.unsavedChangesArePresent() ) {
-			int response = JOptionPane.showConfirmDialog( this, 
-					"Unsaved changes present. \n" + 
-					"Would you like to save and exit?" );
+			int response = -1;
+			try {
+				response = JOptionPane.showConfirmDialog( this, 
+						"Unsaved changes present. \n" + 
+						"Would you like to save and exit?", 
+						"Unsaved alert", 
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE,
+						new ImageIcon( ImageIO.read( getClass().getResource( UIConstants.ALERT_ICON_RES ) ) ) );
+			} catch ( Exception e1 ) {
+				e1.printStackTrace();
+			}
 			
 			if( response == JOptionPane.YES_OPTION ) {
 				editPanel.onSaveButtonClicked();
 				instance.shutdown();
 			}
-			else if( response == JOptionPane.NO_OPTION ) {				
-				instance.shutdown();
+			else if( response == JOptionPane.CANCEL_OPTION || response == JOptionPane.CLOSED_OPTION ) {				
+				// do nothing
 			}
 			else {
-				// do nothing
+				instance.shutdown();
 			}
 		}
 		else {

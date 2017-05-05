@@ -34,10 +34,10 @@ public class HeadphoneTest {
 	}
 
 	private void outputHeadphoneAttributes() {
-		log.debug( ((WiredInEarHeadphone)wiredInEarHeadphone).toString() );
-		log.debug( ((WiredOverTheEarHeadphone)wiredOverTheEarHeadphone).toString() );
-		log.debug( ((WirelessInEarHeadphone)wirelessInEarHeadphone).toString() );
-		log.debug( ((WirelessOverTheEarHeadphone)wirelessOverTheEarHeadphone).toString() );
+		log.info( ((WiredInEarHeadphone)wiredInEarHeadphone).toString() );
+		log.info( ((WiredOverTheEarHeadphone)wiredOverTheEarHeadphone).toString() );
+		log.info( ((WirelessInEarHeadphone)wirelessInEarHeadphone).toString() );
+		log.info( ((WirelessOverTheEarHeadphone)wirelessOverTheEarHeadphone).toString() );
 	}
 
 	private void assembleHeadphone() {

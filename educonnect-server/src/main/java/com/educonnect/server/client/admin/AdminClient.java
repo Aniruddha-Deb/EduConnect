@@ -22,12 +22,12 @@ public class AdminClient extends Client {
 		List<Client> loggedOnAdminClients = ClientHandler.getLoggedOnAdminClients();
 		
 		if( !( loggedOnAdminClients.isEmpty() ) ) {
-			log.debug( "Other admin clients are already logged on. Alerting admin." );
+			log.info( "Other admin clients are already logged on. Alerting admin." );
 			alertClientThatOtherAdminsAreLoggedOn( loggedOnAdminClients, requestUID );
 		}
 		else {
 			logOnAdminClient( requestUID );
-			log.debug( "Successfully logged in admin " + super.getClientName() );
+			log.info( "Successfully logged in admin " + super.getClientName() );
 		}
 	}
 	

@@ -57,7 +57,7 @@ public abstract class Client {
 	
 	public void send( Message m ) {
 		String stringToSend = Serializer.serialize( m );
-		log.debug( "Sending message to client " + clientName );
+		log.info( "Sending message to client " + clientName );
 		try {
 			writer.write( stringToSend );
 			writer.flush();
@@ -67,7 +67,7 @@ public abstract class Client {
 	}
 	
 	public void receive( Request r ) {
-		log.debug( "Received request from client " + clientName );
+		log.info( "Received request from client " + clientName );
 		PayloadHandler.handleResponse( r, this );
 	}
 	

@@ -25,9 +25,9 @@ public class Constants {
 	
 	static {
 		loadLoggerProperties();
-		log.debug( "Loaded properties for logger" );
+		log.info( "Loaded properties for logger" );
 		checkForKeystore();
-		log.debug( "Successfully retrieved and loaded keyStore" );
+		log.info( "Successfully retrieved and loaded keyStore" );
 	}
 	
 	private static void loadLoggerProperties() {

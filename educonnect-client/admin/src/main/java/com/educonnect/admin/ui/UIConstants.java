@@ -24,6 +24,7 @@ public class UIConstants {
 	public static final String REFRESH_ICON_RES         = ICON_RES_ROOT + "refresh.png";
 	public static final String ADD_NEW_STUDENT_RES      = ICON_RES_ROOT + "add_new_student.png";
 	public static final String DELETE_STUDENT_RES       = ICON_RES_ROOT + "remove_student.png";
+	public static final String ALERT_ICON_RES           = ICON_RES_ROOT + "alert.png";
 	
 	public static final String SAVE_BUTTON_CMD     = "Save"      ;
 	public static final String EXPORT_BUTTON_CMD   = "Export"    ;

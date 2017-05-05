@@ -21,6 +21,6 @@ public class StudentClient extends Client {
 							true
 			  ).withStatusText( clientName )
 		);
-		log.debug( "Successfully logged in student " + super.getClientName() );
+		log.info( "Successfully logged in student " + super.getClientName() );
 	}
 }

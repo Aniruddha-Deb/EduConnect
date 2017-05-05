@@ -9,9 +9,9 @@ public class EduConnectServer {
 	private static final Logger log = Logger.getLogger( EduConnectServer.class );
 	
 	public static void main( String[] args ) {
-		log.debug( "Starting the Server" );
+		log.info( "Starting the Server" );
 		new ServerEngine().start();
-		log.debug( "Closing the Server" );
+		log.info( "Closing the Server" );
 	}
 
 }
