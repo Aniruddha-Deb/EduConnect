@@ -101,7 +101,7 @@ public class ClientHandler {
 			writer.write( Serializer.serialize( new ShutdownResponse( r.getUID() ) ) );
 			writer.flush();
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( "Could not tell client that authentication failed", e );
 		}
 	}
 	

@@ -38,8 +38,8 @@ public abstract class Client {
 		
 		try {
 			this.writer = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream() ) );
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch ( IOException e ) {
+			log.error( "Could not initialize BufferedWriter", e );
 		}
 	}
 	
@@ -62,7 +62,7 @@ public abstract class Client {
 			writer.write( stringToSend );
 			writer.flush();
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( "Could not send message across the network", e );
 		}
 	}
 	
@@ -76,8 +76,8 @@ public abstract class Client {
 		try {
 			writer.write( Serializer.serialize( new ShutdownResponse( UID ) ) );
 			writer.flush();
-		} catch( Exception e ) {
-			e.printStackTrace();
+		} catch( IOException e ) {
+			log.error( "Could not send ShutdownResponse across the network", e );
 		}
 	}	
 }

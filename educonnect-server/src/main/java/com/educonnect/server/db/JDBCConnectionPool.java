@@ -7,8 +7,11 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
 
 public class JDBCConnectionPool {
+	
+	private static final Logger log = Logger.getLogger( JDBCConnectionPool.class );
 	
 	private String url      = null ;
 	private String user     = null ;
@@ -66,8 +69,8 @@ public class JDBCConnectionPool {
 	    try {
 	        connectionPool.returnObject( conn ) ;
 	    } 
-	    catch (Exception e) {
-	    	e.printStackTrace();
+	    catch ( Exception e ) {
+	    	log.error( "Could not return connection to connection pool", e );
 	    }
 	}	
 }

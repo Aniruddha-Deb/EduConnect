@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.educonnect.common.client.ClientType;
 import com.educonnect.common.message.dbclass.Student;
 import com.educonnect.common.message.dbupdate.Row;
 
 public class JDBCAdapter {
+	
+	private static final Logger log = Logger.getLogger( JDBCAdapter.class );
 
 	private static JDBCAdapter instance = null;
 	private JDBCConnectionPool connPool = null;
@@ -30,8 +34,8 @@ public class JDBCAdapter {
 									"jdbc:mysql://localhost:3306/ec_tbs_camp?useSSL=false",
 									"root",
 									"bokor123" );
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch ( Exception e ) {
+			log.error( "Could not create new Connection Pool", e );
 		}
 	}
 	
@@ -57,7 +61,7 @@ public class JDBCAdapter {
 				clientUID = -1;
 			}
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Could not retrieve client from database", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -67,11 +71,13 @@ public class JDBCAdapter {
 	private String getClientRetrievalQuery( ClientType clientType ) {
 		switch( clientType ) {
 		case ADMIN:
+			log.debug( "Retrieving an AdminClient from the database" );
 			return "SELECT UID FROM admins "
 			 		   + "WHERE emailId = ? "
 			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
 
 		case STUDENT:
+			log.debug( "Retrieving a StudentClient from the database" );
 			return "SELECT UID FROM students "
 			 		   + "WHERE emailId = ? "
 			 		   + "AND passwd = AES_ENCRYPT( ?, ? ) ";
@@ -92,7 +98,7 @@ public class JDBCAdapter {
 			rs.next();
 			adminName = rs.getString( "name" );
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Could not get admin name", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -114,7 +120,7 @@ public class JDBCAdapter {
 						  rs.getString( "lastName" );
 			
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Could not get student name", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -125,14 +131,17 @@ public class JDBCAdapter {
 
 		switch( r.getAction() ) {
 			case CREATE:
+				log.debug( "Creating a student with First Name " + r.getStudent().getFirstName() );
 				createStudent( clazz, section, r.getStudent() );
 			break;
 			
 			case DELETE:
+				log.debug( "Deleting student no." + r.getStudent().getUID() );
 				deleteStudent( r.getStudent() );				
 			break;
 			
 			case UPDATE:
+				log.debug( "Updating student no." + r.getStudent().getUID() );
 				updateStudent( clazz, section, r.getStudent() );
 			break;
 		}
@@ -155,7 +164,7 @@ public class JDBCAdapter {
 			st.executeUpdate();
 			
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Unable to create new student in the database", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -183,7 +192,7 @@ public class JDBCAdapter {
 			st.executeUpdate();
 			
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Unable to update student no. " + s.getUID() + " in the database", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -202,7 +211,7 @@ public class JDBCAdapter {
 			st.executeUpdate();
 			
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Unable to delete student no. " + s.getUID() + " in the database", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -219,7 +228,7 @@ public class JDBCAdapter {
 			st.executeUpdate();
 			
 		} catch( Exception ex ) {
-			ex.printStackTrace();
+			log.error( "Unable to update the adminLog", ex );
 		}
 	}
 
@@ -250,7 +259,7 @@ public class JDBCAdapter {
 				students.add( s );
 			}
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.error( "Unable to get student database data for " + clazz + "-" + section, e );
 		} finally {
 			connPool.returnConnection( c );
 		}
@@ -275,7 +284,7 @@ public class JDBCAdapter {
 			}
 			
 		} catch( Exception e ) {
-			e.printStackTrace();
+			log.debug( "Unable to retrieve editable classes", e );
 		} finally {
 			connPool.returnConnection( c );
 		}
