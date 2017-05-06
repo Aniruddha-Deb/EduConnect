@@ -195,7 +195,7 @@ public class JDBCAdapter {
 					    "section = ?," + 
 					    "rollNo = ?," + 
 					    "firstName = ?," + 
-					    "lastName = ?," +  
+					    "lastName = ? " +  
 					    "WHERE UID = ?";
 		
 		Connection c = null;
